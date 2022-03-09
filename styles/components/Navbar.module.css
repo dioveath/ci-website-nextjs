@@ -1,0 +1,20 @@
+.nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.navlist {
+    display: flex;
+    list-style-type: none;
+    gap: 20px;
+}
+
+.navitem {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.navitem:hover {
+    color: blue;
+}
