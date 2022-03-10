@@ -2,6 +2,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    background-color: #F6FEFF;
 }
 
 .navlist {
@@ -12,9 +13,10 @@
 
 .navitem {
     cursor: pointer;
-    font-weight: bold;
+    font-weight: normal;
+    font-size: 16px;
 }
 
 .navitem:hover {
-    color: blue;
+    color: #0070f3;
 }

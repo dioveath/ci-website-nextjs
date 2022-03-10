@@ -7,7 +7,7 @@ export default function Navbar(){
   return (
     <nav className={styles.nav}>
       <div>
-        <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />        
+        <Image src="/ci_logo_light_blue.png" alt="Charicha Institute Logo" width={105} height={36} />        
       </div>
       <ul className={styles.navlist}>
         <li className={styles.navitem}> Home </li>
