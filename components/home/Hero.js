@@ -1,10 +1,12 @@
-import styles from '../../../styles/components/home/Hero.module.css';
+import Image from 'next/image';
+import styles from '../../styles/components/home/Hero.module.css';
 
 export default function Hero(){
 
   return (
     <div className={styles["hero-container"]}>
       {/* <div className={styles.background}></div> */}
+      <img className={styles.background} alt="" src="tech_back.png"/>
       <div className={styles.content}>
         <h2 className={styles.heading1}> Welcome to Charicha Institute!</h2>
         <h4 className={styles.heading4}> Esteemed institute for Academic Tuitions & Advance Computer Courses.</h4>

@@ -1,0 +1,41 @@
+.course-card {
+    background-color: #FFEFE4;
+    min-width: 400px;
+    color: #0070f3;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #0070f3;
+    color: white;
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    margin: 0px;
+}
+
+.content {
+    font-size: 16px;
+    padding: 20px 30px;
+    margin: 0px;
+    color: black;
+}
+
+.list-item {
+    list-style-type: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    font-size: 14px;
+}
+
+.enroll {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    background-color: lightgreen;
+    color: white;
+}

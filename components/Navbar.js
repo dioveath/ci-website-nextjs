@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import styles from '../../styles/components/Navbar.module.css';
+import styles from '../styles/components/Navbar.module.css';
 
 export default function Navbar(){
 
@@ -11,7 +11,9 @@ export default function Navbar(){
       </div>
       <ul className={styles.navlist}>
         <li className={styles.navitem}> Home </li>
-        <li className={styles.navitem}> Courses </li>
+        <Link className={styles.navitem} href="/courses">
+          <a> Courses </a>
+        </Link>
         <li className={styles.navitem}> Services </li>
         <li className={styles.navitem}> Blog </li>
         <li className={styles.navitem}> Contact </li>

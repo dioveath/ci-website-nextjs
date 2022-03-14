@@ -1,0 +1,42 @@
+.container {
+    padding: 0 2rem;
+}
+
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.courses-container {
+    background-color: #F6FEFF;    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 40px 40px;
+}
+
+.level-courses {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.course-level {
+    color: white;
+    background-color: #0070f3;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.course-card {
+    min-width: 600px;
+    min-height: 600px;
+}
