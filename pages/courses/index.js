@@ -4,8 +4,31 @@ import Navbar from '../../components/Navbar.js';
 import styles from '../../styles/courses/Courses.module.css';
 import { BsFillArrowDownCircleFill } from 'react-icons/bs';
 import { AiFillDownCircle } from 'react-icons/ai';
+import { Accordian } from '../../components/Accordian.js';
 
 import CourseCard from '../../components/course/CourseCard.js';
+import TestimonialCard from '../../components/testimonial/TestimonialCard.js';
+
+const Level1Courses = (props) => {
+  return <div className={styles["level-courses"]}>
+           <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
+             [
+               "Computer Advance Fundamentals",
+               "Microsoft Office Training",
+               "Image Manipulation Basics",
+               "Internet & Web Fundamentals",
+               "Lok Shewa Preparation"
+             ]}/>
+           <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
+             [
+               "Microsoft Office Training",
+               "Tally Accounting",
+               "Advance Microsoft Excel",
+               "Internet & Web Official Workds Fundamentals"
+             ]
+           }/>
+         </div>;
+};
 
 export default function Courses(){
 
@@ -27,10 +50,25 @@ export default function Courses(){
           <div className={styles["course-level"]}>
             Level 1 Courses <AiFillDownCircle/>
           </div>
-          {/* <div className={styles.courses}> */}
-          {/*   <CourseCard/> */}
-          {/*   <CourseCard/>           */}
-          {/* </div> */}
+          <div className={styles["level-courses"]}>
+            <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
+              [
+                "Computer Advance Fundamentals",
+                "Microsoft Office Training",
+                "Image Manipulation Basics",
+                "Internet & Web Fundamentals",
+                "Lok Shewa Preparation"
+              ]}/>
+            <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
+              [
+                "Microsoft Office Training",
+                "Tally Accounting",
+                "Advance Microsoft Excel",
+                "Internet & Web Official Workds Fundamentals"
+              ]
+            }/>
+          </div>
+
           <div className={styles["course-level"]}>
             Level 2 Courses <AiFillDownCircle/>
           </div>
@@ -53,7 +91,30 @@ export default function Courses(){
             }/>
           </div>
 
+          <div className={styles["course-level"]}>
+            Level 2 Courses <AiFillDownCircle/>
+          </div>
+          <div className={styles["level-courses"]}>
+            <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
+              [
+                "Computer Advance Fundamentals",
+                "Microsoft Office Training",
+                "Image Manipulation Basics",
+                "Internet & Web Fundamentals",
+                "Lok Shewa Preparation"
+              ]}/>
+            <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
+              [
+                "Microsoft Office Training",
+                "Tally Accounting",
+                "Advance Microsoft Excel",
+                "Internet & Web Official Workds Fundamentals"
+              ]
+            }/>
+          </div>             
         </div>
+
+        {/* <TestimonialCard/> */}
 
       </main>
 

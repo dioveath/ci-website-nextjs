@@ -20,6 +20,7 @@
     padding: 20px 30px;
     margin: 0px;
     color: black;
+    min-height: 150px;
 }
 
 .list-item {
@@ -31,6 +32,7 @@
 }
 
 .enroll {
+    cursor: pointer;
     font-size: 18px;
     font-weight: bold;
     display: flex;
