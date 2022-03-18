@@ -9,26 +9,15 @@ import { Accordian } from '../../components/Accordian.js';
 import CourseCard from '../../components/course/CourseCard.js';
 import TestimonialCard from '../../components/testimonial/TestimonialCard.js';
 
-const Level1Courses = (props) => {
-  return <div className={styles["level-courses"]}>
-           <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
-             [
-               "Computer Advance Fundamentals",
-               "Microsoft Office Training",
-               "Image Manipulation Basics",
-               "Internet & Web Fundamentals",
-               "Lok Shewa Preparation"
-             ]}/>
-           <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
-             [
-               "Microsoft Office Training",
-               "Tally Accounting",
-               "Advance Microsoft Excel",
-               "Internet & Web Official Workds Fundamentals"
-             ]
-           }/>
+import Collapsible from 'react-collapsible';
+
+
+const Trigger = (props) => {
+  return <div className={styles["course-level"]}>
+           { props.title } <AiFillDownCircle/>
          </div>;
 };
+
 
 export default function Courses(){
 
@@ -46,10 +35,55 @@ export default function Courses(){
         <h2> Our Courses </h2>
         <BsFillArrowDownCircleFill size={24}/>
 
-        <div className={styles["courses-container"]}>
-          <div className={styles["course-level"]}>
-            Level 1 Courses <AiFillDownCircle/>
+        <div style={{height: "30px"}}></div>
+
+        <Collapsible trigger={ <Trigger title="Level 1 Courses"/>}>
+          <div className={styles["level-courses"]}>
+            <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
+              [
+                "Computer Advance Fundamentals",
+                "Microsoft Office Training",
+                "Image Manipulation Basics",
+                "Internet & Web Fundamentals",
+                "Lok Shewa Preparation"
+              ]}/>
+            <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
+              [
+                "Microsoft Office Training",
+                "Tally Accounting",
+                "Advance Microsoft Excel",
+                "Internet & Web Official Workds Fundamentals"
+              ]
+            }/>
+          </div>          
+        </Collapsible>
+
+
+
+
+        <Collapsible trigger={ <Trigger title="Level 2 Courses"/>}>
+          <div className={styles["level-courses"]}>
+            <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
+              [
+                "Computer Advance Fundamentals",
+                "Microsoft Office Training",
+                "Image Manipulation Basics",
+                "Internet & Web Fundamentals",
+                "Lok Shewa Preparation"
+              ]}/>
+            <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
+              [
+                "Microsoft Office Training",
+                "Tally Accounting",
+                "Advance Microsoft Excel",
+                "Internet & Web Official Workds Fundamentals"
+              ]
+            }/>
           </div>
+        </Collapsible>
+
+
+        <Collapsible trigger={ <Trigger title="Level 3 Courses"/>}>
           <div className={styles["level-courses"]}>
             <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
               [
@@ -69,54 +103,17 @@ export default function Courses(){
             }/>
           </div>
 
-          <div className={styles["course-level"]}>
-            Level 2 Courses <AiFillDownCircle/>
-          </div>
-          <div className={styles["level-courses"]}>
-            <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
-              [
-                "Computer Advance Fundamentals",
-                "Microsoft Office Training",
-                "Image Manipulation Basics",
-                "Internet & Web Fundamentals",
-                "Lok Shewa Preparation"
-              ]}/>
-            <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
-              [
-                "Microsoft Office Training",
-                "Tally Accounting",
-                "Advance Microsoft Excel",
-                "Internet & Web Official Workds Fundamentals"
-              ]
-            }/>
-          </div>
+        </Collapsible>
 
-          <div className={styles["course-level"]}>
-            Level 2 Courses <AiFillDownCircle/>
-          </div>
-          <div className={styles["level-courses"]}>
-            <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
-              [
-                "Computer Advance Fundamentals",
-                "Microsoft Office Training",
-                "Image Manipulation Basics",
-                "Internet & Web Fundamentals",
-                "Lok Shewa Preparation"
-              ]}/>
-            <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
-              [
-                "Microsoft Office Training",
-                "Tally Accounting",
-                "Advance Microsoft Excel",
-                "Internet & Web Official Workds Fundamentals"
-              ]
-            }/>
-          </div>             
-        </div>
+        <div style={{height: "30px"}}></div>
 
-        {/* <TestimonialCard/> */}
+        <TestimonialCard content={"Ultricies mi eget mauris pharetra et ultrices neque ornare aenean euismod elementum? Etiam tempor, orci eu lobortis elementum, nibh tellus molestie nunc, non blandit massa enim nec dui nunc mattis."}/>
+
+        
 
       </main>
+
+      <div style={{height: "30px"}}></div>
 
       <footer className={styles.footer}>
         <a
