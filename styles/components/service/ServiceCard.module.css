@@ -1,0 +1,17 @@
+.service-card {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 200px;
+}
+
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.content {
+    font-size: 14px;
+    font-weight: light;
+}

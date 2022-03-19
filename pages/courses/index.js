@@ -58,9 +58,6 @@ export default function Courses(){
           </div>          
         </Collapsible>
 
-
-
-
         <Collapsible trigger={ <Trigger title="Level 2 Courses"/>}>
           <div className={styles["level-courses"]}>
             <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
@@ -106,10 +103,7 @@ export default function Courses(){
         </Collapsible>
 
         <div style={{height: "30px"}}></div>
-
         <TestimonialCard content={"Ultricies mi eget mauris pharetra et ultrices neque ornare aenean euismod elementum? Etiam tempor, orci eu lobortis elementum, nibh tellus molestie nunc, non blandit massa enim nec dui nunc mattis."}/>
-
-        
 
       </main>
 
