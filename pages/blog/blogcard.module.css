@@ -9,21 +9,27 @@
     }
 }
 
-.blog-container {
-    /* max-width: 400px; */
-    background-color: red;
+.blog-image {
+    object-fit: contain;
+    border-radius: 10px;
 }
 
+.blog-container {
+    max-width: 400px;
+}
 
-.blog-image {
+.image-container {
+    width: auto;
+    border-radius: 10px;    
 }
 
 .info-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     /* width: 500px; */
+    /* background-color: red; */
 }
 
 .smallinfo {
@@ -42,7 +48,6 @@
     font-size: 10px;
     font-weight: 300;
 }
-
 
 .blog-title {
     font-size: 23px;
