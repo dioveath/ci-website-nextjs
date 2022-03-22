@@ -1,4 +1,4 @@
-import styles from '../../styles/components/blog/TopBlog.module.css';
+import styles from '../../styles/components/blog/topblog.module.css';
 import Image from 'next/image';
 
 import { BsFillCircleFill } from 'react-icons/bs';

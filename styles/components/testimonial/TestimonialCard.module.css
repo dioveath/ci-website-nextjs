@@ -12,9 +12,12 @@
 .profile {
     min-width: 200px;
     min-height: 200px;
-    background-color: grey;
+    /* background-color: green; */
+    border-radius: 50%;
 }
 
 
-
-
+.profile-image {
+    object-fit: cover;
+    border-radius: 50%;
+}

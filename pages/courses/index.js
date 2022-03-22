@@ -11,6 +11,10 @@ import TestimonialCard from '../../components/testimonial/TestimonialCard.js';
 
 import Collapsible from 'react-collapsible';
 
+import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
+import 'pure-react-carousel/dist/react-carousel.es.css';
+
+
 
 const Trigger = (props) => {
   return <div className={styles["course-level"]}>
@@ -103,7 +107,12 @@ export default function Courses(){
         </Collapsible>
 
         <div style={{height: "30px"}}></div>
-        <TestimonialCard content={"Ultricies mi eget mauris pharetra et ultrices neque ornare aenean euismod elementum? Etiam tempor, orci eu lobortis elementum, nibh tellus molestie nunc, non blandit massa enim nec dui nunc mattis."}/>
+
+        <TestimonialCard
+          content={"Viverra aliquet eget sit amet tellus. Sit amet, consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique."}
+          reviewer={"Ful Maya"}
+        />
+
 
       </main>
 
