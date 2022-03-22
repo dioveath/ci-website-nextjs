@@ -8,6 +8,8 @@ import { ImLocation } from 'react-icons/im';
 import TopBlog from './TopBlog.js';
 import BlogCard from './BlogCard.js';
 
+import Footer from '../../components/footer/Footer.js';
+
 export default function Contact(){
   
   return (
@@ -31,6 +33,8 @@ export default function Contact(){
         </div>
 
       </main>
+
+      <Footer/>
 
     </div>
   );

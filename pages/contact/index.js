@@ -5,6 +5,8 @@ import styles from '../../styles/contact/Contact.module.css';
 import { AiFillPhone } from 'react-icons/ai';
 import { ImLocation } from 'react-icons/im';
 
+import Footer from '../../components/footer/Footer.js';
+
 export default function Contact(){
   
   return (
@@ -46,6 +48,9 @@ export default function Contact(){
 
 
       </main>
+
+      <Footer/>
+
     </div>
 
   );

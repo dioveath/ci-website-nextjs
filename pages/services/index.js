@@ -4,6 +4,9 @@ import { BsFillArrowDownCircleFill } from 'react-icons/bs';
 import styles from '../../styles/services/Services.module.css';
 import ServiceCard from '../../components/services/ServiceCard.js';
 
+
+import Footer from '../../components/footer/Footer.js';
+
 export default function Services(){
 
   return (
@@ -53,6 +56,7 @@ export default function Services(){
 
       </div>
 
+      <Footer/>
     </div>
   );
   

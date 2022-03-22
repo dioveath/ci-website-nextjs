@@ -1,0 +1,72 @@
+.footer{
+    display: flex;
+    flex-direction: column;
+    font-family: "Poppins", "sans-serif";
+}
+
+.footerContents{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-size: 14px;
+}
+
+.logoImg>img{
+    width: 250px;
+    height: 80px;
+}
+
+.logoBorder1{
+    width: 270px;
+    height: 3px;
+    background-color: black;
+}
+
+.primaryFooterContents{
+    margin: 20px 200px 30px 100px;
+    flex: 1;
+    max-width: 400px;
+}
+
+.secondaryFooterContents{
+    max-width: 400px;
+    flex: 1;
+    margin: 20px 200px 30px 100px;
+}
+
+.logoBorder2{
+    width: 180px;
+    height: 3px;
+    background-color: black;
+}
+
+.navLinks{
+    list-style-type: none;
+    padding: 0;
+}
+
+.navLinks>li>a{
+    text-decoration: none;
+    color: #39A1FF;
+}
+
+.thirdFooterContents{
+    max-width: 400px;
+    flex: 1;
+    margin: 20px 10px 30px 100px;
+}
+
+.secondaryFooterContents>h3, .thirdFooterContents>h3{
+    margin: 0;
+    font-size: 20px;
+}
+
+.copyright{
+    margin: auto;
+    margin-left: 100px;
+}
+
+.copyright>p{
+    font-size: 14px;
+    color: #39A1FF;
+}

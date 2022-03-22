@@ -14,7 +14,7 @@ import Collapsible from 'react-collapsible';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
-
+import Footer from '../../components/footer/Footer.js';
 
 const Trigger = (props) => {
   return <div className={styles["course-level"]}>
@@ -118,18 +118,8 @@ export default function Courses(){
 
       <div style={{height: "30px"}}></div>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      <Footer/>
+
     </div>    
   );
   
