@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar.js';
 import Hero from '../components/home/Hero.js';
 import Footer from '../components/footer/Footer.js';
 
+
 export default function Home() {
   return (
     <div className={styles.container}>
@@ -15,6 +16,7 @@ export default function Home() {
       </Head>
 
       <Navbar/>
+
       <main className={styles.main}>
         <Hero/>
       </main>

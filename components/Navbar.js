@@ -2,7 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../styles/components/Navbar.module.css';
 
+import { useUser } from '@auth0/nextjs-auth0';
+
 export default function Navbar(){
+
+  const { user, error, isLoading } = useUser();
 
   return (
     <nav className={styles.nav}>
@@ -25,8 +29,19 @@ export default function Navbar(){
         </Link>
         <Link className={styles.navitem} href="/contact">
           <a> Contact </a>
-        </Link>        
+        </Link>
+
+        {
+          user !== undefined ?
+            <p>
+              Welcome { user.name } <a href="/api/auth/logout"> Logout </a>
+          </p>
+          : <p>
+              <a href="/api/auth/login"> Login </a>
+            </p>
+        }
       </ul>
+
     </nav>
   );
 
