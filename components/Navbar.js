@@ -2,11 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../styles/components/Navbar.module.css';
 
-import { useUser } from '@auth0/nextjs-auth0';
+// import { useUser } from '@auth0/nextjs-auth0';
 
 export default function Navbar(){
 
-  const { user, error, isLoading } = useUser();
+  // const { user, error, isLoading } = useUser();
 
   return (
     <nav className={styles.nav}>
@@ -31,15 +31,16 @@ export default function Navbar(){
           <a> Contact </a>
         </Link>
 
-        {
-          user !== undefined ?
-            <p>
-              Welcome { user.name } <a href="/api/auth/logout"> Logout </a>
-          </p>
-          : <p>
-              <a href="/api/auth/login"> Login </a>
-            </p>
-        }
+        {/* { */}
+        {/*   user !== undefined ? */}
+        {/*     <p> */}
+        {/*       Welcome { user.name } <a href="/api/auth/logout"> Logout </a> */}
+        {/*   </p> */}
+        {/*   : <p> */}
+        {/*       <a href="/api/auth/login"> Login </a> */}
+        {/*     </p> */}
+        {/* } */}
+
       </ul>
 
     </nav>

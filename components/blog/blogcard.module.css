@@ -10,7 +10,9 @@
 }
 
 .blog-image {
-    object-fit: contain;
+    width: 400px;
+    height: 200px;
+    object-fit: cover;
     border-radius: 10px;
 }
 
@@ -61,8 +63,8 @@
 }
 
 .author-profile {
-    width: 100px;
-    height: 100px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
 }
