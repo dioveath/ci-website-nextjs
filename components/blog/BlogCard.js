@@ -1,6 +1,7 @@
+import { useState, useEffect } from 'react';
+
 import Image from 'next/image';
 import styles from './blogcard.module.css';
-
 import { BsFillCircleFill } from 'react-icons/bs';
 
 export default function BlogCard(props){
@@ -11,6 +12,17 @@ export default function BlogCard(props){
     // arguments[0] is the entire match
     summary = arguments[0];
   });
+
+  const [userData, setUserData] = useState(null);
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(async () => {
+    setLoading(true);
+    let res = await fetch('api/users/' + blog.writtenBy);
+    let user = await res.json();
+    setUserData(user);
+    setLoading(userData == null);
+  }, []);
 
   return(
     <div className={styles["blog-container"]}>
@@ -30,17 +42,32 @@ export default function BlogCard(props){
         <div className={styles["blog-title"]}> { blog.title }</div>
         <div className={styles["blog-summary"]}> Pharetra pharetra, massa massa ultricies mi, quis hendrerit dolor magna eget est lorem ipsum dolor. Maecenas volutpat blandit aliquam etiam erat velit, scelerisque in dictum non, consectetur a erat nam. </div>
         <div style={{height: "10px"}}></div>
-        <div className={styles["blog-author-container"]}>
-          <img src="/profile.jpg" width={64} height={64} objectFit="contain" className={styles["author-profile"]}/>
-          <div style={{width: "10px"}}></div>          
-          <div className={styles["blog-author-info-container"]}>
-            <p className={styles["blog-author-name"]}> Ajaya Rajbhandari </p>        
-            <p className={styles["blog-author-post"]}> Chief Executive Officer </p>          
-          </div>
-        </div>
+        {
+          isLoading ? "Loading...."
+            : <div className={styles["blog-author-container"]}>
+                <img src={userData.profile_URL} className={styles["author-profile"]}/>
+                <div style={{width: "10px"}}></div>          
+                <div className={styles["blog-author-info-container"]}>
+                  <p className={styles["blog-author-name"]}> { userData.first_name + " " + userData.last_name} </p>        
+                  <p className={styles["blog-author-post"]}> { userData.rank }</p>          
+                </div>
+              </div>
+        }
+
       </div>      
     </div>
   );
 
+}
+
+
+export async function getStaticProps(){
+  const res = await getPostsFirestore();
+  const posts = {
+    posts: res
+  };
+  return {
+    props: posts
+  };
 }
 

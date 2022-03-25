@@ -9,6 +9,7 @@ import TopBlog from '../../components/blog/TopBlog.js';
 import BlogCard from '../../components/blog/BlogCard.js';
 
 import Footer from '../../components/footer/Footer.js';
+import { getPostsFirestore } from '../api/posts/index.js';
 
 export default function Contact(props){
 
@@ -42,10 +43,9 @@ export default function Contact(props){
 }
 
 export async function getStaticProps(){
-  const res = await fetch('http://localhost:3000/api/posts/posts');
-  // console.log(await res.json());
+  const res = await getPostsFirestore();
   const posts = {
-    posts: await res.json()
+    posts: res
   };
   return {
     props: posts
