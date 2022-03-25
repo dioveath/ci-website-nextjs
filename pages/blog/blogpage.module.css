@@ -1,0 +1,38 @@
+.main {
+    padding: 1rem 2rem;
+}
+
+.authorDetailsContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.authorLeftContainer{
+    display: flex;
+    align-items: center;
+}
+
+.profileImg {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.infoText {
+    font-size: 16px;
+}
+
+.timeDetails {
+    display: flex;
+    font-size: 14px;
+    font-weight: 300;
+    color: grey;
+    justify-content: center;
+    align-items: center;
+}
+
+.socialLinks {
+    display: flex;
+}
