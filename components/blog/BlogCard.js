@@ -13,8 +13,8 @@ export default function BlogCard(props){
     summary = arguments[0];
   });
 
-  const [userData, setUserData] = useState(null);
-  const [isLoading, setLoading] = useState(false);
+  const [userData, setUserData] = useState({ first_name: "null", last_name: "null"});
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(async () => {
     setLoading(true);
@@ -22,7 +22,8 @@ export default function BlogCard(props){
     let user = await res.json();
     setUserData(user);
     setLoading(userData == null);
-  }, []);
+    console.log(userData);
+  }, [userData.first_name, userData.last_name]);
 
   return(
     <div className={styles["blog-container"]}>
@@ -59,15 +60,3 @@ export default function BlogCard(props){
   );
 
 }
-
-
-export async function getStaticProps(){
-  const res = await getPostsFirestore();
-  const posts = {
-    posts: res
-  };
-  return {
-    props: posts
-  };
-}
-
