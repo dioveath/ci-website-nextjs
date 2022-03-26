@@ -1,13 +1,15 @@
 .heading1 {
-    font-size: 32px;
+    font-size: 42px;
     font-weight: bold;
     margin: 5px;
+    color: white;
 }
 
 .heading4 {
     font-size: 18px;
     font-weight: normal;
     margin: 0px;
+    color: white;
 }
 
 
@@ -16,14 +18,16 @@
     position: relative;
 }
 
-
 .background {
-    width: 95vw;
+    padding: 0px;
+    margin: 0px;
+    width: 100vw;
+    height: 80vh;
+    object-fit: cover;
     opacity: 0.5;
 }
 
 .content {
-    /* width: ; */
     position: absolute;
     display: flex;
     top: 0px;

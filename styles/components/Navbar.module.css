@@ -3,6 +3,7 @@
     justify-content: space-around;
     align-items: center;
     background-color: #F6FEFF;
+    padding: 10px 0px;
 }
 
 .navlist {
@@ -17,6 +18,13 @@
     font-size: 15px;
 }
 
-.navitem:hover {
+.anchorTag {
+    font-family: "Lato";
+    font-weight: bold;
+    transition: all .2s ease;
+    /* color: #F6FEFF; */
+}
+
+.anchorTag:hover {
     color: #0070f3;
 }
