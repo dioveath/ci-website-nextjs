@@ -29,7 +29,7 @@ export default function Contact(props){
         <div style={{height: "40px"}}></div>
         <div className={styles["cards-container"]}>
           {
-            props.posts.map((blog) => <BlogCard key={blog.title} blog={blog}/>)
+            props.posts.map((blog) => <BlogCard key={blog.id} blog={blog}/>)
           }
         </div>
         <div style={{height: "40px"}}></div>

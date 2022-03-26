@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
 
 import Image from 'next/image';
@@ -13,6 +14,7 @@ export default function BlogCard(props){
     summary = arguments[0];
   });
 
+  // const blogHref = "/blog" + blog.id !== undefined ? "/" + blog.id : "";
   const [userData, setUserData] = useState({ first_name: "null", last_name: "null"});
   const [isLoading, setLoading] = useState(true);
 
@@ -26,6 +28,7 @@ export default function BlogCard(props){
   }, [userData.first_name, userData.last_name]);
 
   return(
+    <Link href={"/blog/" + blog.id}>
     <div className={styles["blog-container"]}>
       <div className={styles["image-container"]}>
         <img src={blog.imageURL} className={styles["blog-image"]}/>
@@ -57,6 +60,7 @@ export default function BlogCard(props){
 
       </div>      
     </div>
+    </Link>
   );
 
 }

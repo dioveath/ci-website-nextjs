@@ -10,6 +10,7 @@ import styles from './blogpage.module.css';
 import htmr from 'htmr';
 
 import { getPost } from '../api/posts/[postId].js';
+import Footer from '../../components/footer/Footer.js';
 
 export default function BlogPage(props){
   const router = useRouter();
@@ -62,12 +63,14 @@ export default function BlogPage(props){
           </div>
         </div>
 
+        <Marginer vertical="40px"/>        
         <div>
           { loading ? "Loading..." : htmr(blogData.body) }
         </div>
 
       </main>
 
+      <Footer/>
     </div>
   );
 

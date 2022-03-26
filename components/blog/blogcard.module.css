@@ -17,7 +17,21 @@
 }
 
 .blog-container {
-    max-width: 400px;
+    max-width: 450px;
+    border-radius: 4px;    
+    padding: 20px;
+    transition: all 0.2s ease;
+    /* border: 1px solid red; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* box-shadow: 1px 1px 6px 0.1px red; */
+    box-shadow: 0.01px 0.01px 2px 0.1px #888888;    
+}
+
+.blog-container:hover {
+    cursor: pointer;
+    box-shadow: 0.01px 0.01px 4px 0.2px #888888;
 }
 
 .image-container {
