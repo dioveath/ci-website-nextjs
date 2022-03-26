@@ -36,3 +36,49 @@
 .socialLinks {
     display: flex;
 }
+
+.contentContainer {
+    display: grid;
+    flex-wrap: wrap;
+    column-gap: 40px;
+    /* background-color: blue; */
+    padding: 2rem 4rem;
+    grid-template-columns: 1fr;
+}
+
+@media only screen and (min-width: 1080px){
+    .contentContainer {
+	grid-template-columns: 8fr 2fr;
+    }
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content > p {
+    font-size: 18px;
+    font-weight: 200;
+    letter-spacing: 0.7px;
+    word-spacing: 1px;
+    padding: 0px;
+    padding-bottom: 10px;
+    font-family: "Times New Roman";
+}
+
+.content img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60vw;
+    text-align: center;
+    object-fit: contain;
+    padding: 0px;
+    padding-bottom: 10px;
+}
+
+.rightContents {
+    width: 400px;
+}

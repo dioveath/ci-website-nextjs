@@ -1,8 +1,6 @@
 import { firebaseStore } from '../../../lib/firebase.js';
 import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 
-// const usersRef = collection(firebaseStore, "ci_users");
-
 export async function getUser(userId){
   const docRef = doc(firebaseStore, "ci_users", userId);
   const docSnap = await getDoc(docRef);

@@ -1,7 +1,7 @@
 .footer{
     display: flex;
     flex-direction: column;
-    font-family: "Poppins", "sans-serif";
+    font-family: "Lato", "Poppins", "sans-serif";
 }
 
 .footerContents{
@@ -12,14 +12,15 @@
 }
 
 .logoImg>img{
-    width: 250px;
-    height: 80px;
+    width: 150px;
+    object-fit: contain;
 }
 
 .logoBorder1{
     width: 270px;
-    height: 3px;
+    height: 1px;
     background-color: black;
+    margin: 6px 0px;
 }
 
 .primaryFooterContents{
@@ -36,8 +37,10 @@
 
 .logoBorder2{
     width: 180px;
-    height: 3px;
+    height: 1px;
     background-color: black;
+    padding: 0px;
+    margin-bottom: 4px;
 }
 
 .navLinks{
@@ -58,7 +61,8 @@
 
 .secondaryFooterContents>h3, .thirdFooterContents>h3{
     margin: 0;
-    font-size: 20px;
+    font-size: 18px;
+    font-weight: normal;
 }
 
 .copyright{

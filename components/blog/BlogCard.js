@@ -5,6 +5,8 @@ import Image from 'next/image';
 import styles from './blogcard.module.css';
 import { BsFillCircleFill } from 'react-icons/bs';
 
+import Marginer from '../../components/utils/Marginer.js';
+
 export default function BlogCard(props){
 
   const blog = props.blog;
@@ -34,6 +36,8 @@ export default function BlogCard(props){
         <img src={blog.imageURL} className={styles["blog-image"]}/>
       </div>
 
+      <Marginer vertical="10px"/>
+      
       <div className={styles["info-container"]}>
         <div className={styles["smallinfo"]}>
           <p className={styles["small-category-text"]}> Travels </p>
@@ -43,9 +47,14 @@ export default function BlogCard(props){
           <p className={styles["small-publish-date"]}> { Date(blog.createdAt.seconds * 100).toLocaleString() } </p>  
         </div>
 
+        <Marginer vertical="10px"/>
+
         <div className={styles["blog-title"]}> { blog.title }</div>
         <div className={styles["blog-summary"]}> Pharetra pharetra, massa massa ultricies mi, quis hendrerit dolor magna eget est lorem ipsum dolor. Maecenas volutpat blandit aliquam etiam erat velit, scelerisque in dictum non, consectetur a erat nam. </div>
         <div style={{height: "10px"}}></div>
+
+        <Marginer vertical="10px"/>
+
         {
           isLoading ? "Loading...."
             : <div className={styles["blog-author-container"]}>
