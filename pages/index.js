@@ -5,8 +5,13 @@ import Navbar from '../components/Navbar.js';
 import Hero from '../components/home/Hero.js';
 import Footer from '../components/footer/Footer.js';
 
+import useAuth from '../lib/hooks/Auth.js';
 
 export default function Home() {
+  const { user, loginWithGoogle, logout } = useAuth();
+
+  console.log(user);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -19,6 +24,10 @@ export default function Home() {
 
       <main className={styles.main}>
         <Hero/>
+
+        <button onClick={() => { loginWithGoogle(); }} > Sign In </button>
+        { "Hello " + user?.displayName }
+        <button onClick={() => { logout(); }} > Sign Out </button>        
       </main>
 
       <Footer/>

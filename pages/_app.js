@@ -1,9 +1,13 @@
 import '../styles/globals.css';
-import { UserProvider } from '@auth0/nextjs-auth0';
+
+import { AuthProvider } from '../lib/hooks/Auth.js';
 
 function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
-        
+
+  return <AuthProvider>
+           <Component {...pageProps} />
+         </AuthProvider>;
+
 }
 
 export default MyApp;
