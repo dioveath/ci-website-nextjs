@@ -1,30 +1,106 @@
 .nav {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     background-color: #F6FEFF;
-    padding: 10px 0px;
+    padding: 5px 0px;
+    box-shadow: 1px 1px 2px 0.2px #eeeeee;
+    overflow: hidden;
 }
 
 .navlist {
+    overflow: hidden;
     display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     list-style-type: none;
+    
     gap: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+    height: 100vh;
+    padding: 1rem 2rem;
+    transition: all 1s ease;
+}
+
+
+@media only screen and (min-width: 768px) {
+    .navlist {
+	flex-direction: row;
+	padding: 0px;
+	background-color: none;
+	height: inherit;
+	position: inherit;
+    }
+
+    .nav {
+	justify-content: space-around;
+    }
+
+
 }
 
 .navitem {
     cursor: pointer;
     font-weight: bold;
     font-size: 15px;
+    /* background-color: red; */
 }
 
 .anchorTag {
     font-family: "Lato";
     font-weight: bold;
     transition: all .2s ease;
+    /* background-color: red; */
     /* color: #F6FEFF; */
+    /* text-align: center; */
+    /* vertical-align: center; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
 }
 
 .anchorTag:hover {
-    color: #0070f3;
+    color: var(--primary-color);
+    /* color: #0030e3; */
+    /* background-color: #0070f3; */
+}
+
+
+.loginButton {
+    border: 2px solid var(--primary-color);
+    padding: 5px 20px;
+    border-radius: 4px;
+    text-align: center;
+    vertical-align: center;
+    color: var(--primary-color);
+    /* height: 40px; */
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+
+.loginButton:hover {
+    box-shadow: 1px 1px 2px 0.2px #eeeeee;
+}
+
+.registerButton {
+    border: 2px solid var(--primary-color);
+    padding: 5px 20px;
+    border-radius: 4px;
+    text-align: center;
+    vertical-align: center;
+    background-color: var(--primary-color);
+    color: white;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+
+.registerButton:hover {
+    box-shadow: 1px 1px 2px 0.2px #eeeeee;    
 }

@@ -2,16 +2,15 @@
     font-size: 42px;
     font-weight: bold;
     margin: 5px;
-    color: white;
+    color: black;
 }
 
 .heading4 {
     font-size: 18px;
     font-weight: normal;
     margin: 0px;
-    color: white;
+    color: black;
 }
-
 
 .hero-container {
     min-height: 60vh;
@@ -24,7 +23,7 @@
     width: 100vw;
     height: 80vh;
     object-fit: cover;
-    opacity: 0.5;
+    opacity: 0.4;
 }
 
 .content {
@@ -53,7 +52,7 @@
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    background-color: #39A1FF;
+    background-color: black;
     padding: 12px 80px;
     font-size: 22px;
     font-weight: bold;
@@ -63,18 +62,25 @@
     /* box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit; */
     transition: all .2s ease-in-out;
     /* box-shadow: 0.2px 0.2px 4px 1px #aaaaaa;     */
+    border: 4px solid transparent;
 }
 
 .button:hover {
     box-shadow: 1px 1px 4px 1px #aaaaaa;
+    /* font-size: 23px; */
+    background-color: transparent;
+    border: 4px solid black;
+    color: black;
 }
 
 .tag {
     border: none;
     border-radius: 5px;
-    background-color: #39A1FF;
+    background-color: black;
     padding: 5px 20px;
     font-size: 10px;
     font-weight: light;
     color: white;
 }
+
+

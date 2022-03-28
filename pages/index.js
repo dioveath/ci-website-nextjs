@@ -10,8 +10,6 @@ import useAuth from '../lib/hooks/Auth.js';
 export default function Home() {
   const { user, loginWithGoogle, logout } = useAuth();
 
-  console.log(user);
-
   return (
     <div className={styles.container}>
       <Head>
