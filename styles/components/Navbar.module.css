@@ -26,6 +26,15 @@
     transition: all 1s ease;
 }
 
+.hamburger {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.hamburger:hover {
+    cursor: pointer;
+}
+
 
 @media only screen and (min-width: 768px) {
     .navlist {

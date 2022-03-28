@@ -29,7 +29,8 @@ export default function Navbar(){
             {
               isMobile ? <div style={{
                 "display": "flex",
-                "justify-content": "flex-end"
+                "justify-content": "flex-end",
+                "cursor": "pointer"
               }}> <MdOutlineCancel size={20} onClick={() => {
                 setShowMenu(!showMenu);
               }}/> </div> : ""
@@ -63,7 +64,8 @@ export default function Navbar(){
 
           </ul> :
         <div style={{
-          "marginRight": "20px"
+          "marginRight": "20px",
+          "cursor": "pointer"
         }}
              onClick={() => {
                setShowMenu(!showMenu);
