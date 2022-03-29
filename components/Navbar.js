@@ -8,14 +8,17 @@ import { useMediaQuery } from 'react-responsive';
 import { SCREENS } from '../lib/utils/Responsive.js';
 import { MdOutlineCancel } from 'react-icons/md';
 import { GiHamburgerMenu } from 'react-icons/gi';
+import { BsPersonFill } from 'react-icons/bs';
+
+import useAuth from '../lib/hooks/Auth.js';
 
 export default function Navbar(){
   const isMobile = useMediaQuery({ maxWidth: SCREENS.md});
   const [showMenu, setShowMenu] = useState(false);
 
+  const { user, logout } = useAuth();
+
   let navListStyle = styles.navlist;
-  // if(!showMenu && isMobile)
-  // navListStyle = styles["navlist-hide"];
 
   return (
     <nav className={styles.nav}>
@@ -54,13 +57,24 @@ export default function Navbar(){
 
             <Marginer horizontal="20px"/>
 
-            <Link className={styles.navitem} href="/login">
-              <a className={styles.loginButton}> Login </a>
-            </Link>
+            {
+              user === null ?
+                <>
+                  <Link className={styles.navitem} href="/login">
+                    <a className={styles.loginButton}> Login </a>
+                  </Link>
 
-            <Link className={styles.navitem} href="/register">
-              <a className={styles.registerButton}> Register </a>
-            </Link>        
+                  <Link className={styles.navitem} href="/register">
+                    <a className={styles.registerButton}> Register </a>
+                  </Link>
+                </>
+              : <> <p style={{
+                "fontSize": "14px",
+                "display": "flex",
+                "align-items": "center",
+              }}>Hi, { user.displayName } </p><BsPersonFill size={24}/></>
+            }
+
 
           </ul> :
         <div style={{
