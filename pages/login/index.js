@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useRef } from 'react';
 
 import Navbar from '../../components/Navbar.js';
 
@@ -12,15 +12,16 @@ import PrimaryButton from '../../components/buttons/PrimaryButton.js';
 import useAuth from '../../lib/hooks/Auth.js';
 
 export default function Login(){
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const email = useRef();
+  const password = useRef();
 
-  const { user, loginWithGoogle, logout } = useAuth();
+  const { user, error, loginWithGoogle, loginWithEmailAndPassword, logout } = useAuth();
 
   const router = useRouter();
   if(user != null) {
     router.push("/");
   }
+
 
   return (
     <div className={styles.container}>
@@ -36,11 +37,15 @@ export default function Login(){
           <Marginer vertical="20px"/>
           <p className={styles.captionStyle}> Login with credentials </p>
           <Marginer vertical="6px"/>          
-          <input name="email" type="email" value={email} placeholder="Email" onChange={(e)=> { setEmail(e.value); }} className={styles.inputText}/>
+          <input name="email" type="email" placeholder="Email" ref={email} className={styles.inputText}/>
           <Marginer vertical="14px"/>                    
-          <input name="password" type="password" value={password} placeholder="Password" onChange={(e) => { setPassword(e.value); }} className={styles.inputText}/>
+          <input name="password" type="password" placeholder="Password" ref={password} className={styles.inputText}/>
+          <Marginer vertical="6px"/>
+          { error != "" ? <p className={styles.captionStyle} style={{
+            "color": "red"
+          }}> { error } </p> : "" }
           <Marginer vertical="14px"/>          
-          <PrimaryButton onClick={() => console.log("clicked")} text="LOGIN"/>
+          <PrimaryButton onClick={() => loginWithEmailAndPassword(email.current.value, password.current.value)} text="LOGIN"/>
           <Marginer vertical="6px"/>          
           <PrimaryButton onClick={() => console.log("clicked")} text="LOGIN WITH FACEBOOK"/>
           <Marginer vertical="6px"/>                    
@@ -48,7 +53,7 @@ export default function Login(){
           <Marginer vertical="14px"/>
           <p className={styles.captionStyle}> Forget Your Password? </p>
           <Marginer vertical="18px"/>          
-          <p className={styles.bodyTextStyle}> Don't have an Account? Register </p>
+          <p className={styles.bodyTextStyle}> Don&apos;t have an Account? Register </p>
         </div>
       </main>
 
