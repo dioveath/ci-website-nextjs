@@ -8,12 +8,18 @@
 
 .loginContainer {
     max-width: 500px;
+    min-width: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     /* box-shadow: 1px 1px 1px 1px #000000; */
     padding: 20px 20px;
     border-radius: 5px;
+}
+
+.image {
+    width: auto;
+    object-fit: contain;
 }
 
 .captionStyle {

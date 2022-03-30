@@ -14,5 +14,6 @@
 
 
 .primaryButton:hover {
-    /* background-color: ; */
+    background-color: #0FF8F1;
+    /* box-shadow: 1px 1px 2px 1px #44333333; */
 }

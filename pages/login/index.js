@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 import Navbar from '../../components/Navbar.js';
 
@@ -13,6 +13,7 @@ import useAuth from '../../lib/hooks/Auth.js';
 import PuffLoader from 'react-spinners/PuffLoader';
 
 export default function Login(){
+  const [isRegisterPage, setRegisterPage] = useState(false);
   const email = useRef();
   const password = useRef();
 
@@ -31,30 +32,41 @@ export default function Login(){
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        { !loading ? <div className={styles.loginContainer}>
-                       {/* <Image alt="" src="/ci_pc.png" width="400px" height="100px" layout="responsive"/> */}
-                       <img alt="" src="ci_pc.png"/>
-                       <Marginer vertical="20px"/>
-                       <p className={styles.captionStyle}> Login with credentials </p>
-                       <Marginer vertical="6px"/>          
-                       <input name="email" type="email" placeholder="Email" ref={email} className={styles.inputText}/>
-                       <Marginer vertical="14px"/>                    
-                       <input name="password" type="password" placeholder="Password" ref={password} className={styles.inputText}/>
-                       <Marginer vertical="6px"/>
-                       { error != "" ? <p className={styles.captionStyle} style={{
-                         "color": "red"
-                       }}> { error } </p> : "" }
-                       <Marginer vertical="14px"/>          
-                       <PrimaryButton onClick={() => loginWithEmailAndPassword(email.current.value, password.current.value)} text="LOGIN"/>
-                       <Marginer vertical="6px"/>          
-                       <PrimaryButton onClick={() => console.log("clicked")} text="LOGIN WITH FACEBOOK"/>
-                       <Marginer vertical="6px"/>                    
-                       <PrimaryButton onClick={() => loginWithGoogle() } text="LOGIN WITH GOOGLE"/>
-                       <Marginer vertical="14px"/>
-                       <p className={styles.captionStyle}> Forget Your Password? </p>
-                       <Marginer vertical="18px"/>          
-                       <p className={styles.bodyTextStyle}> Don&apos;t have an Account? Register </p>
-                     </div> : <div> <PuffLoader/> </div>
+        { !loading ? !isRegisterPage ?
+          <form className={styles.loginContainer}>
+            <img alt="" src="ci_pc.png" className={styles.image}/>
+            <Marginer vertical="20px"/>
+            <p className={styles.captionStyle}> Login with credentials </p>
+            <Marginer vertical="6px"/>          
+            <input name="email" type="email" placeholder="Email" ref={email} className={styles.inputText}/>
+            <Marginer vertical="14px"/>                    
+            <input name="password" type="password" placeholder="Password" ref={password} className={styles.inputText}/>
+            <Marginer vertical="6px"/>
+            { error != "" ? <p className={styles.captionStyle} style={{
+              "color": "red"
+            }}> { error } </p> : "" }
+            <Marginer vertical="14px"/>          
+            <PrimaryButton onClick={() => loginWithEmailAndPassword(email.current.value, password.current.value)} text="LOGIN"/>
+            <Marginer vertical="6px"/>          
+            <PrimaryButton onClick={() => console.log("clicked")} text="LOGIN WITH FACEBOOK"/>
+            <Marginer vertical="6px"/>                    
+            <PrimaryButton onClick={() => loginWithGoogle() } text="LOGIN WITH GOOGLE"/>
+            <Marginer vertical="14px"/>
+            <p className={styles.captionStyle} style={{ "cursor": "pointer" }}> Forget Your Password? </p>
+            <Marginer vertical="18px"/>
+            <div style={{
+              "display": "flex",
+              "gap": "5px"
+            }}>
+              <p className={styles.bodyTextStyle}> Don&apos;t have an Account? </p>
+              <p style={{
+                "cursor": "pointer"
+              }} onClick={() => { setRegisterPage(true); }}> Register </p>
+            </div>
+          </form> :
+          <>
+            RegisterPage
+          </> : <div> <PuffLoader/> </div>
         }
       </main>
 

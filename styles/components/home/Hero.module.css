@@ -1,12 +1,11 @@
 .heading1 {
-    font-size: 42px;
+    font-size: 2rem;
     font-weight: bold;
-    margin: 5px;
     color: black;
 }
 
 .heading4 {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: normal;
     margin: 0px;
     color: black;
@@ -42,7 +41,9 @@
 
 .feature-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
+    align-items: center;
     gap: 40px;
     margin-top: 40px;
 }
@@ -53,16 +54,16 @@
     border: none;
     border-radius: 5px;
     background-color: black;
-    padding: 12px 80px;
-    font-size: 22px;
+    /* width: 100%; */
+    padding: 10px 70px;
+    font-size: 1rem;
     font-weight: bold;
     text-transform: uppercase;
     color: white;
-    margin: 20px;
-    /* box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit; */
     transition: all .2s ease-in-out;
-    /* box-shadow: 0.2px 0.2px 4px 1px #aaaaaa;     */
     border: 4px solid transparent;
+    /* box-shadow: 0.2px 0.2px 4px 1px #aaaaaa;     */
+    /* box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit; */
 }
 
 .button:hover {
@@ -78,9 +79,11 @@
     border-radius: 5px;
     background-color: black;
     padding: 5px 20px;
-    font-size: 10px;
+    font-size: 0.9rem;
     font-weight: light;
     color: white;
+    min-width: 250px;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
 }
-
-

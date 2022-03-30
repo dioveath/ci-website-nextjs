@@ -19,11 +19,12 @@
     position: absolute;
     right: 0;
     top: 0;
-    z-index: 100;
+    z-index: 10;
     background-color: #F6FEFF;
     height: 100vh;
     padding: 1rem 2rem;
     transition: all 1s ease;
+    overflow: visible;
 }
 
 .hamburger {
@@ -48,8 +49,6 @@
     .nav {
 	justify-content: space-around;
     }
-
-
 }
 
 .navitem {
@@ -112,4 +111,12 @@
 
 .registerButton:hover {
     box-shadow: 1px 1px 2px 0.2px #eeeeee;    
+}
+
+
+.userProfilePhoto {
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
 }

@@ -10,15 +10,37 @@ import { MdOutlineCancel } from 'react-icons/md';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { BsPersonFill } from 'react-icons/bs';
 
+import { DropdownMenu } from '../components/DropdownMenu/index.js';
+
 import useAuth from '../lib/hooks/Auth.js';
+
+
+
+
 
 export default function Navbar(){
   const isMobile = useMediaQuery({ maxWidth: SCREENS.md});
   const [showMenu, setShowMenu] = useState(false);
-
   const { user, logout } = useAuth();
 
   let navListStyle = styles.navlist;
+
+  const dropdownList = [
+    {
+      name: "Profile",
+      onClick: () => { console.log(""); }
+    },
+    {
+      name: "Dashboard",
+      onClick: () => { console.log(""); }
+    },
+    {
+      name: "Logout",
+      onClick: () => { logout(); }
+    }
+  ];
+
+  console.log(user);
 
   return (
     <nav className={styles.nav}>
@@ -32,7 +54,7 @@ export default function Navbar(){
             {
               isMobile ? <div style={{
                 "display": "flex",
-                "justify-content": "flex-end",
+                "justifyContent": "flex-end",
                 "cursor": "pointer"
               }}> <MdOutlineCancel size={20} onClick={() => {
                 setShowMenu(!showMenu);
@@ -68,13 +90,21 @@ export default function Navbar(){
                     <a className={styles.registerButton}> Register </a>
                   </Link>
                 </>
-              : <> <p style={{
-                "fontSize": "14px",
-                "display": "flex",
-                "align-items": "center",
-              }}>Hi, { user.displayName } </p><BsPersonFill size={24}/></>
-            }
+              : <>
+                  {/*     <p style={{ */}
+                  {/*   "fontSize": "14px", */}
+                  {/*   "display": "flex", */}
+                  {/*   "align-items": "center", */}
+                  {/* }}>Hi, { user.displayName } </p><BsPersonFill size={24}/> */}
 
+                  <DropdownMenu title={
+                    user.photoURL !== undefined ?
+                      <img alt={user.displayName} src={user.photoURL} className={styles.userProfilePhoto}/>
+                    : <BsPersonFill size={24}/>
+                  } itemList={dropdownList}/>
+
+                </>
+            }
 
           </ul> :
         <div style={{
