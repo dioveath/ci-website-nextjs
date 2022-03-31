@@ -50,6 +50,7 @@ export default function BlogCard(props){
         <Marginer vertical="10px"/>
 
         <div className={styles["blog-title"]}> { blog.title }</div>
+        <Marginer vertical="10px"/>        
         <div className={styles["blog-summary"]}> Pharetra pharetra, massa massa ultricies mi, quis hendrerit dolor magna eget est lorem ipsum dolor. Maecenas volutpat blandit aliquam etiam erat velit, scelerisque in dictum non, consectetur a erat nam. </div>
         <div style={{height: "10px"}}></div>
 
@@ -59,9 +60,10 @@ export default function BlogCard(props){
           isLoading ? "Loading...."
             : <div className={styles["blog-author-container"]}>
                 <img src={userData.profile_URL} className={styles["author-profile"]}/>
-                <div style={{width: "10px"}}></div>          
+                <Marginer horizontal="10px"/>
                 <div className={styles["blog-author-info-container"]}>
-                  <p className={styles["blog-author-name"]}> { userData.first_name + " " + userData.last_name} </p>        
+                  <p className={styles["blog-author-name"]}> { userData.first_name + " " + userData.last_name} </p>
+                  <Marginer vertical="2px"/>                  
                   <p className={styles["blog-author-post"]}> { userData.rank }</p>          
                 </div>
               </div>

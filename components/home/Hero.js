@@ -9,7 +9,7 @@ export default function Hero(){
   return (
     <div className={styles["hero-container"]}>
       {/* <div className={styles.background}></div> */}
-      <img className={styles.background} alt="" src="landing_image.jpg"/>
+      <img className={styles.background} alt="" src="landing_image3.jpg"/>
       <div className={styles.content}>
         <Marginer vertical="40px"/>      
         <h2 className={styles.heading1}> Welcome to Charicha Institute!</h2>

@@ -2,10 +2,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #F6FEFF;
+    /* background-color: #F6FEFF; */
+    background-color: transparent;
     padding: 5px 0px;
     box-shadow: 1px 1px 2px 0.2px #eeeeee;
-    overflow: hidden;
+    /* overflow: hidden; */
+
 }
 
 .navlist {
@@ -20,7 +22,8 @@
     right: 0;
     top: 0;
     z-index: 10;
-    background-color: #F6FEFF;
+    background-color: transparent;
+    /* background-color: #F6FEFF; */
     height: 100vh;
     padding: 1rem 2rem;
     transition: all 1s ease;
@@ -59,10 +62,10 @@
 }
 
 .anchorTag {
-    font-family: "Lato";
+    /* font-family: ""; */
     font-weight: bold;
     transition: all .2s ease;
-    background-color: #F6FEFF;
+    /* background-color: #F6FEFF; */
     /* color: #F6FEFF; */
     /* text-align: center; */
     /* vertical-align: center; */

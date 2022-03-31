@@ -1,7 +1,9 @@
 .heading1 {
     font-size: 2rem;
     font-weight: bold;
-    color: black;
+    color: var(--primary-color);
+    text-transform: upper;
+    font-family: Montserrat;
 }
 
 .heading4 {
@@ -19,10 +21,10 @@
 .background {
     padding: 0px;
     margin: 0px;
-    width: 100vw;
+    width: 99.7vw;
     height: 80vh;
     object-fit: cover;
-    opacity: 0.4;
+    opacity: 0.7;
 }
 
 .content {

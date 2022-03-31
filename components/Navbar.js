@@ -18,8 +18,9 @@ import useAuth from '../lib/hooks/Auth.js';
 export default function Navbar(){
   const isMobile = useMediaQuery({ maxWidth: SCREENS.md});
   const [showMenu, setShowMenu] = useState(false);
+  // const [height, setHeight] = useState(0);
+  // const ref = useRef(null);
   const { user, logout } = useAuth();
-
   let navListStyle = styles.navlist;
 
   const dropdownList = [
@@ -38,6 +39,23 @@ export default function Navbar(){
       onClick: () => { logout(); }
     }
   ];
+
+  // const fixedStyle = {
+  //   "position": "fixed",
+  //   "top": 0,
+  //   "left": 0
+  // };
+
+  // const putFixed = () => {
+  //   if(window.pageYOffset >= height){
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   setHeight(ref.current.clientHeight);
+  // });
+
+
 
   return (
     <nav className={styles.nav}>
