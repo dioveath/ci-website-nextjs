@@ -1,0 +1,104 @@
+.main {
+    padding: 1rem 14rem;
+}
+
+.coverImg {
+    width: auto;
+    height: 150px;
+    border-radius: 5px;
+    background-color: grey;
+}
+
+.profileContainer {
+    position: relative;
+    top: -1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.profileImg {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 50%;
+    border: 5px solid greenyellow;
+    /* box-shadow: 1px 1px 4px #11223344 ; */
+}
+
+.basicInfoContainer {
+    display: flex;
+    align-items: center;
+}
+
+.userTextInfoContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.titleText {
+    font-weight: bold;
+    letter-spacing: 0.02rem;
+    word-spacing: 0.1rem;
+    /* color: greenyellow; */
+    color: var(--primary-color)
+}
+
+.subTitleText {
+    font-weight: 300;
+    color: grey;
+    letter-spacing: 0.05rem;
+    font-size: 13px;
+}
+
+.socialMediaLinks {
+    display: flex;
+    align-items: center;
+}
+
+.statsContainer {
+    max-width: 300px;
+    padding: 0 2rem;
+}
+
+.levelXpContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* .levelBarContainer { */
+/*     position: relative; */
+/* } */
+
+.levelHolder {
+    width: auto;
+    height: 6px;
+    border: 2px solid greenyellow;
+}
+
+.completedLevel {
+    position: relative;
+    top: -6px;
+    width: 50px;
+    height: 6px;
+    background-color: greenyellow;
+}
+
+.rolesContainer {
+    display: flex;
+    align-items: center;
+    column-gap: 2px;
+}
+
+.roleCard {
+    background-color: royalblue;
+    padding: 4px 8px;
+    color: white;
+    font-size: 12px;
+}
+
+.heartsContainer {
+    display: flex;
+}

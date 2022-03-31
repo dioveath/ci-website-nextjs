@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import Router from 'next/router';
 
 import styles from '../styles/components/Navbar.module.css';
 import Marginer from '../components/utils/Marginer.js';
@@ -14,10 +15,6 @@ import { DropdownMenu } from '../components/DropdownMenu/index.js';
 
 import useAuth from '../lib/hooks/Auth.js';
 
-
-
-
-
 export default function Navbar(){
   const isMobile = useMediaQuery({ maxWidth: SCREENS.md});
   const [showMenu, setShowMenu] = useState(false);
@@ -28,7 +25,9 @@ export default function Navbar(){
   const dropdownList = [
     {
       name: "Profile",
-      onClick: () => { console.log(""); }
+      onClick: () => {
+        Router.push("/profile/Pr2iG0ld5IOvjg5NQEAlHtf35ei1");
+      }
     },
     {
       name: "Dashboard",
@@ -39,8 +38,6 @@ export default function Navbar(){
       onClick: () => { logout(); }
     }
   ];
-
-  console.log(user);
 
   return (
     <nav className={styles.nav}>

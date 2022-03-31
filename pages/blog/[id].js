@@ -41,8 +41,6 @@ export default function BlogPage(props){
         setUserData(user);
       }
       setLoadingUser(false);
-      console.log("USER: ");
-      console.log(user);
     }
   }, [userData.first_name, blogData.id]);
 
