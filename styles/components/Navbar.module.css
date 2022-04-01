@@ -3,11 +3,9 @@
     justify-content: space-between;
     align-items: center;
     /* background-color: #F6FEFF; */
-    background-color: transparent;
+    background-color: white;
     padding: 5px 0px;
     box-shadow: 1px 1px 2px 0.2px #eeeeee;
-    /* overflow: hidden; */
-
 }
 
 .navlist {
@@ -22,8 +20,8 @@
     right: 0;
     top: 0;
     z-index: 10;
-    background-color: transparent;
     /* background-color: #F6FEFF; */
+    background-color: white;
     height: 100vh;
     padding: 1rem 2rem;
     transition: all 1s ease;
@@ -44,7 +42,6 @@
     .navlist {
 	flex-direction: row;
 	padding: 0px;
-	background-color: none;
 	height: inherit;
 	position: inherit;
     }
@@ -58,17 +55,13 @@
     cursor: pointer;
     font-weight: bold;
     font-size: 15px;
+    background-color: white;
     /* background-color: red; */
 }
 
 .anchorTag {
-    /* font-family: ""; */
     font-weight: bold;
     transition: all .2s ease;
-    /* background-color: #F6FEFF; */
-    /* color: #F6FEFF; */
-    /* text-align: center; */
-    /* vertical-align: center; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -77,8 +70,6 @@
 
 .anchorTag:hover {
     color: var(--primary-color);
-    /* color: #0030e3; */
-    /* background-color: #0070f3; */
 }
 
 
@@ -89,10 +80,6 @@
     text-align: center;
     vertical-align: center;
     color: var(--primary-color);
-    /* height: 40px; */
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
 }
 
 .loginButton:hover {
@@ -107,9 +94,6 @@
     vertical-align: center;
     background-color: var(--primary-color);
     color: white;
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
 }
 
 .registerButton:hover {

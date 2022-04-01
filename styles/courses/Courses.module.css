@@ -10,6 +10,16 @@
     padding: 1rem 2rem;
 }
 
+.levelCoursesContainer {
+    min-width: 360px;
+    width: 100%;
+}
+
+@media only screen and (min-width: 1280px) {
+    .levelCoursesContainer {
+	padding: 1rem 14rem;
+    }
+}
 
 .courses-container {
     background-color: #F6FEFF;    
@@ -24,6 +34,7 @@
 .level-courses {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 
@@ -37,4 +48,3 @@
     padding: 10px 20px;
     margin: 8px 0px;
 }
-

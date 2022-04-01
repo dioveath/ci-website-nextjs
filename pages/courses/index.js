@@ -8,11 +8,11 @@ import { Accordian } from '../../components/Accordian.js';
 
 import CourseCard from '../../components/course/CourseCard.js';
 import TestimonialCard from '../../components/testimonial/TestimonialCard.js';
-
 import Collapsible from 'react-collapsible';
-
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
+
+import Marginer from '../../components/utils/Marginer.js';
 
 import Footer from '../../components/footer/Footer.js';
 
@@ -36,82 +36,87 @@ export default function Courses(){
       <Navbar/>
 
       <main className={styles.main}>
+        <Marginer vertical="20px"/>
         <h2> Our Courses </h2>
+        <Marginer vertical="20px"/>        
         <BsFillArrowDownCircleFill size={24}/>
+        <Marginer vertical="20px"/>        
 
-        <div style={{height: "30px"}}></div>
+        <div className={styles.levelCoursesContainer}>
 
-        <Collapsible trigger={ <Trigger title="Level 1 Courses"/>}>
-          <div className={styles["level-courses"]}>
-            <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
-              [
-                "Computer Advance Fundamentals",
-                "Microsoft Office Training",
-                "Image Manipulation Basics",
-                "Internet & Web Fundamentals",
-                "Lok Shewa Preparation"
-              ]}/>
-            <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
-              [
-                "Microsoft Office Training",
-                "Tally Accounting",
-                "Advance Microsoft Excel",
-                "Internet & Web Official Workds Fundamentals"
-              ]
-            }/>
-          </div>          
-        </Collapsible>
+          <Collapsible trigger={ <Trigger title="Level 1 Courses"/>}>
+            <div className={styles["level-courses"]}>
+              <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
+                [
+                  "Computer Advance Fundamentals",
+                  "Microsoft Office Training",
+                  "Image Manipulation Basics",
+                  "Internet & Web Fundamentals",
+                  "Lok Shewa Preparation"
+                ]}/>
+              <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
+                [
+                  "Microsoft Office Training",
+                  "Tally Accounting",
+                  "Advance Microsoft Excel",
+                  "Internet & Web Official Workds Fundamentals"
+                ]
+              }/>
+            </div>          
+          </Collapsible>
 
-        <Collapsible trigger={ <Trigger title="Level 2 Courses"/>}>
-          <div className={styles["level-courses"]}>
-            <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
-              [
-                "Computer Advance Fundamentals",
-                "Microsoft Office Training",
-                "Image Manipulation Basics",
-                "Internet & Web Fundamentals",
-                "Lok Shewa Preparation"
-              ]}/>
-            <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
-              [
-                "Microsoft Office Training",
-                "Tally Accounting",
-                "Advance Microsoft Excel",
-                "Internet & Web Official Workds Fundamentals"
-              ]
-            }/>
-          </div>
-        </Collapsible>
+          <Collapsible trigger={ <Trigger title="Level 2 Courses"/>}>
+            <div className={styles["level-courses"]}>
+              <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
+                [
+                  "Computer Advance Fundamentals",
+                  "Microsoft Office Training",
+                  "Image Manipulation Basics",
+                  "Internet & Web Fundamentals",
+                  "Lok Shewa Preparation"
+                ]}/>
+              <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
+                [
+                  "Microsoft Office Training",
+                  "Tally Accounting",
+                  "Advance Microsoft Excel",
+                  "Internet & Web Official Workds Fundamentals"
+                ]
+              }/>
+            </div>
+          </Collapsible>
 
 
-        <Collapsible trigger={ <Trigger title="Level 3 Courses"/>}>
-          <div className={styles["level-courses"]}>
-            <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
-              [
-                "Computer Advance Fundamentals",
-                "Microsoft Office Training",
-                "Image Manipulation Basics",
-                "Internet & Web Fundamentals",
-                "Lok Shewa Preparation"
-              ]}/>
-            <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
-              [
-                "Microsoft Office Training",
-                "Tally Accounting",
-                "Advance Microsoft Excel",
-                "Internet & Web Official Workds Fundamentals"
-              ]
-            }/>
-          </div>
+          <Collapsible trigger={ <Trigger title="Level 3 Courses"/>}>
+            <div className={styles["level-courses"]}>
+              <CourseCard title="Computer Operator" bgColor="#FFEFE4" contents={
+                [
+                  "Computer Advance Fundamentals",
+                  "Microsoft Office Training",
+                  "Image Manipulation Basics",
+                  "Internet & Web Fundamentals",
+                  "Lok Shewa Preparation"
+                ]}/>
+              <CourseCard title="Accounting Package" bgColor="#E4FFF0" contents={
+                [
+                  "Microsoft Office Training",
+                  "Tally Accounting",
+                  "Advance Microsoft Excel",
+                  "Internet & Web Official Workds Fundamentals"
+                ]
+              }/>
+            </div>
 
-        </Collapsible>
+          </Collapsible>
 
-        <div style={{height: "30px"}}></div>
+        </div>    
 
-        <TestimonialCard
-          content={"Viverra aliquet eget sit amet tellus. Sit amet, consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique."}
-          reviewer={"Ful Maya"}
-        />
+        <Marginer vertical="30px"/>
+
+        {/* <TestimonialCard */}
+        {/*   content={"Viverra aliquet eget sit amet tellus. Sit amet, consectetur adipiscing elit pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas integer eget aliquet nibh praesent tristique."} */}
+        {/*   reviewer={"Ful Maya"} */}
+        {/* /> */}
 
 
       </main>

@@ -1,11 +1,19 @@
 .course-card {
     background-color: #FFEFE4;
-    min-width: 400px;
+    width: 100%;
+    min-width: 350px;
     color: #0070f3;
 }
 
+@media only screen and (min-width: 768px){
+    .course-card {
+	width: 100%;
+	max-width: 400px;
+    }
+} 
+
 .title {
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: bold;
     background-color: #0070f3;
     color: white;
@@ -16,7 +24,7 @@
 }
 
 .content {
-    font-size: 16px;
+    font-size: 1rem;
     padding: 20px 30px;
     margin: 0px;
     color: black;
