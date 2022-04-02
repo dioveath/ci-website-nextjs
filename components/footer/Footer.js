@@ -1,4 +1,4 @@
-// import Image from 'next/image';
+import Link from 'next/link';
 import styles from './footer.module.css';
 import Marginer from '../../components/utils/Marginer.js';
 
@@ -25,11 +25,31 @@ export default function Footer (){
                   <h3>Charicha Institute</h3>
                   <Marginer vertical="10px"/>
                   <ul className={styles.navLinks}>
-                    <li><a href="">Home</a></li>
-                    <li><a href="">Courses</a></li>
-                    <li><a href="">Services</a></li>
-                    <li><a href="">Blog</a></li>
-                    <li><a href="">Contact Us</a></li>
+                    <li>
+                      <Link href="/">
+                        <a href="">Home</a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/courses">
+                        <a href="">Courses</a>
+                      </Link>                      
+                    </li>
+                    <li>
+                      <Link href="/services">
+                        <a href="">Services</a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/blog">
+                        <a href="">Blog</a>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link href="/contact">
+                        <a href="">Contact Us</a>
+                      </Link>
+                    </li>
                   </ul>
                 </div>
                 <div className={styles.thirdFooterContents}>

@@ -33,6 +33,20 @@
     outline: none;
     border-radius: 10px;
     border: 1px solid #aaaaaa55;
+    width: 100%;
+    font-family: inherit;
+}
+
+.field {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.eyeIcon {
+    position: absolute;
+    right: 0;
+    margin-right: 1rem;
 }
 
 .bodyTextStyle {

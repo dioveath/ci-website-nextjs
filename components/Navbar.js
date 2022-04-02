@@ -60,7 +60,9 @@ export default function Navbar(){
   return (
     <nav className={styles.nav}>
       <div>
-        <Image src="/ci_logo_full.png" alt="Charicha Institute Logo" width={140} height={50} />        
+        <Link href="/">
+          <Image src="/ci_logo_full.png" alt="Charicha Institute Logo" width={140} height={50}/>
+        </Link>
       </div>
 
       {

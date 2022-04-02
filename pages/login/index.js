@@ -11,6 +11,7 @@ import PrimaryButton from '../../components/buttons/PrimaryButton.js';
 
 import useAuth from '../../lib/hooks/Auth.js';
 import PuffLoader from 'react-spinners/PuffLoader';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 export default function Login(){
   const email = useRef();
@@ -18,10 +19,17 @@ export default function Login(){
 
   const { user, error, loading, loginWithGoogle, loginWithEmailAndPassword, logout } = useAuth();
 
+  const [passwordShow, setPasswordShow] = useState(false);
+
   const router = useRouter();
   if(user != null) {
     router.push("/");
   }
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
+    loginWithEmailAndPassword(email.current.value, password.current.value);
+  };
   
   return (
     <div className={styles.container}>
@@ -31,24 +39,26 @@ export default function Login(){
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        { !loading ?
-          <form className={styles.loginContainer}>
+        { !loading || user == null ?
+          <form className={styles.loginContainer} onSubmit={onSubmitHandler}>
             <img alt="" src="ci_pc.png" className={styles.image}/>
             <Marginer vertical="20px"/>
             <p className={styles.captionStyle}> Login with credentials </p>
             <Marginer vertical="6px"/>          
             <input name="email" type="email" placeholder="Email" ref={email} className={styles.inputText}/>
             <Marginer vertical="14px"/>                    
-            <input name="password" type="password" placeholder="Password" ref={password} className={styles.inputText}/>
+            <div className={styles.field}>
+              <div className={styles.eyeIcon} onClick={() => { setPasswordShow(!passwordShow); }}> { passwordShow ? <AiFillEyeInvisible/> : <AiFillEye/>}</div>
+              <input name="password" type={ passwordShow ? "text" : "password"} placeholder="Password" ref={password} className={styles.inputText}/>
+            </div>
             <Marginer vertical="6px"/>
             { error != "" ? <p className={styles.captionStyle} style={{
-              "color": "red"
-            }}> { error } </p> : "" }
+              "color": "red",
+              "fontSize": "12px"
+            }}> * { error } </p> : "" }
             <Marginer vertical="14px"/>          
-            <PrimaryButton onClick={() => loginWithEmailAndPassword(email.current.value, password.current.value)} text="LOGIN"/>
+            <PrimaryButton type="submit" text="LOGIN"/>
             <Marginer vertical="6px"/>          
-            <PrimaryButton onClick={() => console.log("clicked")} text="LOGIN WITH FACEBOOK"/>
-            <Marginer vertical="6px"/>                    
             <PrimaryButton onClick={() => loginWithGoogle() } text="LOGIN WITH GOOGLE"/>
             <Marginer vertical="14px"/>
             <p className={styles.captionStyle} style={{ "cursor": "pointer" }}> Forget Your Password? </p>
