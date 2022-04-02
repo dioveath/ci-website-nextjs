@@ -73,13 +73,14 @@ export default function BlogPage(props){
           </div>
 
           <div className={styles.socialLinks}>
+            {/* <Marginer horizontal="20px"/> */}
             <FaFacebook size="30px" color="blue"/>
             <Marginer horizontal="20px"/>            
             <FaInstagram size="30px" color="red"/>
+            {/* <p className={styles.timeDetails} > Social Links </p> */}
           </div>
         </div>
 
-        <Marginer vertical="40px"/>
         <div className={styles.contentContainer}>
           <div className={styles.content}>
             { loading ? "Loading..." : htmr(blogData.body) }
@@ -92,7 +93,6 @@ export default function BlogPage(props){
                    "object-fit": "cover",
                    "border-radius": "50%"
                  }}/>
-            <Marginer vertical="10px"/>            
             <div style={{
               "display": "flex",
               "align-items": "center"
@@ -105,7 +105,6 @@ export default function BlogPage(props){
                 "color": "grey"
               }}> { userData.hearts } Likes </p>
             </div>
-            <Marginer vertical="5px"/>                                    
             <p className={styles.infoText}> { loadingUser ? "Loading.." : userData.first_name + " " + userData.last_name } </p>
             <Marginer vertical="5px"/>                        
             <p style={{

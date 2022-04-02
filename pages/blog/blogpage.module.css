@@ -4,8 +4,16 @@
 
 .authorDetailsContainer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media only screen and (min-width: 768px){
+    .authorDetailsContainer {
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+    }
 }
 
 .authorLeftContainer{
@@ -22,12 +30,13 @@
 
 .infoText {
     font-size: 16px;
+    font-weight: 600;
 }
 
 .timeDetails {
     display: flex;
     font-size: 14px;
-    font-weight: 300;
+    font-weight: 400;
     color: grey;
     justify-content: center;
     align-items: center;
@@ -41,14 +50,20 @@
     display: grid;
     flex-wrap: wrap;
     column-gap: 40px;
-    /* background-color: blue; */
-    padding: 2rem 8rem;
     grid-template-columns: 1fr;
+    padding: 2rem 0;
 }
 
-@media only screen and (min-width: 1080px){
+@media only screen and (min-width: 640px){
+    .contentContainer {
+	padding: 2rem 6rem;
+    }
+}
+
+@media only screen and (min-width: 1024px){
     .contentContainer {
 	grid-template-columns: 8fr 2fr;
+	padding: 2rem 10rem;	
     }
 }
 
@@ -59,9 +74,8 @@
 }
 
 .content > p {
-    font-size: 18px;
-    font-weight: 200;
-    letter-spacing: 0.7px;
+    font-size: 17px;
+    letter-spacing: 0.5px;
     word-spacing: 1px;
     padding: 0px;
     padding-bottom: 10px;
@@ -80,5 +94,11 @@
 }
 
 .rightContents {
-    width: 400px;
+    /* min-width: 400px; */
+    width: 100%;
+    padding: 2rem 0rem;    
+}
+
+@media only screen and (min-width: 1024px) {
+    padding: 0;
 }

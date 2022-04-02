@@ -6,13 +6,19 @@ import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 export async function getPost(postId){
   if(postId === undefined) return undefined;
   const docRef = doc(firebaseStore, "articles", postId);
-  const docSnap = await getDoc(docRef);
-  if(docSnap.exists()){
-    return docSnap.data();
-  } else {
-    console.log("No such post!");
+  try {
+    const docSnap = await getDoc(docRef);
+    if(docSnap.exists()){
+      return docSnap.data();
+    } else {
+      console.log("No such post!");
+      return undefined;
+    }    
+  } catch(e){
+    console.log("Error: " + e.message);
     return undefined;
   }
+
 }
 
 export default async function handler(req, res){
