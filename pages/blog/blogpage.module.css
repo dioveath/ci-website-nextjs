@@ -42,7 +42,7 @@
     flex-wrap: wrap;
     column-gap: 40px;
     /* background-color: blue; */
-    padding: 2rem 4rem;
+    padding: 2rem 8rem;
     grid-template-columns: 1fr;
 }
 

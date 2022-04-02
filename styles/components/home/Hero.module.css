@@ -1,16 +1,14 @@
 .heading1 {
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    text-transform: upper;
-    font-family: Montserrat;
+    font-size: 1.8rem;
+    color: white;
+    font-weight: 800;
 }
 
 .heading4 {
     font-size: 1rem;
-    font-weight: normal;
+    font-weight: 500;
     margin: 0px;
-    color: black;
+    color: white;
 }
 
 .hero-container {
@@ -24,10 +22,11 @@
     width: 99.7vw;
     height: 80vh;
     object-fit: cover;
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 .content {
+    width: 80%;
     position: absolute;
     display: flex;
     top: 0px;
@@ -35,7 +34,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    top: 40%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -44,7 +43,7 @@
 .feature-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     gap: 40px;
     margin-top: 40px;
@@ -55,37 +54,41 @@
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    background-color: black;
-    /* width: 100%; */
-    padding: 10px 70px;
-    font-size: 1rem;
-    font-weight: bold;
+    background-color: var(--primary-color);
+    width: 100%;
+    padding: 10px 0px;
+    font-size: 1.2rem;
+    font-weight: 900;
     text-transform: uppercase;
     color: white;
     transition: all .2s ease-in-out;
     border: 4px solid transparent;
-    /* box-shadow: 0.2px 0.2px 4px 1px #aaaaaa;     */
-    /* box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit; */
 }
 
 .button:hover {
-    box-shadow: 1px 1px 4px 1px #aaaaaa;
-    /* font-size: 23px; */
+    box-shadow: 1px 1px 4px #11222222;
     background-color: transparent;
-    border: 4px solid black;
-    color: black;
+    border: 4px solid white;
+    color: white;
 }
 
 .tag {
     border: none;
     border-radius: 5px;
-    background-color: black;
+    background-color: var(--secondary-color);
     padding: 5px 20px;
     font-size: 0.9rem;
     font-weight: light;
     color: white;
-    min-width: 250px;
+    min-width: 200px;
+    width: 100%;
+    max-width: 300px;
     display: flex;
-    /* justify-content: center; */
     align-items: center;
+}
+
+@media only screen and (min-width: 1024px){
+    .feature-container {
+	/* justify-content: space-between; */
+    }
 }

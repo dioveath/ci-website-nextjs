@@ -8,7 +8,6 @@ import Footer from '../components/footer/Footer.js';
 import useAuth from '../lib/hooks/Auth.js';
 
 export default function Home() {
-  const { user, loginWithGoogle, logout } = useAuth();
 
   return (
     <div className={styles.container}>
@@ -23,9 +22,6 @@ export default function Home() {
       <main className={styles.main}>
         <Hero/>
 
-        <button onClick={() => { loginWithGoogle(); }} > Sign In </button>
-        { "Hello " + user?.displayName }
-        <button onClick={() => { logout(); }} > Sign Out </button>        
       </main>
 
       <Footer/>

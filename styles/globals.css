@@ -8,6 +8,7 @@
 
 :root {
     --primary-color: #0EE8E1;
+    --secondary-color: #0070f3;
 }
 
 html,
@@ -15,7 +16,8 @@ body {
   padding: 0;
   margin: 0;
   font-family: "Montserrat", "Lato", Poppins, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+	       Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-weight: 500;
 }
 
 a {
@@ -27,7 +29,8 @@ a {
     box-sizing: border-box;
     padding: 0px;
     margin: 0px;
-    cursor: url(../public/aim.svg);
+    /* cursor: none; */
+    /* cursor: url("../public/aim.svg"); */
 }
 
 /* width */
