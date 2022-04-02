@@ -4,7 +4,7 @@
     font-weight: 800;
 }
 
-.heading4 {
+.heading4 { 
     font-size: 1rem;
     font-weight: 500;
     margin: 0px;
@@ -22,7 +22,8 @@
     width: 99.7vw;
     height: 80vh;
     object-fit: cover;
-    opacity: 0.8;
+    opacity: 1;
+    filter: brightness(60%);
 }
 
 .content {

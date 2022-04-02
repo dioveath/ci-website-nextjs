@@ -1,0 +1,41 @@
+.main {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loginContainer {
+    max-width: 500px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* box-shadow: 1px 1px 1px 1px #000000; */
+    padding: 20px 20px;
+    border-radius: 5px;
+}
+
+.image {
+    width: auto;
+    object-fit: contain;
+}
+
+.captionStyle {
+    font-size: 14px;
+    color: grey;
+    font-weight: 300;
+}
+
+.inputText {
+    padding: 14px 14px;
+    outline: none;
+    border-radius: 10px;
+    border: 1px solid #aaaaaa55;
+}
+
+.bodyTextStyle {
+    font-size: 16px;
+    text-align: center;
+}

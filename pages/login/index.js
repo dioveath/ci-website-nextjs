@@ -13,7 +13,6 @@ import useAuth from '../../lib/hooks/Auth.js';
 import PuffLoader from 'react-spinners/PuffLoader';
 
 export default function Login(){
-  const [isRegisterPage, setRegisterPage] = useState(false);
   const email = useRef();
   const password = useRef();
 
@@ -32,7 +31,7 @@ export default function Login(){
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        { !loading ? !isRegisterPage ?
+        { !loading ?
           <form className={styles.loginContainer}>
             <img alt="" src="ci_pc.png" className={styles.image}/>
             <Marginer vertical="20px"/>
@@ -61,12 +60,11 @@ export default function Login(){
               <p className={styles.bodyTextStyle}> Don&apos;t have an Account? </p>
               <p style={{
                 "cursor": "pointer"
-              }} onClick={() => { setRegisterPage(true); }}> Register </p>
+              }} onClick={() => {
+                router.push('/register');
+              }}> Register </p>
             </div>
-          </form> :
-          <>
-            RegisterPage
-          </> : <div> <PuffLoader/> </div>
+          </form> : <div> <PuffLoader/> </div>
         }
       </main>
 
