@@ -10,6 +10,7 @@ import useAuth from '../../lib/hooks/Auth.js';
 import PuffLoader from 'react-spinners/PuffLoader';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { FcGoogle } from 'react-icons/fc';
 
 export default function Register(){
   const { user, error, loading, registerWithEmailAndPassword, logout } = useAuth();

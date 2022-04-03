@@ -5,11 +5,12 @@ import { getUser } from '../api/users/[userId].js';
 
 import { FaFacebook, FaInstagram, FaDotCircle } from 'react-icons/fa';
 import { AiFillHeart } from 'react-icons/ai';
+import { ImProfile } from 'react-icons/im';
+import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import Navbar from '../../components/Navbar.js';
 import styles from '../../styles/profile/profile.module.css';
 import Marginer from '../../components/utils/Marginer.js';
 import Footer from '../../components/footer/Footer.js';
-
 
 export default function Profile(props){
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function Profile(props){
 
   useEffect(async () => {
     setLoadingUser(true);
-    let user = await getUser("Pr2iG0ld5IOvjg5NQEAlHtf35ei1");
+    let user = await getUser("vSeXBm67vKOUnLhioVxGYNaqa0h1");
     if(user !== undefined) {
       setUserData(user);
       setError(false);
@@ -94,17 +95,22 @@ export default function Profile(props){
 
           <div className={styles.statsContainer}>
             <div className={styles.rowCenterContainer}>
+              <ImProfile size={20}/>
+              <Marginer/>
               <p className={styles.subTitleText}> 100 Profile Visits </p>
             </div>
+            <Marginer/>
             <div className={styles.rowCenterContainer}>
-              <p className={styles.subTitleText}> 100 Profile Visits </p>
+              <MdOutlineAccessTimeFilled size={20}/>
+              <Marginer/>
+              <p className={styles.subTitleText}>  1d 23h Time Spent </p>
             </div>            
           </div>
 
           <div className={styles.statsContainer}>
             <h2 className={styles.titleText}> Bio </h2>
             <p className={styles.subTitleText}>
-              Augue eget arcu dictum varius duis at consectetur lorem donec massa sapien! Elit duis tristique sollicitudin nibh sit amet commodo nulla facilisi nullam vehicula ipsum a arcu cursus vitae congue.
+              Typical pop culture geek. Coffee lover. Music enthusiast. Social media junkie. Extreme food advocate. Tv practitioner.
             </p>
           </div>          
 

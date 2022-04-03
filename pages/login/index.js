@@ -12,6 +12,7 @@ import PrimaryButton from '../../components/buttons/PrimaryButton.js';
 import useAuth from '../../lib/hooks/Auth.js';
 import PuffLoader from 'react-spinners/PuffLoader';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { ImGoogle2 } from 'react-icons/im';
 
 export default function Login(){
   const email = useRef();
@@ -59,7 +60,11 @@ export default function Login(){
             <Marginer vertical="14px"/>          
             <PrimaryButton type="submit" text="LOGIN"/>
             <Marginer vertical="6px"/>          
-            <PrimaryButton onClick={() => loginWithGoogle() } text="LOGIN WITH GOOGLE"/>
+            <PrimaryButton onClick={() => loginWithGoogle() } text={ <div style={{
+              "display": "flex",
+              "justifyContent": "center",
+              "align-items": "center"
+            }}> <ImGoogle2 size={26}/> <Marginer/>LOGIN WITH GOOGLE </div>}/>
             <Marginer vertical="14px"/>
             <p className={styles.captionStyle} style={{ "cursor": "pointer" }}> Forget Your Password? </p>
             <Marginer vertical="18px"/>
