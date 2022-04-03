@@ -1,8 +1,12 @@
 * Fixes
 ** DONE firebaseConfig through .env.local file
-** TODO Google Logo in button
+** DONE Google Logo in button
 ** DONE Footer Links update
 ** DONE Navbar Link Update
+
+* Tasks
+** Courses Page UI
+** Load courses from Network
 
 * MVP
 ** Courses Page Overhaul
