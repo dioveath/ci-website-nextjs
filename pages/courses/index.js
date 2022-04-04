@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Navbar from '../../components/Navbar.js';
+import { useState } from 'react';
 import styles from '../../styles/courses/Courses.module.css';
 import { BsFillArrowDownCircleFill } from 'react-icons/bs';
 import { AiFillDownCircle } from 'react-icons/ai';
@@ -28,6 +29,8 @@ const Trigger = (props) => {
 
 export default function Courses(){
 
+  const [currentTabIndex, setCurrentTabIndex] = useState(0);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -52,10 +55,33 @@ export default function Courses(){
             <input name="" type="text" value="" className={styles.searchInput}/>
           </div>
           <ul className={styles.tabItems}>
-            <li className={styles.tabItemActive}> All </li>
-            <li className={styles.tabItem}> Beginner </li>
-            <li className={styles.tabItem}> Intermediate </li>
-            <li className={styles.tabItem}> Advance </li>            
+            <li className={currentTabIndex == 0 ? styles.tabItemActive : styles.tabItem}
+                onClick={
+                  () => {
+                    setCurrentTabIndex(0);
+                  }
+                }> All </li>
+            <li className={currentTabIndex == 1 ? styles.tabItemActive : styles.tabItem}
+                onClick={
+                  () => {
+                    setCurrentTabIndex(1);
+                  }
+                }
+            > Beginner </li>
+            <li className={currentTabIndex == 2 ? styles.tabItemActive : styles.tabItem}
+                onClick={
+                  () => {
+                    setCurrentTabIndex(2);
+                  }
+                }
+            > Intermediate </li>
+            <li className={currentTabIndex == 3 ? styles.tabItemActive : styles.tabItem}
+                onClick={
+                  () => {
+                    setCurrentTabIndex(3);
+                  }
+                }
+            > Advance </li>            
           </ul>
           <div className={styles.extras}>
             <div className={styles.smallIcon}>
@@ -67,55 +93,63 @@ export default function Courses(){
 
         <Marginer vertical="40px"/>
 
-        <div className={styles.levelCoursesContainer}>
+        <div className={styles.tabContentsContainer}>
+          <div className={`${styles.tabContent} ${currentTabIndex == 0 && styles.tabActive}`}> All </div>
+          <div className={`${styles.tabContent} ${currentTabIndex == 1 && styles.tabActive}`}>
 
-          <div className={styles.courseCard}>
-            <img alt="" src="/george.jpg" className={styles.courseImg}/>
-            <div className={styles.courseDetails}>
-              <p className={styles.captionText}> Beginner </p>
-              <Marginer vertical="5px"/>
-              <p className={styles.titleText}> Computer Basics </p>
-              <Marginer vertical="50px"/>
-              {/* <p> Sit amet, mattis vulputate enim nulla aliquet porttitor lacus, luctus accumsan tortor posuere ac ut. Amet est placerat in egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam ut? </p> */}
-              <div className={styles.courseTimings}>
-                <div className={styles.lessons}> <FaLayerGroup/> <Marginer/> 23 Lessons </div>
-                <div className={styles.lessons}> <AiOutlineCalendar/> <Marginer/> 3 Months </div>
+            <div className={styles.levelCoursesContainer}>
+              <div className={styles.courseCard}>
+                <img alt="" src="/george.jpg" className={styles.courseImg}/>
+                <div className={styles.courseDetails}>
+                  <p className={styles.captionText}> Beginner </p>
+                  <Marginer vertical="5px"/>
+                  <p className={styles.titleText}> Computer Basics </p>
+                  <Marginer vertical="50px"/>
+                  <div className={styles.courseTimings}>
+                    <div className={styles.lessons}> <FaLayerGroup/> <Marginer/> 23 Lessons </div>
+                    <div className={styles.lessons}> <AiOutlineCalendar/> <Marginer/> 3 Months </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.courseCard}>
+                <img alt="" src="/george.jpg" className={styles.courseImg}/>
+                <div className={styles.courseDetails}>
+                  <p className={styles.captionText}> Beginner </p>
+                  <Marginer vertical="5px"/>
+                  <p className={styles.titleText}> Advance Basics </p>
+                  <Marginer vertical="50px"/>
+                  {/* <p> Sit amet, mattis vulputate enim nulla aliquet porttitor lacus, luctus accumsan tortor posuere ac ut. Amet est placerat in egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam ut? </p> */}
+                  <div className={styles.courseTimings}>
+                    <div className={styles.lessons}> <FaLayerGroup/> <Marginer/> 23 Lessons </div>
+                    <div className={styles.lessons}> <AiOutlineCalendar/> <Marginer/> 3 Months </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.courseCard}>
+                <img alt="" src="/george.jpg" className={styles.courseImg}/>
+                <div className={styles.courseDetails}>
+                  <p className={styles.captionText}> Beginner </p>
+                  <Marginer vertical="5px"/>
+                  <p className={styles.titleText}> Computer Operator </p>
+                  <Marginer vertical="50px"/>
+                  {/* <p> Sit amet, mattis vulputate enim nulla aliquet porttitor lacus, luctus accumsan tortor posuere ac ut. Amet est placerat in egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam ut? </p> */}
+                  <div className={styles.courseTimings}>
+                    <div className={styles.lessons}> <FaLayerGroup/> <Marginer/> 23 Lessons </div>
+                    <div className={styles.lessons}> <AiOutlineCalendar/> <Marginer/> 3 Months </div>
+                  </div>
+                </div>
               </div>
             </div>
+
           </div>
 
-          <div className={styles.courseCard}>
-            <img alt="" src="/george.jpg" className={styles.courseImg}/>
-            <div className={styles.courseDetails}>
-              <p className={styles.captionText}> Beginner </p>
-              <Marginer vertical="5px"/>
-              <p className={styles.titleText}> Advance Basics </p>
-              <Marginer vertical="50px"/>
-              {/* <p> Sit amet, mattis vulputate enim nulla aliquet porttitor lacus, luctus accumsan tortor posuere ac ut. Amet est placerat in egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam ut? </p> */}
-              <div className={styles.courseTimings}>
-                <div className={styles.lessons}> <FaLayerGroup/> <Marginer/> 23 Lessons </div>
-                <div className={styles.lessons}> <AiOutlineCalendar/> <Marginer/> 3 Months </div>
-              </div>
-            </div>
-          </div>
+          <div className={`${styles.tabContent} ${currentTabIndex == 2 && styles.tabActive}`}> Intermediate </div>
+          <div className={`${styles.tabContent} ${currentTabIndex == 3 && styles.tabActive}`}> Advance  </div>
+        </div>
 
-          <div className={styles.courseCard}>
-            <img alt="" src="/george.jpg" className={styles.courseImg}/>
-            <div className={styles.courseDetails}>
-              <p className={styles.captionText}> Beginner </p>
-              <Marginer vertical="5px"/>
-              <p className={styles.titleText}> Computer Operator </p>
-              <Marginer vertical="50px"/>
-              {/* <p> Sit amet, mattis vulputate enim nulla aliquet porttitor lacus, luctus accumsan tortor posuere ac ut. Amet est placerat in egestas erat imperdiet sed euismod nisi porta lorem mollis aliquam ut? </p> */}
-              <div className={styles.courseTimings}>
-                <div className={styles.lessons}> <FaLayerGroup/> <Marginer/> 23 Lessons </div>
-                <div className={styles.lessons}> <AiOutlineCalendar/> <Marginer/> 3 Months </div>
-              </div>
-            </div>
-          </div>
-          
 
-        </div>    
 
         <Marginer vertical="30px"/>
 

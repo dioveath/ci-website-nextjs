@@ -94,14 +94,18 @@
     min-width: 120px;
     border-bottom: 2px solid var(--primary-color);
     text-align: center;
-    padding: 10px 0px;    
+    padding: 10px 0px;
+    transition: all .2s ease;
+    cursor: pointer;
 }
 
 .tabItem {
+    cursor: pointer;
     min-width: 120px;
     border-bottom: 2px solid transparent;
     text-align: center;
     padding: 10px 0px;
+    transition: all .2s ease;    
 }
 
 .extras {
@@ -164,4 +168,23 @@
 .lessons {
     display: flex;
     align-items: center;
+}
+
+.tabContentsContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.tabContent {
+    width: 100%;
+    display: none;
+    transition: all 0.5s ease;
+}
+
+.tabActive {
+    /* display: inherit; */
+    display: flex;
+    justify-content: center;    
+    transition: all 0.5s ease;    
 }
