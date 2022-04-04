@@ -24,6 +24,7 @@
 .levelCoursesContainer {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
 }
@@ -58,13 +59,22 @@
 
 .tabNavBar {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 20px;
     width: 100%;
     align-items: center;
-    /* box-shadow: none|h-offset v-offset blur spread color |inset|initial|inherit; */
     box-shadow: 0px 10px 10px -6px #22222222;
-    padding: 0px 6rem;
+    padding: 1rem 1rem;
 }
+
+@media only screen and (min-width: 640px) {
+    .tabNavBar {
+	justify-content: space-between;
+	padding: 0px 6rem;
+    }
+}
+
 
 .searchBar {
     display: flex;
@@ -86,8 +96,10 @@
 
 .tabItems {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     list-style-type: none;
+    font-size: 0.8rem;
 }
 
 .tabItemActive {
@@ -99,6 +111,10 @@
     cursor: pointer;
 }
 
+.tabItemActive:hover {
+    color: var(--primary-color);
+}
+
 .tabItem {
     cursor: pointer;
     min-width: 120px;
@@ -107,6 +123,12 @@
     padding: 10px 0px;
     transition: all .2s ease;    
 }
+
+.tabItem:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
 
 .extras {
     display: flex;
@@ -121,6 +143,7 @@
     padding: 6px 10px;
     display: flex;
     align-items: center;
+    font-size: 0.8rem;
     /* color: var(--secondary-color); */
 }
 
@@ -174,6 +197,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    overflow: hidden;
 }
 
 .tabContent {
@@ -182,9 +206,30 @@
     transition: all 0.5s ease;
 }
 
-.tabActive {
-    /* display: inherit; */
+.tabActiveRightToLeft {
     display: flex;
     justify-content: center;    
-    transition: all 0.5s ease;    
+    position: relative;
+
+    animation-duration: 0.4s;
+    animation-name: swipeFromRight;
+}
+
+.tabActiveLeftToRight {
+    display: flex;
+    justify-content: center;    
+    position: relative;
+
+    animation-duration: 0.4s;
+    animation-name: swipeFromLeft;    
+}
+
+@keyframes swipeFromRight {
+    0% { right: -100%;}
+    100% { right: 0;}
+}
+
+@keyframes swipeFromLeft {
+    0% { left: -100%;}
+    100% { left: 0;}
 }

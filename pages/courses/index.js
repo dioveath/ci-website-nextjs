@@ -28,8 +28,8 @@ const Trigger = (props) => {
 
 
 export default function Courses(){
-
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
+  const [previousIndex, setPreviousIndex] = useState(0);
 
   return (
     <div className={styles.container}>
@@ -52,18 +52,20 @@ export default function Courses(){
           <div className={styles.searchBar}>
             <FiSearch size={24}/>
             <Marginer/>
-            <input name="" type="text" value="" className={styles.searchInput}/>
+            {/* <input name="" type="text" value="" className={styles.searchInput}/> */}
           </div>
           <ul className={styles.tabItems}>
             <li className={currentTabIndex == 0 ? styles.tabItemActive : styles.tabItem}
                 onClick={
                   () => {
+                    setPreviousIndex(currentTabIndex);
                     setCurrentTabIndex(0);
                   }
                 }> All </li>
             <li className={currentTabIndex == 1 ? styles.tabItemActive : styles.tabItem}
                 onClick={
                   () => {
+                    setPreviousIndex(currentTabIndex);                    
                     setCurrentTabIndex(1);
                   }
                 }
@@ -71,6 +73,7 @@ export default function Courses(){
             <li className={currentTabIndex == 2 ? styles.tabItemActive : styles.tabItem}
                 onClick={
                   () => {
+                    setPreviousIndex(currentTabIndex);                                        
                     setCurrentTabIndex(2);
                   }
                 }
@@ -78,6 +81,7 @@ export default function Courses(){
             <li className={currentTabIndex == 3 ? styles.tabItemActive : styles.tabItem}
                 onClick={
                   () => {
+                    setPreviousIndex(currentTabIndex);                                                            
                     setCurrentTabIndex(3);
                   }
                 }
@@ -94,8 +98,13 @@ export default function Courses(){
         <Marginer vertical="40px"/>
 
         <div className={styles.tabContentsContainer}>
-          <div className={`${styles.tabContent} ${currentTabIndex == 0 && styles.tabActive}`}> All </div>
-          <div className={`${styles.tabContent} ${currentTabIndex == 1 && styles.tabActive}`}>
+          <div className={
+            `${styles.tabContent} ${currentTabIndex == 0 && (previousIndex > currentTabIndex ? styles.tabActiveLeftToRight : styles.tabActiveRightToLeft)}`
+          }> All </div>
+
+          <div className={
+            `${styles.tabContent} ${currentTabIndex == 1 && (previousIndex > currentTabIndex ? styles.tabActiveLeftToRight : styles.tabActiveRightToLeft)}`
+          }>
 
             <div className={styles.levelCoursesContainer}>
               <div className={styles.courseCard}>
@@ -145,8 +154,12 @@ export default function Courses(){
 
           </div>
 
-          <div className={`${styles.tabContent} ${currentTabIndex == 2 && styles.tabActive}`}> Intermediate </div>
-          <div className={`${styles.tabContent} ${currentTabIndex == 3 && styles.tabActive}`}> Advance  </div>
+          <div className={
+            `${styles.tabContent} ${currentTabIndex == 2 && (previousIndex > currentTabIndex ? styles.tabActiveLeftToRight : styles.tabActiveRightToLeft)}`                 
+          }> Intermediate </div>
+          <div className={
+            `${styles.tabContent} ${currentTabIndex == 3 && (previousIndex > currentTabIndex ? styles.tabActiveLeftToRight : styles.tabActiveRightToLeft)}`
+          }> Advance  </div>
         </div>
 
 
