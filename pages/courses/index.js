@@ -19,6 +19,8 @@ import { GrSort } from 'react-icons/gr';
 import { FaLayerGroup } from 'react-icons/fa';
 import { AiOutlineCalendar } from 'react-icons/ai';
 
+import { DropdownMenu } from '../../components/DropdownMenu/index.js';
+
 
 const Trigger = (props) => {
   return <div className={styles["course-level"]}>
@@ -88,10 +90,35 @@ export default function Courses(){
             > Advance </li>            
           </ul>
           <div className={styles.extras}>
-            <div className={styles.smallIcon}>
-              Sort
-              <Marginer/>
-              <GrSort size={20}/> </div>
+            
+            
+
+            <DropdownMenu
+              title={
+                <div className={styles.smallIcon}>
+                  Sort
+                  <Marginer/>
+                  <GrSort size={20}/>
+                </div>              
+              }
+              itemList={
+                [
+                  {
+                    name: "A-z",
+                    onClick: () => { console.log("A-z"); }
+                  },
+                  {
+                    name: "Lessons",
+                    onClick: () => { console.log("Lessons"); }
+                  },
+                  {
+                    name: "Time",
+                    onClick: () => { console.log("Time"); }
+                  }
+                ]
+              }
+            />
+
           </div>
         </div>
 

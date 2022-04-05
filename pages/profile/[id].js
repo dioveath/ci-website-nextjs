@@ -24,7 +24,7 @@ export default function Profile(props){
 
   useEffect(async () => {
     setLoadingUser(true);
-    let user = await getUser("vSeXBm67vKOUnLhioVxGYNaqa0h1");
+    let user = await getUser(id);
     if(user !== undefined) {
       setUserData(user);
       setError(false);
@@ -34,6 +34,10 @@ export default function Profile(props){
     setLoadingUser(false);
     console.log(user);
   }, [userData.first_name, userData.last_name]);
+
+  let Roles = (props) => <p> No Roles </p>;
+  if(userData.first_name != "null")
+    Roles = (props) =>  Object.keys(userData.roles).map(key => <div key={key} className={styles.roleCard}> {key} </div> );
 
   return (
     <div>
@@ -84,12 +88,13 @@ export default function Profile(props){
             <div className={styles.heartsContainer}>
               <AiFillHeart color="red"/>
               <Marginer horizontal="5px"/>
-              <p className={styles.subTitleText}> 194 Hearts </p> </div>
+              <p className={styles.subTitleText}> {userData.hearts} Hearts </p> </div>
             <Marginer vertical="10px"/>
             <div className={styles.rolesContainer}>
-              <div className={styles.roleCard}> CFO </div>
-              <div className={styles.roleCard}> Manager </div>            
-              <div className={styles.roleCard}> Instructor </div>            
+              <Roles/>
+              {/* <div className={styles.roleCard}> CFO </div> */}
+              {/* <div className={styles.roleCard}> Manager </div>             */}
+              {/* <div className={styles.roleCard}> Instructor </div>             */}
             </div>
           </div>
 

@@ -23,11 +23,12 @@ export default function Navbar(){
   const { user, logout } = useAuth();
   let navListStyle = styles.navlist;
 
+
   const dropdownList = [
     {
       name: "Profile",
       onClick: () => {
-        Router.push("/profile/Pr2iG0ld5IOvjg5NQEAlHtf35ei1");
+        Router.push("/profile/" + user?.uid);
       }
     },
     {
