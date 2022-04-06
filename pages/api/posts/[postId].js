@@ -1,8 +1,6 @@
 import { firebaseStore } from '../../../lib/firebase.js';
 import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 
-// const usersRef = collection(firebaseStore, "ci_users");
-
 export async function getPost(postId){
   if(postId === undefined) return undefined;
   const docRef = doc(firebaseStore, "articles", postId);

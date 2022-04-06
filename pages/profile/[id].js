@@ -32,7 +32,6 @@ export default function Profile(props){
       setError(true);
     }
     setLoadingUser(false);
-    console.log(user);
   }, [userData.first_name, userData.last_name]);
 
   let Roles = (props) => <p> No Roles </p>;

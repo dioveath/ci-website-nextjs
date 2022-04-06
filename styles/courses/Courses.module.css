@@ -27,6 +27,9 @@
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
+    column-gap: 4rem;
+    grid-row-gap: 2rem;
+    padding: 4rem 2rem;
 }
 
 .courses-container {
