@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getUser } from '../api/users/[userId].js';
 
 import { FaFacebook, FaInstagram, FaDotCircle } from 'react-icons/fa';
 import { AiFillHeart } from 'react-icons/ai';
@@ -15,72 +14,67 @@ import Footer from '../../components/footer/Footer.js';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
+import { UserService } from '../../lib/service/UserService.js';
+
 
 export default function Profile(props){
   const router = useRouter();
   const { id } = router.query;
 
-  const [userData, setUserData ] = useState({first_name: "null", last_name: "null"});
+  const [userData, setUserData ] = useState({id: ""});
   const [loadingUser, setLoadingUser] = useState(true);
-  const [isError, setError] = useState(false);
+  const [isError, setError] = useState("");
 
-  const userJoinedDate = new Date(userData?.joinedAt?.seconds * 1000);
+  const userJoinedDate = new Date(userData?.joinedAt);
 
   useEffect(async () => {
     setLoadingUser(true);
-    let { user, error } = await getUser(id);
-    if(user !== undefined) {
-      setUserData(user);
-      setError(false);
+    let result = await UserService.getUser(id);
+    if(result.userData !== undefined) {
+      setUserData(result.userData);
+      setError("");
     } else {
-      setError(true);
+      setError(result.error);
     }
     setLoadingUser(false);
-  }, [userData.first_name, userData.last_name]);
-
-  let Roles = (props) => <p> No Roles </p>;
-  if(userData.first_name != "null")
-    Roles = (props) =>  Object.keys(userData.roles).map(key => <div key={key} className={styles.roleCard}> {key} </div> );
-
-  return (
-    <div>
-      <Head>
-        <title> Charicha Insitute </title>
-        <meta name="description" content="Charicha Institute Blogs" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <Navbar/>
-
-      <main className={styles.main}>
+  }, [userData.id]);
 
 
-        {/* <div className={styles.coverImg}> */}
-        {/*   <Skeleton style={{"height": "200px", "z-index": "-10"}}/> */}
-        {/* </div> */}
-        <img alt="cover image" src="/landing_image.jpg" className={styles.coverImg}/>
-        <div className={styles.profileContainer}>
-          <div className={styles.basicInfoContainer}>
-            <img alt="" src={ !isError ? userData.profile_URL : "/profile.jpg"} className={styles.profileImg}/>
-            <Marginer horizontal="10px"/>
-            <div className={styles.userTextInfoContainer}>
-              <p className={styles.titleText}> { !isError ? userData.first_name + " " + userData.last_name : <Skeleton/>}</p>
-              <p className={styles.subTitleText}> { userData?.rank } </p>
-              <p className={styles.subTitleText}> Since { !isError ? userJoinedDate?.toDateString() : <Skeleton width={"80px"}/>}</p>
-            </div>
-          </div>
-          <div className={styles.socialMediaLinks}>
-            <p className={styles.subTitleText}> Social Media  </p>
-            <Marginer horizontal="10px"/>            
-            <FaFacebook size="24px" color="blue"/>
-            <Marginer horizontal="10px"/>
-            <FaInstagram size="24px" color="red"/>            
-          </div>
-          
+  const Roles = (props) =>
+        loadingUser ?
+        <Skeleton width={20}/>
+        : (userData.roles.length != 0) ? Object.keys(userData.roles).map(key => <div key={key} className={styles.roleCard}> {key} </div>) : <p>No Roles</p>;
+
+  const CoverImage = (props) => loadingUser ?
+        <div className={styles.coverImg}>
+          <Skeleton style={{"height": "200px", "zIndex": "-10"}}/>
         </div>
+        : <img alt="cover image" src="/landing_image.jpg" className={styles.coverImg}/>;
 
-        <div className={styles.wrapContainer}>
-          <div className={styles.statsContainer}>
+  const ProfileImage = (props) => loadingUser ?
+        <Skeleton circle={true} width={100} height={100}/>
+        : userData.photoURL == "" ?
+        <div className={styles.profileTextImg}> <p> { userData.firstName[0] } </p> </div> :
+        <img alt="" src={ userData.photoURL ?? "/profile.jpg"} className={styles.profileImg}/>;
+
+  const UserInfo = (props) => loadingUser ?
+        <div style={{
+          "display": "flex",
+          "flexDirection": "column"
+        }}>
+          <Skeleton count={1} width={320} height={20}/>
+          <Marginer/>
+          <Skeleton count={1} width={320} height={15}/>          
+        </div>
+        : <div className={styles.userTextInfoContainer}>
+            <p className={styles.titleText}> { !isError ? userData.firstName + " " + userData.lastName : <Skeleton/>}</p>
+            <p className={styles.subTitleText}> { userData?.rank } </p>
+            <p className={styles.subTitleText}> Since { !isError ? userJoinedDate?.toDateString() : <Skeleton width={"80px"}/>}</p>
+          </div>;        
+
+  const StatsInfo = (props) => loadingUser ?
+        <Skeleton count={4} width={320} style={{"marginBottom": "10px"}}/>
+        : <div className={styles.statsContainer}>
             <div className={styles.levelXpContainer}>
               <p className={styles.titleText} style={{color: "greenyellow"}}> Gold </p>
               <p className={styles.subTitleText}> 314 XP </p>
@@ -100,9 +94,12 @@ export default function Profile(props){
             <div className={styles.rolesContainer}>
               <Roles/>
             </div>
-          </div>
+          </div>;
 
-          <div className={styles.statsContainer}>
+  const SecondaryStatsInfo = (props) => 
+        loadingUser ?
+        <Skeleton count={3} width={320} style={{"marginBottom": "10px"}}/>
+        : <div className={styles.statsContainer}>
             <div className={styles.rowCenterContainer}>
               <ImProfile size={20}/>
               <Marginer/>
@@ -114,17 +111,57 @@ export default function Profile(props){
               <Marginer/>
               <p className={styles.subTitleText}>  1d 23h Time Spent </p>
             </div>            
-          </div>
+          </div>;
 
-          <div className={styles.statsContainer}>
+  const BioInfo = (props) =>
+        loadingUser ?
+        <div style={{
+          "display": "flex",
+          "flexDirection": "column",
+        }}>
+          <Skeleton count={1} width={320} style={{"marginBottom": "10px"}}/>
+          <Skeleton count={1} width={320} height={100}/>
+        </div>
+        : <div className={styles.statsContainer}>
             <h2 className={styles.titleText}> Bio </h2>
             <p className={styles.subTitleText}>
               Typical pop culture geek. Coffee lover. Music enthusiast. Social media junkie. Extreme food advocate. Tv practitioner.
             </p>
-          </div>          
+          </div>;
 
+  return (
+    <div>
+      <Head>
+        <title> Charicha Insitute </title>
+        <meta name="description" content="Charicha Institute Blogs" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <Navbar/>
+
+      <main className={styles.main}>
+
+        <CoverImage/>
+        <div className={styles.profileContainer}>
+          <div className={styles.basicInfoContainer}>
+            <ProfileImage/>
+            <Marginer horizontal="10px"/>
+            <UserInfo/>
+          </div>
+          <div className={styles.socialMediaLinks}>
+            <p className={styles.subTitleText}> Social Media  </p>
+            <Marginer horizontal="10px"/>            
+            <FaFacebook size="24px" color="blue"/>
+            <Marginer horizontal="10px"/>
+            <FaInstagram size="24px" color="red"/>            
+          </div>
+        </div>
+
+        <div className={styles.wrapContainer}>
+          <StatsInfo/>
+          <SecondaryStatsInfo/>
+          <BioInfo/>
         </div>    
-
 
       </main>
 

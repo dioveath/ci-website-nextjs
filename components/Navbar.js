@@ -21,9 +21,6 @@ export default function Navbar(){
   const { user, userData, logout } = useAuth();
   let navListStyle = styles.navlist;
 
-  console.log(user);
-  console.log(userData);
-
   const dropdownList = [
     {
       name: "Profile",
@@ -43,11 +40,9 @@ export default function Navbar(){
 
   return (
     <nav className={styles.nav}>
-      <div>
-        <Link href="/">
-          <a><Image src="/ci_logo_full.png" alt="Charicha Institute Logo" width={140} height={50}/> </a>
-        </Link>
-      </div>
+      <Link href="/">
+        <a><Image src="/ci_logo_full.png" alt="Charicha Institute Logo" width={140} height={50}/> </a>
+      </Link>
 
       {
         !isMobile || showMenu ?
@@ -91,31 +86,26 @@ export default function Navbar(){
                     <a className={styles.registerButton}> Register </a>
                   </Link>
                 </>
-              : <>
-                  {/*     <p style={{ */}
-                  {/*   "fontSize": "14px", */}
-                  {/*   "display": "flex", */}
-                  {/*   "align-items": "center", */}
-                  {/* }}>Hi, { user.displayName } </p><BsPersonFill size={24}/> */}
-
+              : <div>
                   <DropdownMenu title={
                     user.photoURL !== undefined ?
                       <img alt={user.displayName} src={userData.photoURL} className={styles.userProfilePhoto}/>
                     : <BsPersonFill size={24}/>
                   } itemList={dropdownList}/>
-
-                </>
+                </div>
             }
 
-          </ul> :
-        <div style={{
-          "marginRight": "20px",
-          "cursor": "pointer"
-        }}
-             onClick={() => {
-               setShowMenu(!showMenu);
-             }}
-        > <GiHamburgerMenu size={30}/> </div>
+          </ul>
+        : <div
+            style={{
+              "marginRight": "20px",
+              "cursor": "pointer"
+            }}
+            onClick={() => {
+              setShowMenu(!showMenu);
+            }}>
+            <GiHamburgerMenu size={30}/>
+          </div>
       }
 
     </nav>
