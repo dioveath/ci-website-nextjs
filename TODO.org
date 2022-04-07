@@ -5,11 +5,15 @@
 ** DONE Navbar Link Update
 
 * Tasks
-** Courses Page UI
+** DONE Courses Page UI
+** DONE Create a Final User Model for Charicha Institute
+** DONE Implement the final User Model
+** Implement User Model to laod with Profile Page
+** Make course enrollable to user, i.e. courses ids to user data
 ** Load courses from Network
 
 * MVP
-** Courses Page Overhaul
+** DONE Courses Page Overhaul
 ** Payment gateway
 
 * Milestones
@@ -18,3 +22,5 @@
 ** Write an Article Page
 ** Article Paging   
 ** Article Categories
+
+

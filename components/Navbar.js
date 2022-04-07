@@ -18,9 +18,11 @@ import useAuth from '../lib/hooks/Auth.js';
 export default function Navbar(){
   const isMobile = useMediaQuery({ maxWidth: SCREENS.md});
   const [showMenu, setShowMenu] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, userData, logout } = useAuth();
   let navListStyle = styles.navlist;
 
+  console.log(user);
+  console.log(userData);
 
   const dropdownList = [
     {
@@ -98,7 +100,7 @@ export default function Navbar(){
 
                   <DropdownMenu title={
                     user.photoURL !== undefined ?
-                      <img alt={user.displayName} src={user.photoURL} className={styles.userProfilePhoto}/>
+                      <img alt={user.displayName} src={userData.photoURL} className={styles.userProfilePhoto}/>
                     : <BsPersonFill size={24}/>
                   } itemList={dropdownList}/>
 

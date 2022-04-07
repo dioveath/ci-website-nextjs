@@ -12,6 +12,10 @@ import styles from '../../styles/profile/profile.module.css';
 import Marginer from '../../components/utils/Marginer.js';
 import Footer from '../../components/footer/Footer.js';
 
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+
+
 export default function Profile(props){
   const router = useRouter();
   const { id } = router.query;
@@ -24,7 +28,7 @@ export default function Profile(props){
 
   useEffect(async () => {
     setLoadingUser(true);
-    let user = await getUser(id);
+    let { user, error } = await getUser(id);
     if(user !== undefined) {
       setUserData(user);
       setError(false);
@@ -50,15 +54,19 @@ export default function Profile(props){
 
       <main className={styles.main}>
 
+
+        {/* <div className={styles.coverImg}> */}
+        {/*   <Skeleton style={{"height": "200px", "z-index": "-10"}}/> */}
+        {/* </div> */}
         <img alt="cover image" src="/landing_image.jpg" className={styles.coverImg}/>
         <div className={styles.profileContainer}>
           <div className={styles.basicInfoContainer}>
             <img alt="" src={ !isError ? userData.profile_URL : "/profile.jpg"} className={styles.profileImg}/>
             <Marginer horizontal="10px"/>
             <div className={styles.userTextInfoContainer}>
-              <p className={styles.titleText}> { !isError ? userData.first_name + " " + userData.last_name : "Loading..."}</p>
+              <p className={styles.titleText}> { !isError ? userData.first_name + " " + userData.last_name : <Skeleton/>}</p>
               <p className={styles.subTitleText}> { userData?.rank } </p>
-              <p className={styles.subTitleText}> Since { !isError ? userJoinedDate?.toDateString() : "Loading..."}</p>
+              <p className={styles.subTitleText}> Since { !isError ? userJoinedDate?.toDateString() : <Skeleton width={"80px"}/>}</p>
             </div>
           </div>
           <div className={styles.socialMediaLinks}>
@@ -91,9 +99,6 @@ export default function Profile(props){
             <Marginer vertical="10px"/>
             <div className={styles.rolesContainer}>
               <Roles/>
-              {/* <div className={styles.roleCard}> CFO </div> */}
-              {/* <div className={styles.roleCard}> Manager </div>             */}
-              {/* <div className={styles.roleCard}> Instructor </div>             */}
             </div>
           </div>
 

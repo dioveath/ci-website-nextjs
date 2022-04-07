@@ -2,6 +2,11 @@ import { firebaseStore } from '../../../lib/firebase.js';
 import { collection, doc, setDoc, getDoc } from 'firebase/firestore';
 
 export async function getUser(userId){
+  if(userId === undefined)
+    return {
+      error: "Not valid user id"
+    };
+
   const docRef = doc(firebaseStore, "ci_users", userId);
   try {
     const docSnap = await getDoc(docRef);
