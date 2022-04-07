@@ -119,7 +119,7 @@ export const coursesList = [
   },
 
   {
-    id: "6",
+    id: "7",
     level: "Advance",
     title: "Introduction to Programming",
     coverImg: "/george.jpg",
@@ -139,7 +139,7 @@ export const coursesList = [
   },
 
   {
-    id: "6",
+    id: "8",
     level: "Advance",
     title: "Web Development",
     coverImg: "/george.jpg",
@@ -158,24 +158,24 @@ export const coursesList = [
     time: 68  // in days
   },
 
-  // {
-  //   id: "6",
-  //   level: "Advance",
-  //   title: "Flutter Mobile Development",
-  //   coverImg: "/george.jpg",
-  //   lessons: [
-  //     "fermentum", 
-  //     "scelerisque", 
-  //     "Diam quis",
-  //     "volutpat maecenas",
-  //     "enim lobortis", 
-  //     "dui faucibus", 
-  //     "Nulla facilisi",
-  //     "nullam vehicula",
-  //     "Pellentesque id",
-  //   ],
-  //   description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
-  //   time: 68  // in days
-  // },   
+  {
+    id: "9",
+    level: "Advance",
+    title: "Flutter Mobile Development",
+    coverImg: "/george.jpg",
+    lessons: [
+      "fermentum", 
+      "scelerisque", 
+      "Diam quis",
+      "volutpat maecenas",
+      "enim lobortis", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula",
+      "Pellentesque id",
+    ],
+    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
+    time: 68  // in days
+  },   
      
 ];

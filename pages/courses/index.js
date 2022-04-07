@@ -27,7 +27,7 @@ const AllCourses = (props) => {
   return (
     <div className={styles.levelCoursesContainer}>
       { coursesList.map((course) => {
-        return <CourseCard key={course.id} course={course}/>;
+        return <CourseCard key={"all" + course.id} course={course}/>;
       })}
     </div>
   );

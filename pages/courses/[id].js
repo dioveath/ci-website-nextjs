@@ -8,15 +8,14 @@ import { coursesList } from '../../components/course/coursesList.js';
 import PrimaryButton from '../../components/buttons/PrimaryButton.js';
 
 import useAuth from '../../lib/hooks/Auth.js';
+import { UserService } from '../../lib/service/UserService.js';
 
 export default function CoursePage(props) {
   const router = useRouter();
   const { id } = router.query;
-  const course = coursesList[id];
+  const course = coursesList.find((course) => course.id == id);
 
   const {user, userData, registerWithEmailAndPassword} = useAuth();
-  console.log(user);
-  console.log(userData);
 
   return (
     <div>
@@ -37,8 +36,10 @@ export default function CoursePage(props) {
         </ol>
 
         { user != null ? 
-        <PrimaryButton text="Enroll now" onClick={async ()=> {
-          await registerWithEmailAndPassword();
+          <PrimaryButton text="Enroll now" onClick={async ()=> {
+            UserService.updateUser(user.uid, {
+              [`courses.${course.id}`]: ""
+            });
         }}/> :
           <h2>
             Login to enroll now
