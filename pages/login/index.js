@@ -63,7 +63,7 @@ export default function Login(){
             <PrimaryButton onClick={() => loginWithGoogle() } text={ <div style={{
               "display": "flex",
               "justifyContent": "center",
-              "align-items": "center"
+              "alignItems": "center"
             }}> <ImGoogle2 size={26}/> <Marginer/>LOGIN WITH GOOGLE </div>}/>
             <Marginer vertical="14px"/>
             <p className={styles.captionStyle} style={{ "cursor": "pointer" }}> Forget Your Password? </p>

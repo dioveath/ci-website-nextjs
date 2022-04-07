@@ -27,7 +27,7 @@ const AllCourses = (props) => {
   return (
     <div className={styles.levelCoursesContainer}>
       { coursesList.map((course) => {
-        return <CourseCard course={course}/>;
+        return <CourseCard key={course.id} course={course}/>;
       })}
     </div>
   );
@@ -37,7 +37,7 @@ const BeginnerCourses = (props) => {
   return (
     <div className={styles.levelCoursesContainer}>
       { coursesList.filter((course) => course.level === "Beginner").map((course) => {
-        return <CourseCard course={course}/>;
+        return <CourseCard key={course.id} course={course}/>;
       })}
     </div>
   );
@@ -47,7 +47,7 @@ const IntermediateCourses = (props) => {
   return (
     <div className={styles.levelCoursesContainer}>
       { coursesList.filter((course) => course.level === "Intermediate").map((course) => {
-        return <CourseCard course={course}/>;
+        return <CourseCard key={course.id} course={course}/>;
       })}
     </div>
   );
@@ -57,7 +57,7 @@ const AdvanceCourses = (props) => {
   return (
     <div className={styles.levelCoursesContainer}>
       { coursesList.filter((course) => course.level === "Advance").map((course) => {
-        return <CourseCard course={course}/>;
+        return <CourseCard key={course.id} course={course}/>;
       })}
     </div>
   );

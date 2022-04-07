@@ -13,7 +13,7 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { FcGoogle } from 'react-icons/fc';
 
 export default function Register(){
-  const { user, error, loading, registerWithEmailAndPassword, logout } = useAuth();
+  const { user, registerError, loading, registerWithEmailAndPassword, logout } = useAuth();
 
   const [ fieldError, setFieldError ] = useState(null);
   const [ passwordShow, setPasswordShow ] = useState(false);
@@ -84,10 +84,10 @@ export default function Register(){
               <input name="confirmPassword" type={ confirmPasswordShow ? "text" : "password"}  placeholder="Confirm Password" ref={confirmPassword} className={styles.inputText}/>
             </div>            
             <Marginer vertical="6px"/>
-            { error != "" || fieldError != null ? <p className={styles.captionStyle} style={{
+            { registerError != "" || fieldError != null ? <p className={styles.captionStyle} style={{
               "color": "red",
               "fontSize": "12px"
-            }}> * { fieldError || error } </p> : "" }
+            }}> * { fieldError || registerError } </p> : "" }
             <Marginer vertical="14px"/>          
             <PrimaryButton type="submit" text="REGISTER"/>
             <Marginer vertical="14px"/>
