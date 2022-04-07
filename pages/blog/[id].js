@@ -12,7 +12,7 @@ import styles from './blogpage.module.css';
 import htmr from 'htmr';
 
 import { getPost } from '../api/posts/[postId].js';
-import { getUser } from '../api/users/[userId].js';
+import { UserService } from '../../lib/service/UserService.js';
 import Footer from '../../components/footer/Footer.js';
 
 export default function BlogPage(props){
@@ -36,7 +36,7 @@ export default function BlogPage(props){
   useEffect(async () => {
     setLoadingUser(true);
     if(blogData.title !== "undefined") {
-      let user = await getUser(blogData.writtenBy);
+      let user = await UserService.getUser(blogData.writtenBy);
       if(user !== undefined){
         setUserData(user);
       }
