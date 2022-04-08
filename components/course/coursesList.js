@@ -3,6 +3,7 @@ export const coursesList = [
     id: "1",
     level: "Beginner",
     title: "Computer Basics",
+    thumbImg: "/george.jpg",
     coverImg: "/george.jpg",
     lessons: [
       "Diam quis", 
@@ -21,6 +22,7 @@ export const coursesList = [
     id: "2",
     level: "Beginner",
     title: "Advance Basics",
+    thumbImg: "/george.jpg",    
     coverImg: "/george.jpg",
     lessons: [
       "fermentum", 
@@ -41,6 +43,7 @@ export const coursesList = [
     id: "3",
     level: "Beginner",
     title: "Office Basics",
+    thumbImg: "/george.jpg",    
     coverImg: "/george.jpg",
     lessons: [
       "fermentum", 
@@ -61,6 +64,7 @@ export const coursesList = [
     id: "4",
     level: "Intermediate",
     title: "Computer Operator",
+    thumbImg: "/george.jpg",    
     coverImg: "/george.jpg",
     lessons: [
       "fermentum", 
@@ -82,6 +86,7 @@ export const coursesList = [
     id: "5",
     level: "Intermediate",
     title: "Lok Shewa Preparation",
+    thumbImg: "/george.jpg",    
     coverImg: "/george.jpg",
     lessons: [
       "fermentum", 
@@ -102,7 +107,8 @@ export const coursesList = [
     id: "6",
     level: "Intermediate",
     title: "Accounting Package",
-    coverImg: "/george.jpg",
+    thumbImg: "/george.jpg",    
+    coverImg: "/computer_course_cover_2.jpg",
     lessons: [
       "fermentum", 
       "scelerisque", 

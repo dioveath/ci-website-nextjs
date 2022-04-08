@@ -1,0 +1,16 @@
+
+
+.heroContainer {
+    /* position: relative; */
+}
+
+.heroContentContainer {
+    display: flex;
+}
+
+
+.lessonsContainer {
+    width: 200px;
+    height: 200px;
+    background-color: red;
+}

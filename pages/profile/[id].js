@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { FaFacebook, FaInstagram, FaDotCircle } from 'react-icons/fa';
 import { AiFillHeart } from 'react-icons/ai';
 import { ImProfile } from 'react-icons/im';
+import { BsRecordCircleFill } from 'react-icons/bs';
+
 import { MdOutlineAccessTimeFilled } from 'react-icons/md';
 import Navbar from '../../components/Navbar.js';
 import styles from '../../styles/profile/profile.module.css';
@@ -15,6 +17,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 import { UserService } from '../../lib/service/UserService.js';
+import { coursesList } from '../../components/course/coursesList.js';
 
 
 export default function Profile(props){
@@ -96,6 +99,29 @@ export default function Profile(props){
             </div>
           </div>;
 
+  const CoursesEnrolled = (props) => {
+    return loadingUser ?
+      <Skeleton count={3} width={320}/>
+    : <div>
+        {
+          Object.keys(userData.courses).map((courseId) => {
+            return <div className={styles.roleCard} style={{ "marginBottom": "10px" }}>
+                     <p className={styles.subTitleText}
+                        style={{
+                          "color": "white",
+                          "display": "flex",
+                          "alignItems": "center"
+                        }} >
+                       <BsRecordCircleFill/>
+                       <Marginer/>
+                       { coursesList[courseId].title }
+                     </p>
+                   </div>;
+          })
+        }
+      </div>;
+  };
+
   const SecondaryStatsInfo = (props) => 
         loadingUser ?
         <Skeleton count={3} width={320} style={{"marginBottom": "10px"}}/>
@@ -110,7 +136,13 @@ export default function Profile(props){
               <MdOutlineAccessTimeFilled size={20}/>
               <Marginer/>
               <p className={styles.subTitleText}>  1d 23h Time Spent </p>
-            </div>            
+            </div>
+            <Marginer/>
+            <div>
+              <p className={styles.titleText}> Courses Enrolled </p>
+              <Marginer/>
+              <CoursesEnrolled/>
+            </div>
           </div>;
 
   const BioInfo = (props) =>

@@ -9,7 +9,8 @@
 ** DONE Create a Final User Model for Charicha Institute
 ** DONE Implement the final User Model
 ** DONE Implement User Model to load with Profile Page
-** Make course enrollable to user, i.e. courses ids to user data
+** DONE Make course enrollable to user, i.e. courses ids to user data
+** TODO Create Course Page   
 ** Load courses from Network
 
 * MVP

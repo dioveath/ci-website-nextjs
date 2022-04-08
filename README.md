@@ -1,8 +1,13 @@
 ## Charicha Institute Official Website
+Charicha Institute Official Website. Students Profiles, Blogs system, etc.
+
+<p align="center">
+	<img alt="" src="charichainstitute_test_blog.png" width="70%"/>
+</p>
 
 
 ## User Model 
-```json
+```js
 { 
 	firstName: type: String,
 	lastName: type: String,
