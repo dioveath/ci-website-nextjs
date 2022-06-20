@@ -14,46 +14,16 @@ import htmr from 'htmr';
 import { getPost } from '../api/posts/[postId].js';
 import { UserService } from '../../lib/service/UserService.js';
 import Footer from '../../components/footer/Footer.js';
+import { serialize } from 'bson';
 
-export default function BlogPage(props){
-  const router = useRouter();
-  const { id } = router.query;
-
-  const [userData, setUserData] = useState({ first_name: "null", last_name: "null"});
-  const [loadingUser, setLoadingUser] = useState(true);
-
-  const [blogData, setBlogData] = useState({title: "undefined"});
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    (async() => {
-      setLoading(true);
-      let blog = await getPost(id);
-      if(blog !== undefined)
-        setBlogData(blog);
-      setLoading(blogData.title === "undefined");      
-    })();
-  }, [blogData.id, blogData.title, id]);
-
-  useEffect(() => {
-    (async () => {
-      setLoadingUser(true);
-      if(blogData.title !== "undefined") {
-        let user = await UserService.getUser(blogData.writtenBy);
-        if(user !== undefined){
-          setUserData(user.userData);
-        }
-        setLoadingUser(false);
-      }      
-    })();
-  }, [userData.first_name, blogData.id, blogData.title, blogData.writtenBy]);
+export default function BlogPage({ blog: blogData, user: userData }){
 
   return (
     <div>
       <Head>
-        <title> Charicha Insitute Blogs | { blogData?.title } </title>
+        <title> Charicha Insitute Blogs | { blogData?.title || "Empty Blog" } </title>
         <meta name="description" content={htmr(blogData?.body || "") + "..."} />
-        <meta property="og:image" itemProp="image" content="landing_image.png"/>        
+        {/* <meta property="og:image" itemProp="image" content={"landing_image.png"}/> */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -66,13 +36,13 @@ export default function BlogPage(props){
             <Image alt={userData?.first_name + " Profile"} src={ userData?.profile_URL || "/profile.jpg" } className={styles.profileImg} width="60px" height="60px" objectFit='cover'/>
             <Marginer horizontal="30px"/>                          
             <div className={styles.textDetails}>
-              <p className={styles.infoText}> { loadingUser ? "Loading.." : userData.first_name + " " + userData.last_name }</p>
+              <p className={styles.infoText}> { userData?.first_name + " " + userData?.last_name }</p>
               <div className={styles.timeDetails}>
-                <p className={styles.infoTextGrey}> { loading ? "Loading..." : Date(blogData.createdAt.seconds * 100).toLocaleString() } </p>
+                <p className={styles.infoTextGrey}> { Date(blogData?.createdAt.seconds * 100).toLocaleString() } </p>
                 <Marginer horizontal="10px"/>              
                 <FaDotCircle size="5px"/>
                 <Marginer horizontal="10px"/>
-                <p className={styles.infoTextGrey}> { loading ? "Loading.." : parseInt(blogData.body.length / 450) + " min read"}</p>              
+                <p className={styles.infoTextGrey}> { parseInt(blogData?.body.length / 450) + " min read"}</p>              
               </div>
             </div>
           </div>
@@ -88,7 +58,7 @@ export default function BlogPage(props){
 
         <div className={styles.contentContainer}>
           <div className={styles.content}>
-            { loading ? "Loading..." : htmr(blogData.body) }
+            { htmr(blogData?.body || "") }
           </div>
           <div className={styles.rightContents}>
             <Image alt=""
@@ -107,15 +77,15 @@ export default function BlogPage(props){
                 "fontSize": "14px",
                 "fontWeight": "300",
                 "color": "grey"
-              }}> { userData.hearts } Likes </p>
+              }}> { userData?.hearts } Likes </p>
             </div>
-            <p className={styles.infoText}> { loadingUser ? "Loading.." : userData.first_name + " " + userData.last_name } </p>
+            <p className={styles.infoText}> { userData?.first_name + " " + userData?.last_name } </p>
             <Marginer vertical="5px"/>                        
             <p style={{
               "fontSize": "14px",
               "fontWeight": "300",
               "color": "grey"
-            }}> { loadingUser ? "Loading.." : userData.rank }</p>
+            }}> { userData?.rank }</p>
             <Marginer vertical="20px"/>            
             <div className={styles.socialLinks}>
               <FaFacebook size="30px" color="blue"/>
@@ -131,4 +101,26 @@ export default function BlogPage(props){
     </div>
   );
 
+}
+
+
+export async function getServerSideProps(context){
+  const blog = await getPost(context.params.id);
+
+  let user;
+  if(blog)
+    user = await UserService.getUser(blog.writtenBy);
+
+  let { createdAt, ...serializableBlog } = blog;
+  createdAt = createdAt.toDate().toString();
+
+  let { joinedAt, ...serializableUser} = user.userData;
+  joinedAt = joinedAt.toDate().toString();
+
+  return {
+    props: {
+      blog: { ...serializableBlog, createdAt },
+      user: { ...serializableUser, joinedAt }
+    }
+  }
 }
