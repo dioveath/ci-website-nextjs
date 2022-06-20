@@ -1,11 +1,21 @@
-
-
 .heroContainer {
-    /* position: relative; */
+    position: relative;
+    background-color: red;
+    padding: 0px 80px;
+}
+
+.containerDivider {
+    display: flex;
 }
 
 .heroContentContainer {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
+    gap: 1rem;
 }
 
 
@@ -13,4 +23,18 @@
     width: 200px;
     height: 200px;
     background-color: red;
+}
+
+.detailsContainer {
+    margin: 20px 200px;
+}
+
+.courseTitle {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.headingTwo {
+    font-size: 30px;
+    font-weight: 700;
 }

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import styles from './coursecard.module.css';
 import { BsFillCircleFill } from 'react-icons/bs';
 import Marginer from '../../components/utils/Marginer.js';
@@ -8,10 +9,12 @@ import Link from 'next/link';
 
 export default function CourseCard(props) {
   return (
-    <Link href={"/courses/" + props.course.id}>
+    <Link href={"/courses/" + props.course.id} passHref>
 
       <div className={styles.courseCard} onClick={() => { }}>
-        <img alt="" src={props.course.coverImg} className={styles.courseImg}/>
+	<div className={styles.courseImg}>
+          <Image alt="" src={props.course.coverImg} width="350px" height="240px" layout="responsive" objectFit="cover"/>
+        </div>
         <div className={styles.courseDetails}>
           <p className={styles.captionText}>  {props.course.level} </p>
           <Marginer vertical="5px"/>

@@ -6,7 +6,8 @@ const nextConfig = {
       "i.ibb.co",
       "assets-api.kathmandupost.com",
       "scontent.fbir5-1.fna.fbcdn.net",
-      "images.saymedia-content.com"
+      "images.saymedia-content.com",
+      "firebasestorage.googleapis.com"
     ]
   },
   env: {

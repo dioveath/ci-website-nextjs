@@ -12,25 +12,24 @@ export default function BlogCard(props){
   const blog = props.blog;
   let summary = "Summary";
   blog.body.replace(/<p>(.*?)<\/p>/g, function () {
-    // arguments[0] is the entire match
     summary = arguments[0];
   });
 
-  // const blogHref = "/blog" + blog.id !== undefined ? "/" + blog.id : "";
   const [userData, setUserData] = useState({ first_name: "null", last_name: "null"});
   const [isLoading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    setLoading(true);
-    let res = await fetch('api/users/' + blog.writtenBy);
-    let user = await res.json();
-    setUserData(user);
-    setLoading(userData == null);
-    console.log(userData);
-  }, [userData.first_name, userData.last_name]);
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      let res = await fetch('api/users/' + blog.writtenBy);
+      let user = await res.json();
+      setUserData(user);
+      setLoading(false);
+    })();
+  }, [blog.writtenBy]);
 
   return(
-    <Link href={"/blog/" + blog.id}>
+    <Link href={"/blog/" + blog.id} passHref>
     <div className={styles["blog-container"]}>
       <div className={styles["image-container"]}>
         <img src={blog.imageURL} className={styles["blog-image"]}/>
@@ -59,7 +58,9 @@ export default function BlogCard(props){
         {
           isLoading ? "Loading...."
             : <div className={styles["blog-author-container"]}>
-                <img src={userData.profile_URL} className={styles["author-profile"]}/>
+		<div className={styles["author-profile"]}>
+                  <Image src={userData.profile_URL} alt={userData?.first_name + " Profile picture"} layout="responsive" width={"40px"} height={"40px"} objectFit="cover"/>
+                </div>
                 <Marginer horizontal="10px"/>
                 <div className={styles["blog-author-info-container"]}>
                   <p className={styles["blog-author-name"]}> { userData.first_name + " " + userData.last_name} </p>

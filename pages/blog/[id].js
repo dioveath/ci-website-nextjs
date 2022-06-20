@@ -1,4 +1,4 @@
-
+import Image from 'next/image';
 import Head from 'next/head';
 import Navbar from '../../components/Navbar.js';
 
@@ -25,30 +25,35 @@ export default function BlogPage(props){
   const [blogData, setBlogData] = useState({title: "undefined"});
   const [loading, setLoading] = useState(true);
 
-  useEffect(async () => {
-    setLoading(true);
-    let blog = await getPost(id);
-    if(blog !== undefined)
-      setBlogData(blog);
-    setLoading(blogData.title === "undefined");
-  }, [blogData.id]);
+  useEffect(() => {
+    (async() => {
+      setLoading(true);
+      let blog = await getPost(id);
+      if(blog !== undefined)
+        setBlogData(blog);
+      setLoading(blogData.title === "undefined");      
+    })();
+  }, [blogData.id, blogData.title, id]);
 
-  useEffect(async () => {
-    setLoadingUser(true);
-    if(blogData.title !== "undefined") {
-      let user = await UserService.getUser(blogData.writtenBy);
-      if(user !== undefined){
-        setUserData(user);
-      }
-      setLoadingUser(false);
-    }
-  }, [userData.first_name, blogData.id]);
+  useEffect(() => {
+    (async () => {
+      setLoadingUser(true);
+      if(blogData.title !== "undefined") {
+        let user = await UserService.getUser(blogData.writtenBy);
+        if(user !== undefined){
+          setUserData(user.userData);
+        }
+        setLoadingUser(false);
+      }      
+    })();
+  }, [userData.first_name, blogData.id, blogData.title, blogData.writtenBy]);
 
   return (
     <div>
       <Head>
-        <title> Charicha Insitute </title>
-        <meta name="description" content="Charicha Institute Blogs" />
+        <title> Charicha Insitute Blogs | { blogData?.title } </title>
+        <meta name="description" content={htmr(blogData?.body || "") + "..."} />
+        <meta property="og:image" itemProp="image" content="landing_image.png"/>        
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -58,7 +63,7 @@ export default function BlogPage(props){
 
         <div className={styles.authorDetailsContainer}>
           <div className={styles.authorLeftContainer}>
-            <img alt="" src={ loadingUser ? "Loading.." : userData.profile_URL } className={styles.profileImg}/>
+            <Image alt={userData?.first_name + " Profile"} src={ userData?.profile_URL || "/profile.jpg" } className={styles.profileImg} width="60px" height="60px" objectFit='cover'/>
             <Marginer horizontal="30px"/>                          
             <div className={styles.textDetails}>
               <p className={styles.infoText}> { loadingUser ? "Loading.." : userData.first_name + " " + userData.last_name }</p>
@@ -86,21 +91,20 @@ export default function BlogPage(props){
             { loading ? "Loading..." : htmr(blogData.body) }
           </div>
           <div className={styles.rightContents}>
-            <img alt="" src={ loadingUser ? "Loading.." : userData.profile_URL }
-                 style={{
-                   "width": "80px",
-                   "height": "80px",
-                   "object-fit": "cover",
-                   "border-radius": "50%"
-                 }}/>
+            <Image alt=""
+                   src={ userData?.profile_URL || "/profile.jpg" }
+                   width="80px"
+                   height="80px"
+                   objectFit="cover"
+                   className={styles.profileImg}/>
             <div style={{
               "display": "flex",
-              "align-items": "center"
+              "alignItems": "center"
             }}>
               <AiFillHeart size="20px" color="red"/>
               <Marginer horizontal="5px"/>
               <p style={{
-                "font-size": "14px",
+                "fontSize": "14px",
                 "fontWeight": "300",
                 "color": "grey"
               }}> { userData.hearts } Likes </p>
@@ -108,8 +112,8 @@ export default function BlogPage(props){
             <p className={styles.infoText}> { loadingUser ? "Loading.." : userData.first_name + " " + userData.last_name } </p>
             <Marginer vertical="5px"/>                        
             <p style={{
-              "font-size": "14px",
-              "font-weight": "300",
+              "fontSize": "14px",
+              "fontWeight": "300",
               "color": "grey"
             }}> { loadingUser ? "Loading.." : userData.rank }</p>
             <Marginer vertical="20px"/>            

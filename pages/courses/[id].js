@@ -23,7 +23,7 @@ export default function CoursePage(props) {
   return (
     <div>
       <Head>
-        <title> Charicha Institute </title>
+        <title> Charicha Institute | Course | { course?.title } </title>
         <meta name="description" content={"Charicha Institute - " + course?.title}/>
         <link rel="icon" href="/favicon.ico" />        
       </Head>
@@ -36,16 +36,25 @@ export default function CoursePage(props) {
                  src={course?.coverImg === undefined ? "/computer_course_cover_2.jpg" : course.coverImg }
                  width="100%" height="30vh"
                  layout="responsive" objectFit="cover"/>
-          <div styles={styles.heroContentContainer}>
-            <p className={styles.courseTitle}> {course?.title} </p>
-            <p className={styles.courseDescription}> { course?.description } </p>
-            <PrimaryButton text="Start Learning"/>            
+	  <div className={styles.containerDivider}>
+            <div styles={styles.heroContentContainer}>
+              <p className={styles.courseTitle}> {course?.title} </p>
+              <p className={styles.courseDescription}> { course?.description } </p>
+              <PrimaryButton text="Start Learning"/>
+            </div>
+            <div className={styles.heroContentContainer}>
+            </div>
           </div>
         </div>
 
-        <div className={styles.lessonsContainer}>
-        </div>
+        {/* <div className={styles.lessonsContainer}> */}
+        {/* </div> */}
 
+	<div className={styles.detailsContainer}>
+
+	<div>
+	  <p className={styles.headingTwo}> Lessons You&apos;ll learn </p>
+        </div>
 
         <ol>
           { course?.lessons?.map((lesson) => <li key={lesson}> {lesson} </li>)}
@@ -61,6 +70,8 @@ export default function CoursePage(props) {
             Login to enroll now
           </h2>
         }
+
+        </div>    
         
       </main>
 

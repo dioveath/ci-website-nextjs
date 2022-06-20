@@ -14,6 +14,7 @@ export default function Home() {
       <Head>
         <title> Charicha Institute </title>
         <meta name="description" content="Official Site of Charicha Institute" />
+        <meta property="og:image" itemProp="image" content="landing_image.png"/>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

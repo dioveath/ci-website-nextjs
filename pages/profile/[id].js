@@ -30,17 +30,20 @@ export default function Profile(props){
 
   const userJoinedDate = new Date(userData?.joinedAt);
 
-  useEffect(async () => {
-    setLoadingUser(true);
-    let result = await UserService.getUser(id);
-    if(result.userData !== undefined) {
-      setUserData(result.userData);
-      setError("");
-    } else {
-      setError(result.error);
-    }
-    setLoadingUser(false);
-  }, [userData.id]);
+  useEffect(() => {
+    (async () => {
+      setLoadingUser(true);
+      let result = await UserService.getUser(id);
+      if(result.userData !== undefined) {
+        setUserData(result.userData);
+        setError("");
+      } else {
+        setError(result.error);
+      }
+      setLoadingUser(false);      
+    })();
+
+  }, [id, userData.id]);
 
 
   const Roles = (props) =>
@@ -105,7 +108,7 @@ export default function Profile(props){
     : <div>
         {
           Object.keys(userData.courses).map((courseId) => {
-            return <div className={styles.roleCard} style={{ "marginBottom": "10px" }}>
+            return <div key={courseId} className={styles.roleCard} style={{ "marginBottom": "10px" }}>
                      <p className={styles.subTitleText}
                         style={{
                           "color": "white",
