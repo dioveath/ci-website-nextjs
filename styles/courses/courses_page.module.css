@@ -1,40 +1,46 @@
 .heroContainer {
-    position: relative;
-    background-color: red;
-    padding: 0px 80px;
+  position: relative;
+  background-color: red;
+  padding: 0px 80px;
 }
-
 .containerDivider {
-    display: flex;
+    color: lightgrey;
+  position: absolute;
+  display: flex;
+  width: 100%;
+  position: absolute;
+  padding: 20px 30px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateY(-100%);
+  gap: 1rem;
 }
 
 .heroContentContainer {
     width: 100%;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    gap: 1rem;
+    flex: 0 1 auto;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* gap: 10rem; */
 }
 
-
 .lessonsContainer {
-    width: 200px;
-    height: 200px;
-    background-color: red;
+  width: 200px;
+  height: 200px;
+  background-color: red;
 }
 
 .detailsContainer {
-    margin: 20px 200px;
+  margin: 20px 200px;
 }
 
 .courseTitle {
-    font-size: 40px;
-    font-weight: bold;
+  font-size: 40px;
+  font-weight: bold;
 }
 
 .headingTwo {
-    font-size: 30px;
-    font-weight: 700;
+  font-size: 30px;
+  font-weight: 700;
 }
