@@ -34,46 +34,47 @@ export default function CoursePage(props) {
       <main className={styles.main}>
         <Navbar />
 
-        <div styles={styles.heroContainer}>
-          <Image
-            alt={"Computer Course - " + course?.title}
-            src={
-              course?.coverImg === undefined
-                ? "/computer_course_cover_2.jpg"
-                : course.coverImg
-            }
-            width="100%"
-            height="30vh"
-            layout="responsive"
-            objectFit="cover"
-          />
-          <div className={styles.containerDivider}>
-            <div styles={styles.heroContentContainer}>
-              <p className={styles.courseTitle}> {course?.title} </p>
-              <p className={styles.courseDescription}>
-                {course?.description}
-              </p>
-              <PrimaryButton text="Start Learning" />
-            </div>
-            <div className="heroContentContainer">
-              Welcome to the good night
-            </div>
-          </div>
+	<div>
         </div>
 
-        {/* <div className={styles.lessonsContainer}> */}
-        {/* </div> */}
+        <div className={styles.heroContainer}>
+          <div className={styles.coverImageContainer}>
+            <Image
+              alt={"Computer Course - " + course?.title}
+              src={
+                course?.coverImg === undefined
+                  ? "/computer_course_cover_2.jpg"
+                  : course.coverImg
+              }
+              width="100"
+              height="100"
+              layout="responsive"
+              objectFit="cover"
+              objectPosition={"center"}
+            />
+          </div>
+          <div className={styles.containerDivider}>
+            <div className={styles.heroContentContainer}>
+              <p className={styles.courseTitle}> {course?.title} </p>
+              <p className={styles.courseDescription}>{course?.description}</p>
+              <PrimaryButton text="Start Learning" />
+            </div>
+            {/* <div className={styles.heroContentContainer}> */}
+            {/*   Welcome to the good night */}
+            {/* </div> */}
+          </div>
+        </div>
 
         <div className={styles.detailsContainer}>
           <div>
             <p className={styles.headingTwo}> Lessons You&apos;ll learn </p>
           </div>
 
-          <ol>
+          <ul className={styles.lessonsContainer}>
             {course?.lessons?.map((lesson) => (
               <li key={lesson}> {lesson} </li>
             ))}
-          </ol>
+          </ul>
 
           {user != null ? (
             <PrimaryButton

@@ -1,38 +1,43 @@
 .heroContainer {
-  position: relative;
-  background-color: red;
-  padding: 0px 80px;
+  /* position: relative; */
 }
+
 .containerDivider {
-    color: lightgrey;
-  position: absolute;
+  color: lightgrey;
   display: flex;
   width: 100%;
   position: absolute;
-  padding: 20px 30px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  padding: 10px 20px;
   transform: translateY(-100%);
   gap: 1rem;
 }
 
-.heroContentContainer {
-    width: 100%;
-    flex: 0 1 auto;
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* gap: 10rem; */
+.containerDivider:nth-child(2) {
+    display: hidden;
 }
 
-.lessonsContainer {
-  width: 200px;
-  height: 200px;
-  background-color: red;
+.coverImageContainer {
+    max-height: 60vh;
+    overflow: hidden;
+    opacity: 1;
+    filter: brightness(0.7);
 }
+
+.heroContentContainer {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+
 
 .detailsContainer {
-  margin: 20px 200px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .courseTitle {
@@ -43,4 +48,21 @@
 .headingTwo {
   font-size: 30px;
   font-weight: 700;
+}
+
+.lessonsContainer {
+}
+
+@media only screen and (min-width: 1024px){
+    .coverImageContainer {
+	max-height: 60vh;
+    }
+
+    .heroContentContainer {
+	padding: 10px 200px;
+    }
+
+    .detailsContainer {
+	padding: 10px 200px;
+    }
 }
