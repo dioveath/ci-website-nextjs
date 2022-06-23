@@ -17,8 +17,7 @@
     list-style-type: none;
     
     gap: 20px;
-    position: absolute;
-    right: 0;
+    position: fixed;
     top: 0;
     z-index: 10;
     /* background-color: #F6FEFF; */
@@ -27,8 +26,20 @@
     padding: 1rem 2rem;
     transition: all 1s ease;
     overflow: visible;
-    transition: all .8s ease;    
 }
+
+.navInActive {
+    right: -100%;
+    animation-duration: 0.4s;
+    animation-name: swipeFromLeft;
+}
+
+.navActive {
+    right: 0;
+    animation-duration: 0.4s;
+    animation-name: swipeFromRight;
+}
+
 
 .hamburger {
     display: flex;
@@ -108,4 +119,15 @@
     width: 24px;
     height: 24px;
     object-fit: contain;
+}
+
+
+@keyframes swipeFromRight {
+    0% { right: -100%;}
+    100% { right: 0;}
+}
+
+@keyframes swipeFromLeft {
+    0% { right: 0%;}
+    100% { right: -100%;}
 }
