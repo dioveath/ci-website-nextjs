@@ -10,8 +10,9 @@
 ** DONE Implement the final User Model
 ** DONE Implement User Model to load with Profile Page
 ** DONE Make course enrollable to user, i.e. courses ids to user data
-** TODO Create Course Page   
-** Load courses from Network
+** TODO Create Course Page
+** TODO Create Artical Writer for Users      
+** TODO Load courses from Network
 
 * MVP
 ** DONE Courses Page Overhaul

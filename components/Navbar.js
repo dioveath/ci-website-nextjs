@@ -19,7 +19,6 @@ export default function Navbar() {
   const isMobile = useMediaQuery({ maxWidth: SCREENS.md });
   const [showMenu, setShowMenu] = useState(false);
   const { user, userData, logout } = useAuth();
-  // let navListStyle = styles.navlist;
 
   const dropdownList = [
     {
@@ -31,7 +30,7 @@ export default function Navbar() {
     {
       name: "Dashboard",
       onClick: () => {
-        console.log("");
+        Router.push("/dashboard");        
       },
     },
     {
@@ -59,20 +58,28 @@ export default function Navbar() {
         <NavHamburger setShowMenu={setShowMenu} showMenu={showMenu} />
       )}
 
-      {!isMobile ||
-        ((
-          <NavList
-            showMenu={showMenu}
-            isMobile={isMobile}
-            user={user}
-            setShowMenu={setShowMenu}
-          />
-        ))}
+      {!isMobile || (
+        <NavList
+          showMenu={showMenu}
+          isMobile={isMobile}
+          user={user}
+          userData={userData}
+          setShowMenu={setShowMenu}
+          dropdownList={dropdownList}
+        />
+      )}
     </nav>
   );
 }
 
-const NavList = ({ showMenu, isMobile, user, setShowMenu }) => (
+const NavList = ({
+  showMenu,
+  isMobile,
+  user,
+  userData,
+  setShowMenu,
+  dropdownList,
+}) => (
   <ul
     className={`${styles.navlist} ${
       showMenu ? styles.navActive : styles.navInActive
@@ -129,15 +136,16 @@ const NavList = ({ showMenu, isMobile, user, setShowMenu }) => (
       <div>
         <DropdownMenu
           title={
-            user.photoURL !== undefined ? (
-              <img
-                alt={user.displayName}
-                src={userData.photoURL}
-                className={styles.userProfilePhoto}
-              />
-            ) : (
-              <BsPersonFill size={24} />
-            )
+            <>
+              {(user?.photoURL || userData?.photoURL) && (
+                <img
+                  alt={user.displayName}
+                  src={userData?.photoURL}
+                  className={styles.userProfilePhoto}
+                />
+              )}
+              {user?.photoURL === undefined && <BsPersonFill size={24} />}
+            </>
           }
           itemList={dropdownList}
         />
@@ -153,8 +161,7 @@ const NavHamburger = ({ setShowMenu, showMenu }) => (
       cursor: "pointer",
     }}
     onClick={() => {
-      if(!showMenu)
-        setShowMenu(true);
+      if (!showMenu) setShowMenu(true);
     }}
   >
     <GiHamburgerMenu size={30} />
