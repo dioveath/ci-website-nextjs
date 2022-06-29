@@ -58,7 +58,6 @@ export default function Navbar() {
         <NavHamburger setShowMenu={setShowMenu} showMenu={showMenu} />
       )}
 
-      {!isMobile || (
         <NavList
           showMenu={showMenu}
           isMobile={isMobile}
@@ -67,7 +66,6 @@ export default function Navbar() {
           setShowMenu={setShowMenu}
           dropdownList={dropdownList}
         />
-      )}
     </nav>
   );
 }
@@ -98,7 +96,7 @@ const NavList = ({
           onClick={() => {
             setShowMenu(!showMenu);
           }}
-        />{" "}
+        />
       </div>
     ) : (
       ""

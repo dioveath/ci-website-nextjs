@@ -19,15 +19,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { UserService } from "../../lib/service/UserService.js";
 import { coursesList } from "../../components/course/coursesList.js";
 
-// import { Editor } from 'react-draft-wysiwyg';
-import {
-  EditorState,
-  ContentState,
-  convertToRaw,
-  convertFromRaw,
-} from "draft-js";
-import "../../styles/profile/react-draft-wysiwyg.module.css";
-
 export default function Profile(props) {
   const router = useRouter();
   const { id } = router.query;

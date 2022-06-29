@@ -27,6 +27,12 @@
     overflow: visible;
 }
 
+@media only screen and (min-width: 768px) {
+  .navlist {
+    background-color: transparent;
+  }
+}
+
 .navInActive {
     right: -100%;
     animation-duration: 0.4s;
