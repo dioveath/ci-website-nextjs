@@ -37,3 +37,4 @@ yarn-error.log*
 # emacs temp files
 *.*~
 *.*#
+.log

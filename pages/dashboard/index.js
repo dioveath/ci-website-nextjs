@@ -1,22 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from 'next/router';
+
+import PuffLoader from 'react-spinners/PuffLoader';
 import styles from "../../styles/dashboard/index.module.css";
 import Navbar from "../../components/Navbar.js";
 import Footer from "../../components/footer/Footer.js";
 
 import useAuth from "../../lib/hooks/Auth.js";
 
-import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from 'draft-js';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
 export default function Dashboard() {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const onEditorStateChange = (editState) => {
-    setEditorState(editState);
+  const { user, userData, loading, error } = useAuth();
+  const router = useRouter();
 
-  };
+  useEffect(() => {
+    if(!user && !loading) {
+      router.push('/');
+    }
+
+    console.log(user);
+  }, [router, user])
+
 
   return (
     <div className={styles.container}>
@@ -29,15 +34,12 @@ export default function Dashboard() {
 
       <Navbar />
 
-      <main className="main">
-        <Editor
-          editorState={editorState}
-          wrapperClassName="demo-wrapper"
-          editorClassName="demo-editor"
-          onEditorStateChange={onEditorStateChange}
-        />
-      </main>
-
+      <div className="main">
+        <nav className={styles.sidebar}> Left Bar </nav>
+	<main> Dashboard Content </main>
+        <aside> Extra </aside>
+      </div>
+      
       <Footer />
     </div>
   );

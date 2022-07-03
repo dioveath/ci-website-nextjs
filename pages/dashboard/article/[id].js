@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import Head from "next/head";
+import dynamic from 'next/dynamic';
 import Image from "next/image";
 import { useRouter } from 'next/router';
 
-// import styles from "../../styles/dashboard/index.module.css";
+import styles from "../../../styles/dashboard/index.module.css";
 import Navbar from "../../../components/Navbar.js";
 import Footer from "../../../components/footer/Footer.js";
 
 import useAuth from "../../../lib/hooks/Auth.js";
 
-import { Editor } from "react-draft-wysiwyg";
 import { EditorState } from 'draft-js';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
+const Editor = dynamic(
+  () => import('react-draft-wysiwyg').then(mod => mod.Editor),
+  { ssr: false }
+);
 
 export default function Article() {
   const router = useRouter();
