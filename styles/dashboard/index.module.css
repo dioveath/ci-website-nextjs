@@ -1,3 +1,49 @@
+.container {
+    width: 100%;
+    height: 100vh;
+}
+
+.main {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+}
+
 .sidebar {
     background-color: red;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.mainContent {
+
+    
+}
+
+.myCourses {
+    display: flex;
+}
+
+.headingOne {
+    font-size: 24px;
+    font-weight: 700;
+    
+}
+
+.profilePhoto {
+    width: 80px;
+    height: 80px;
+    border-radius: 100%;
+    overflow: hidden;
+    box-shadow: 1px 1px 8px #44444444;    
+}
+
+.headingThree {
+    color: #959595;
+    font-size: 16px;
 }
