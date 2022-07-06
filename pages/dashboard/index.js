@@ -80,7 +80,22 @@ const PageContent = ({userData}) => {
       <p className={styles.headingThree}>
         Welcome back { userData.firstName }, ready for your next lesson? 
       </p>
-     <Tabbar tabs={tabs}/>
+
+      <Tabbar tabs={tabs}/>
+
+      
+
+      <div className={styles.card}>
+	<div className={styles.cardImage}>
+          <Image src={userData.photoURL} width="100" height="100" objectFit="cover"/>
+	  <div className={styles.progressContainer}></div>          
+	  <div className={styles.progress}></div>
+        </div>
+	<div className={styles.cardBody}>
+	  <div className={styles.cardTitle}> Illustration </div>
+	  <div className={styles.cardContent}> Illustration in UI Designs </div>
+        </div>
+      </div>
     </main>
 
     {/* <aside> Extra </aside> */}
