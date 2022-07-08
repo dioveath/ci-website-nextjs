@@ -80,6 +80,7 @@ export default function CoursePage(props) {
             <PrimaryButton
               text="Enroll now"
               onClick={async () => {
+                console.log(userData);
                 UserService.updateUser(user.uid, {
                   [`courses.${course.id}`]: "",
                 });
