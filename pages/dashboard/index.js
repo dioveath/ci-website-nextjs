@@ -83,11 +83,9 @@ const PageContent = ({userData}) => {
 
       <Tabbar tabs={tabs}/>
 
-      
-
       <div className={styles.card}>
 	<div className={styles.cardImage}>
-          <Image src={userData.photoURL} width="100" height="100" objectFit="cover"/>
+          <Image src={userData.photoURL} alt={`{userData.firstName} Profile Photo`} width="100" height="100" objectFit="cover"/>
 	  <div className={styles.progressContainer}></div>          
 	  <div className={styles.progress}></div>
         </div>
@@ -96,6 +94,30 @@ const PageContent = ({userData}) => {
 	  <div className={styles.cardContent}> Illustration in UI Designs </div>
         </div>
       </div>
+
+      <div className={styles.table}>
+      <div className={styles.header}>
+	<p className={styles.month}> July </p>
+	<p className={styles.day}> M </p>
+	<p className={styles.day}> T </p>
+	<p className={styles.day}> W </p>
+	<p className={styles.day}> Th </p>
+	<p className={styles.day}> Fr </p>
+	<p className={styles.day}> S </p>
+      </div>
+
+      <div className={styles.row}>
+	<p className={styles.data}> 8:00 </p>
+	<p className={styles.data}>  </p>
+	<p className={styles.data}>  </p>
+	<p className={styles.data}>  </p>
+	<p className={styles.data}>  </p>
+	<p className={styles.data}>  </p>
+	<p className={styles.data}>  </p>
+	<p className={styles.data}>  </p>                
+      </div>
+      </div>
+
     </main>
 
     {/* <aside> Extra </aside> */}
