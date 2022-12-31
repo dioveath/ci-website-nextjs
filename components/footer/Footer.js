@@ -1,7 +1,5 @@
-import Link from 'next/link';
 import Image from 'next/image';
 import styles from './footer.module.css';
-import Marginer from '../../components/utils/Marginer.js';
 import FooterLinkItem from './FooterLinkItem';
 
 import { BsPhoneFill } from 'react-icons/bs';
