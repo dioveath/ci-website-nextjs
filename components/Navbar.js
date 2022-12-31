@@ -13,9 +13,10 @@ import { BsPersonFill } from "react-icons/bs";
 
 import { DropdownMenu } from "../components/DropdownMenu/index.js";
 
+import NavItem from './Navbar/NavItem';
 import useAuth from "../lib/hooks/Auth.js";
 
-export default function Navbar() {
+export default function Navbar({ path }) {
   const isMobile = useMediaQuery({ maxWidth: SCREENS.md });
   const [showMenu, setShowMenu] = useState(false);
   const { user, userData, logout } = useAuth();
@@ -42,15 +43,15 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className={styles.nav}>
+    <nav className={'w-full flex justify-between px-48 py-4 font-normal'}>
       <Link href="/">
         <a>
           <Image
-            src="/ci_logo_full.png"
+            src="/ci_logo_light_blue.png"
             alt="Charicha Institute Logo"
             width={140}
             height={50}
-          />{" "}
+          />
         </a>
       </Link>
 
@@ -65,6 +66,7 @@ export default function Navbar() {
           userData={userData}
           setShowMenu={setShowMenu}
           dropdownList={dropdownList}
+          path={path}
         />
     </nav>
   );
@@ -77,9 +79,10 @@ const NavList = ({
   userData,
   setShowMenu,
   dropdownList,
+  path
 }) => (
   <ul
-    className={`${styles.navlist} ${
+    className={`${'flex items-center'} ${
       showMenu ? styles.navActive : styles.navInActive
     }`}
   >
@@ -102,32 +105,23 @@ const NavList = ({
       ""
     )}
 
-    <Link className={styles.navitem} href="/">
-      <a className={styles.anchorTag}> Home </a>
-    </Link>
-    <Link className={styles.navitem} href="/courses">
-      <a className={styles.anchorTag}> Courses </a>
-    </Link>
-    <Link className={styles.navitem} href="/services">
-      <a className={styles.anchorTag}> Services </a>
-    </Link>
-    <Link className={styles.navitem} href="/blog">
-      <a className={styles.anchorTag}> Blog </a>
-    </Link>
-    <Link className={styles.navitem} href="/contact">
-      <a className={styles.anchorTag}> Contact </a>
-    </Link>
+
+    <NavItem path={path} to={'/'} label={'Home'}/>
+    <NavItem path={path} to={'/courses'} label={'Courses'}/>
+    <NavItem path={path} to={'/services'} label={'Services'}/>
+    <NavItem path={path} to={'/blog'} label={'Blog'}/>
+    <NavItem path={path} to={'/contact'} label={'Contact'}/>    
 
     <Marginer horizontal="20px" />
 
     {user === null ? (
-      <div>
-        <Link className={styles.navitem} href="/login">
-          <a className={styles.loginButton}> Login </a>
+      <div className='flex gap-4'>
+        <Link className='' href="/login">
+          <a className={'px-8 py-2 h-10 w-32 flex justify-center items-center bg-brightaqua hover:bg-slategray text-white rounded-3xl transition-all drop-shadow-md'}> Login </a>
         </Link>
 
         <Link className={styles.navitem} href="/register">
-          <a className={styles.registerButton}> Register </a>
+          <a className={'px-8 py-2 h-10 w-32 flex justify-center items-center bg-slategray hover:bg-brightaqua text-white rounded-3xl transition-all drop-shadow-md'}> Register </a>
         </Link>
       </div>
     ) : (

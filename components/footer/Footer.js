@@ -1,85 +1,52 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './footer.module.css';
 import Marginer from '../../components/utils/Marginer.js';
+import FooterLinkItem from './FooterLinkItem';
 
 import { BsPhoneFill } from 'react-icons/bs';
 import { MdEmail, MdLocationOn } from 'react-icons/md';
 
-export default function Footer (){
-  return (<div>
-            <div style={{"height": "20px"}}></div>            
-            <footer className={styles.footer}>
-              <div className={styles.footerContents}>
-                <div className={styles.primaryFooterContents}>
-                  <div className={styles.logoImg}>
-                    <img src="/ci_logo_light_blue.png" alt="Charicha Institute Logo"/>
-                  </div>
-                  <Marginer vertical="20px"/>
+export default function Footer ({path}){
+  return (<div className='bg-slategray'>
+            <footer className={''}>
+              <div className={'flex flex-wrap justify-between gap-2 px-48 py-10'}>
 
-                  <p className={styles.infoText}>Charicha Institute helps interested students to learn and use their computer skills from basic
+                <div className={'max-w-sm'}>
+                  <Image src="/ci_logo_light_blue.png" alt="Charicha Institute Logo" width={'150px'} height={'50px'}/>
+                  <p className={'text-sm text-white font-light'}>Charicha Institute helps interested students to learn and use their computer skills from basic
                     courses to advanced courses like programming in real world. Come join us and
                     grow.
                   </p>
                 </div>
-                <div className={styles.secondaryFooterContents}>
-                  <h3>Charicha Institute</h3>
-                  <Marginer vertical="10px"/>
-                  <ul className={styles.navLinks}>
-                    <li>
-                      <Link href="/">
-                        <a href="">Home</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/courses">
-                        <a href="">Courses</a>
-                      </Link>                      
-                    </li>
-                    <li>
-                      <Link href="/services">
-                        <a href="">Services</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/blog">
-                        <a href="">Blog</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/contact">
-                        <a href="">Contact Us</a>
-                      </Link>
-                    </li>
+
+                <div className={'max-w-xs flex flex-col'}>
+                  <h3 className='text-white uppercase mb-2'> Menu </h3>
+                  <ul className={'flex flex-col gap-2'}>
+		    <li> <FooterLinkItem label={'Home'} to='/' path={path}/> </li>
+		    <li> <FooterLinkItem label={'Courses'} to='/courses' path={path}/> </li>
+		    <li> <FooterLinkItem label={'Services'} to='/services' path={path}/> </li>
+		    <li> <FooterLinkItem label={'Blog'} to='/blog' path={path}/> </li>
                   </ul>
                 </div>
-                <div className={styles.thirdFooterContents}>
-                  <h3>Other Links</h3>
-                  <Marginer vertical="10px"/>                  
-                  <ul className={styles.navLinks}>
-                    <li><a href="">Charicha Productions</a></li>
-                    <li><a href="">Charicha Gaming</a></li>
-                    <li><a href="">Charicha Education Consultancy</a></li>
+                <div className={'max-w-xs flex flex-col'}>
+                  <h3 className='text-white uppercase mb-2'>Partner Links</h3>
+                  <ul className={'flex flex-col gap-2'}>
+                    <li><a className='text-white hover:text-aquamarine' href="#">Charicha Productions</a></li>
+                    <li><a className='text-white hover:text-aquamarine' href="https://chcgaming.azurewebsites.net">Charicha Gaming</a></li>
                   </ul>
                 </div>
-                <div className={styles.fourthFooterContents}>
-                  <h3> Contact Us </h3>
-                  <Marginer vertical="10px"/>
-                  <div className={styles.iconInfo}>
-                    <BsPhoneFill color="greenyellow"/>
-                    <Marginer/>
-                    +977 981-7388966
+
+                <div className={'flex flex-col gap-2'}>
+                  <h3 className='text-white uppercase'> Contact Us </h3>
+                  <div className={'flex items-center gap-2 text-white'}>
+                    <BsPhoneFill color="greenyellow"/> +977 981-7388966
                   </div>
-                  <Marginer/>                  
-                  <div className={styles.iconInfo}>
-                    <MdEmail color="#39A1FF"/>
-                    <Marginer/>                    
-                    charichainstitute@gmail.com
+                  <div className={'flex items-center gap-2 text-white'}>
+                    <MdEmail color="#39A1FF"/> charichainstitute@gmail.com
                   </div>
-                  <Marginer/>                  
-                  <div className={styles.iconInfo}>
-                    <MdLocationOn color="red"/>
-                    <Marginer/>                    
-                    Belbari - 11
+                  <div className={'flex items-center gap-2 text-white'}>
+                    <MdLocationOn color="red"/> Belbari - 11, Morang
                   </div>
                 </div>
               </div>
