@@ -43,7 +43,7 @@ export default function Navbar({ path }) {
   ];
 
   return (
-    <nav className={'w-full flex justify-between px-48 py-4 font-normal'}>
+    <nav className={'w-full flex justify-between py-4 px-48 font-normal'}>
       <Link href="/">
         <a>
           <Image

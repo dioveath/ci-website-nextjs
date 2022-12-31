@@ -10,6 +10,9 @@ import { loadFull } from 'tsparticles';
 import Particles from 'react-particles';
 import { particleConfig } from '../lib/particle_config';
 
+import ReactPlayer from 'react-player';
+import Stories from '../components/home/Stories';
+import AppStore from '../components/home/AppStore';
 
 export default function Home() {
   const particlesInit = useCallback(async engine => {
@@ -30,13 +33,27 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={'bg-gradient-[0deg] from-eggblue to-slategray'}>
+      <main className={'bg-gradient-[-45deg] from-eggblue to-slategray'}>
         <Navbar path={'/'}/>
         <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>        
 	<div className='h-20'></div>
         <Hero/>
-        <Footer/>
+
+	<div className='flex justify-center'>
+	  <div className='rounded-2xl overflow-clip shadow-lg'>
+            <ReactPlayer className='w-full h-full' url='https://www.youtube.com/watch?v=lvWUO2YTe-M'/>
+          </div>
+        </div>
+	<p className='mt-4 text-center text-[24px] text-white'> See us in Action </p>            
+	<div className='h-40'></div>
+        <Stories/>
+        
+        <AppStore/>
+	<div className='h-20'></div>
       </main>
+
+
+      <Footer/>
 
     </div>
 
