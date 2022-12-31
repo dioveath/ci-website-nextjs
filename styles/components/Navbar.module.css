@@ -3,9 +3,8 @@
     justify-content: space-between;
     align-items: center;
     /* background-color: #F6FEFF; */
-    background-color: white;
     padding: 5px 0px;
-    box-shadow: 1px 1px 2px 0.2px #eeeeee;
+    /* box-shadow: 1px 1px 2px 0.2px #eeeeee; */
     transition: all .8s ease;
 }
 
@@ -20,7 +19,6 @@
     position: fixed;
     top: 0;
     z-index: 10;
-    background-color: #F6FEFF;
     height: 100vh;
     padding: 1rem 2rem;
     transition: all 1s ease;
@@ -73,8 +71,6 @@
     cursor: pointer;
     font-weight: bold;
     font-size: 15px;
-    background-color: white;
-    /* background-color: red; */
 }
 
 .anchorTag {

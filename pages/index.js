@@ -1,31 +1,45 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import Navbar from '../components/Navbar.js';
 import Hero from '../components/home/Hero.js';
 import Footer from '../components/footer/Footer.js';
 
-import useAuth from '../lib/hooks/Auth.js';
+
+import { useCallback } from 'react';
+import { loadFull } from 'tsparticles';
+import Particles from 'react-particles';
+import { particleConfig } from '../lib/particle_config';
+
 
 export default function Home() {
+  const particlesInit = useCallback(async engine => {
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async container => {
+    console.log(container);
+  }, []);
 
   return (
+    <>
     <div className={styles.container}>
       <Head>
         <title> Charicha Institute </title>
         <meta name="description" content="Official Site of Charicha Institute" />
-        <meta property="og:image" itemProp="image" content="landing_image.png"/>
+        <meta property="og:image" itemProp="image" content="landing_image.jpg"/>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar/>
-
-      <main className={styles.main}>
+      <main className={'bg-gradient-[0deg] from-eggblue to-slategray'}>
+        <Navbar path={'/'}/>
+        <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>        
+	<div className='h-20'></div>
         <Hero/>
-
+        <Footer/>
       </main>
 
-      <Footer/>
     </div>
+
+    </>
   );
 }
