@@ -8,9 +8,9 @@ export default function AppStore(){
     console.log('Mission failed successfully!');
   };
 
-  return (	<div className='w-full flex justify-center px-48'>
+  return (	<div className='w-full flex justify-center px-8 md:px-10 xl:px-20 2xl:px-48'>
 	  <div className='flex flex-wrap justify-center gap-4'>
-	    <img className='max-w-xs' alt='Charicha Institute App' src='/app.png'/>
+	    <img className='max-w-xs object-contain' alt='Charicha Institute App' src='/app.png'/>
 	    <div className='max-w-lg flex flex-col justify-center'>
 	      <p className='text-3xl text-white'> Find us in PlayStore </p>
 	      <p className='text-white mt-10 font-normal'> Enter your email id for the download link </p>
