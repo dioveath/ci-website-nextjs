@@ -8,7 +8,7 @@ import { MdEmail, MdLocationOn } from 'react-icons/md';
 export default function Footer ({path}){
   return (<div className='bg-slategray'>
             <footer className={''}>
-              <div className={'flex flex-wrap justify-between gap-2 px-48 py-10'}>
+              <div className={'flex flex-wrap justify-between gap-2 px-8 md:px-10 xl:px-20 2xl:px-48 py-10'}>
 
                 <div className={'max-w-sm'}>
                   <Image src="/ci_logo_light_blue.png" alt="Charicha Institute Logo" width={'150px'} height={'50px'}/>
