@@ -23,7 +23,7 @@
 }
 
 .navInActive {
-  right: -400px;
+  right: -100%;
   animation-duration: 0.4s;
   animation-name: swipeFromLeft;
 }
