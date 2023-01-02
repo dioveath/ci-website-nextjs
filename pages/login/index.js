@@ -42,7 +42,10 @@ export default function Login(){
       <main className={styles.main}>
         { !loading || user == null ?
           <form className={styles.loginContainer} onSubmit={onSubmitHandler}>
-            <img alt="" src="ci_pc.png" className={styles.image}/>
+            <div className={'min-w-md w-[80%] h-full flex justify-center items-center'}>
+              <Image className="shadow-md" alt='charicha pc hero image' src='/ci_pc.svg' width={'700'} height={'500'}/>
+            </div>            
+            {/* <img alt="" src="ci_pc.png" className={styles.image}/> */}
             <Marginer vertical="20px"/>
             <p className={styles.captionStyle}> Login with credentials </p>
             <Marginer vertical="6px"/>          
