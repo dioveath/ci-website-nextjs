@@ -5,7 +5,7 @@ import styles from "../../styles/services/Services.module.css";
 import ServiceCard from "../../components/services/ServiceCard.js";
 import Footer from "../../components/footer/Footer.js";
 
-import { services } from "./service_list";
+import { services } from "../../components/services/service_list";
 
 import { useCallback } from 'react';
 import { loadFull } from 'tsparticles';
