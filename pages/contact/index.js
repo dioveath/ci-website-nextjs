@@ -19,10 +19,9 @@ export default function Contact(){
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar/>
 
-      <main className={styles.main}>
-        <Marginer vertical="10px"/>
+      <main className={'bg-gradient-[-45deg] from-eggblue to-slategray pb-10'}>
+        <Navbar/>
         <h2> Contact Us </h2>
         <Marginer vertical="10px"/>        
         <p className={styles.bodyText}> Ac turpis egestas maecenas pharetra convallis posuere morbi leo urna, molestie at elementum eu, facilisis sed odio morbi quis commodo. Mauris pellentesque pulvinar pellentesque habitant morbi tristique senectus et netus? </p>
