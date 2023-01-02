@@ -1,10 +1,13 @@
 .courseCard {
-  cursor: pointer;
+    cursor: pointer;
+    background-color: #2A4041;
   box-shadow: 1px 1px 8px #11111111;
   max-width: 350px;
   min-width: 320px;
   border-radius: 5px;
   transition: all 0.2s ease;
+  color: white;
+  overflow: clip;
 }
 
 .courseCard:hover {
@@ -26,7 +29,7 @@
 .captionText {
   font-size: 14px;
   font-weight: 300;
-  color: grey;
+  color: #EFB53A;
 }
 
 .titleText {

@@ -13,10 +13,6 @@ import ReactPlayer from 'react-player';
 import Stories from '../components/home/Stories';
 import AppStore from '../components/home/AppStore';
 
-import useWindowSize from '../lib/hooks/useWindowSize';
-import { useMediaQuery } from 'react-responsive';
-import { SCREENS } from '../lib/utils/Responsive';
-
 export default function Home() {
   const particlesInit = useCallback(async engine => {
     await loadFull(engine);
@@ -25,10 +21,6 @@ export default function Home() {
   const particlesLoaded = useCallback(async container => {
     console.log(container);
   }, []);
-
-  const { width } = useWindowSize();
-  const isMobile = useMediaQuery({ maxWidth: SCREENS.md });
-  const isXMobile = useMediaQuery({ maxWidth: SCREENS.sm });
 
   return (
     <>
