@@ -71,12 +71,14 @@
 }
 
 .content > p {
-    font-size: 17px;
+    font-size: 15px;
     letter-spacing: 0.5px;
     word-spacing: 1px;
     padding: 0px;
     padding-bottom: 10px;
-    font-family: "Times New Roman";
+    font-family: "Montserrat";
+    font-weight: 300;
+    text-align: justify;
 }
 
 .content img {
