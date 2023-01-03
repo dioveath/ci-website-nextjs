@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import styles from '../../styles/register/register.module.css';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
@@ -10,7 +11,12 @@ import useAuth from '../../lib/hooks/Auth.js';
 import PuffLoader from 'react-spinners/PuffLoader';
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import { FcGoogle } from 'react-icons/fc';
+
+import { useCallback } from 'react';
+import { loadFull } from 'tsparticles';
+import Particles from 'react-particles';
+import { particleConfig } from '../../lib/particle_config';
+
 
 export default function Register(){
   const { user, registerError, loading, registerWithEmailAndPassword, logout } = useAuth();
@@ -22,6 +28,14 @@ export default function Register(){
   const email = useRef();
   const password = useRef();
   const confirmPassword = useRef();
+
+  const particlesInit = useCallback(async engine => {
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async container => {
+    console.log(container);
+  }, []);    
 
   const router = useRouter();
   if(user != null){
@@ -65,12 +79,15 @@ export default function Register(){
         <meta name="description" content="Charicha Institute - Login Page" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
+      <main className={'flex w-full min-h-screen h-full justify-center items-center bg-gradient-[-45deg] from-eggblue to-slategray'}>
+        <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>        
         { !loading || user == null ?
           <form className={styles.loginContainer} onSubmit={onSubmitHandler}>
-            <img alt="" src="ci_pc.png" className={styles.image}/>
+            <div className={'min-w-md w-full h-full flex justify-center items-center'}>
+              <Image className="shadow-md" alt='charicha pc hero image' src='/ci_pc.svg' width={'500'} height={'300'}/>
+            </div>            
             <Marginer vertical="20px"/>
-            <p className={styles.captionStyle}> Provide your details </p>
+            <p className={'text-sm text-white font-light'}> Provide your details </p>
             <Marginer vertical="6px"/>          
             <input name="email" type="email" placeholder="Email" ref={email} className={styles.inputText}/>
             <Marginer vertical="14px"/>
@@ -91,16 +108,11 @@ export default function Register(){
             <Marginer vertical="14px"/>          
             <PrimaryButton type="submit" text="REGISTER"/>
             <Marginer vertical="14px"/>
-            <p className={styles.captionStyle} style={{ "cursor": "pointer" }}> Forget Your Password? </p>
+            <p className={'text-aquamarine font-light cursor-pointer'} > Forget Your Password? </p>
             <Marginer vertical="18px"/>
-            <div style={{
-              "display": "flex",
-              "gap": "5px"
-            }}>
-              <p className={styles.bodyTextStyle}> Already have an Account? </p>
-              <p style={{
-                "cursor": "pointer"
-              }} onClick={() => { router.push("/login"); }}> Login here! </p>
+            <div className='flex gap-2'>
+              <p className={'text-white font-light'}> Already have an Account? </p>
+              <p className='text-aquamarine font-light cursor-pointer' onClick={() => { router.push("/login"); }}> Login here! </p>
             </div>
           </form> : <div> <PuffLoader/> </div>
         }
