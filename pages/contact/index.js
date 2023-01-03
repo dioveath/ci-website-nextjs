@@ -42,7 +42,7 @@ export default function Contact(){
 
 
           <div className={'flex flex-wrap gap-10 mt-10 justify-center'}>
-          <form className={'w-full flex-1 flex flex-col gap-8 p-12 bg-slategray rounded-2xl shadow-lg'}>
+          <form className={'w-full flex-1 flex flex-col gap-8 p-4 xl:p-12 bg-slategray rounded-2xl shadow-lg'}>
 	    <p className='text-2xl text-white font-light border-b-2 border-b-cheeseyellow'> Contact Details </p>
             <input name="" type="text" className={styles["form-input"]} placeholder="First Name"/>
             <input name="" type="text"  className={styles["form-input"]} placeholder="Last Name"/>
@@ -63,8 +63,8 @@ export default function Contact(){
               <p className={'flex text-white text-sm font-light items-center gap-2'}> <ImLocation color="red"/> Belbari - 11, Laxmimarga </p>            
             </div>
 
-	    <div className='rounded-2xl overflow-clip shadow-md'>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14263.539457521121!2d87.4492403!3d26.6521686!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xec11a5cb93e0fac1!2sCharicha%20Institute!5e0!3m2!1sen!2suk!4v1672662347634!5m2!1sen!2suk" width="600" height="400" style={{'border': 0}} allowFullScreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+	    <div className='w-full h-full rounded-2xl overflow-clip shadow-md'>
+              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14263.539457521121!2d87.4492403!3d26.6521686!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xec11a5cb93e0fac1!2sCharicha%20Institute!5e0!3m2!1sen!2suk!4v1672662347634!5m2!1sen!2suk" width="100%" height="100%" style={{'border': 0}} allowFullScreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
 
           </div>
