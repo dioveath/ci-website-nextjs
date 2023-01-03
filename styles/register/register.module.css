@@ -34,7 +34,8 @@
     border-radius: 10px;
     border: 1px solid #aaaaaa55;
     width: 100%;
-    font-family: inherit;    
+    font-family: inherit;
+    font-weight: 300;
 }
 
 
@@ -48,6 +49,7 @@
     position: absolute;
     right: 0;
     margin-right: 1rem;
+    color: gray;
 }
 
 .bodyTextStyle {

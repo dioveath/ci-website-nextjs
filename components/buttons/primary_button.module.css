@@ -1,20 +1,21 @@
 .primaryButton {
     border: none;
-    background-color: var(--primary-color);
+    background-color: #0FD3BB;
     color: white;
     width: 100%;
     padding: 14px 0px;
     border-radius: 10px;
     
     font-size: 1.2rem;
-    font-weight: bold;
+    font-weight: medium;
 
     cursor: pointer;
     box-shadow: 2px 2px 2px 5px 2px #222222;
+    transition: all .4s;
 }
 
 
 .primaryButton:hover {
-    background-color: #0FF8F1;
+    background-color: #2A4041;
     /* box-shadow: 1px 1px 2px 1px #44333333; */
 }
