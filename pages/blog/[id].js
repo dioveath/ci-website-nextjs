@@ -18,8 +18,6 @@ import { serialize } from 'bson';
 
 export default function BlogPage({ blog: blogData, user: userData }){
 
-  console.log(blogData);
-
   return (
     <div>
       <Head>
