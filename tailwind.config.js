@@ -19,6 +19,25 @@ module.exports = {
         montserrat: "Montserrat",
         poppins: "Poppins",
       },
+      keyFrames: {
+        wiggle: {
+          '25%': {
+            transform: 'translateX(10px)',
+            color: 'blue'
+          },
+          '50%': {
+            transform: 'translateX(0px)',
+            color: 'yellow'
+          },
+          '100%': {
+            transform: 'translateX(-10px)',
+            color: 'red'
+          }
+        }
+      },
+      animation: {
+        wiggle: 'wiggle 0.5s ease-out infinite'
+      },      
     },
   },
   plugins: [

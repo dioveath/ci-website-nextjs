@@ -8,6 +8,7 @@ import Marginer from '../../components/utils/Marginer.js';
 import PrimaryButton from '../../components/buttons/PrimaryButton.js';
 
 import useAuth from '../../lib/hooks/Auth.js';
+import { validateEmail, validatePassword } from '../../lib/utils/validator';
 import PuffLoader from 'react-spinners/PuffLoader';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { ImGoogle2 } from 'react-icons/im';
@@ -18,6 +19,7 @@ import Particles from 'react-particles';
 import { particleConfig } from '../../lib/particle_config';
 
 export default function Login(){
+  const [fieldError, setFieldError] = useState(null);
   const email = useRef();
   const password = useRef();
 
@@ -35,10 +37,23 @@ export default function Login(){
   const router = useRouter();
   if(user != null) {
     router.push("/");
+    return <div className='flex w-full min-h-screen h-full justify-center items-center bg-gradient-[-45deg] from-eggblue to-slategray'>
+             <PuffLoader className='text-eggblue'/>
+           </div>;
   }
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
+    setFieldError(null);
+    if(!validateEmail(email.current.value)) {
+      setFieldError("Please enter a valid email!");
+      return;
+    }
+    if(!validatePassword(password.current.value)) {
+      setFieldError("Password is not valid!");
+      return;
+    }
+
     loginWithEmailAndPassword(email.current.value, password.current.value);
   };
   
@@ -49,7 +64,7 @@ export default function Login(){
         <meta name="description" content="Charicha Institute - Login Page" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-        <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>
+      <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>
       <main className={'flex w-full min-h-screen h-full justify-center items-center bg-gradient-[-45deg] from-eggblue to-slategray'}>
         { loading &&  <div> <PuffLoader/> </div> }
         { !loading &&
@@ -67,12 +82,12 @@ export default function Login(){
               <div className={styles.eyeIcon} onClick={() => { setPasswordShow(!passwordShow); }}> { passwordShow ? <AiFillEyeInvisible/> : <AiFillEye/>}</div>
               <input name="password" type={ passwordShow ? "text" : "password"} placeholder="Password" ref={password} className={styles.inputText}/>
             </div>
-            <Marginer vertical="6px"/>
-            { error != "" ? <p className={styles.captionStyle} style={{
-              "color": "red",
-              "fontSize": "12px"
-            }}> * { error } </p> : "" }
-            <Marginer vertical="14px"/>          
+	    <div className='max-h-12 h-full my-2'>
+            {(fieldError || error) &&
+             <div className='h-full flex items-center p-4 bg-red-300 rounded-md'>
+               <p className='text-red-600 text-xs animate-wiggle'> { fieldError || error }</p>              
+             </div>}
+            </div>
             <PrimaryButton type="submit" text="LOGIN"/>
             <Marginer vertical="6px"/>          
             <PrimaryButton onClick={() => loginWithGoogle() } text={ <div style={{

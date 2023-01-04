@@ -1,6 +1,5 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import Link from 'next/link';
 
 import { FaFacebook, FaInstagram, FaDotCircle } from "react-icons/fa";
 import { AiFillHeart } from "react-icons/ai";
@@ -15,33 +14,13 @@ import Footer from "../../components/footer/Footer.js";
 
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
-import { UserService } from "../../lib/service/UserService.js";
 import { coursesList } from "../../components/course/coursesList.js";
 
-export default function Profile(props) {
-  const router = useRouter();
-  const { id } = router.query;
+export default function Profile({ userData }) {
+  const loadingUser = !userData;
+  const isError = !userData;
 
-  const [userData, setUserData] = useState({ id: "" });
-  const [loadingUser, setLoadingUser] = useState(true);
-  const [isError, setError] = useState(false);
-
-  const userJoinedDate = new Date(userData?.joinedAt);
-
-  useEffect(() => {
-    (async () => {
-      setLoadingUser(true);
-      let result = await UserService.getUser(id);
-      if (result.userData !== undefined) {
-        setUserData(result.userData);
-        setError(false);
-      } else {
-        setError(result.error);
-      }
-      setLoadingUser(false);
-    })();
-  }, [id, userData?.id]);
+  const userJoinedDate = userData?.createdAt;
 
   const Roles = (props) =>
     loadingUser ? (
@@ -108,8 +87,7 @@ export default function Profile(props) {
         </p>
         <p className={styles.subTitleText}> {userData?.rank} </p>
         <p className={styles.subTitleText}>
-          {" "}
-          Since{" "}
+          Since
           {!isError ? (
             userJoinedDate?.toDateString()
           ) : (
@@ -238,10 +216,15 @@ export default function Profile(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar />
 
-      <main className={styles.main}>
-        {isError && <div> Server Error: {isError} </div>}
+      <main className={'bg-gradient-[-45deg] from-eggblue to-slategray'}>
+        <Navbar />
+        {isError && <div className='min-h-[85vh] h-full w-full flex justify-center items-center'>
+		      <div>
+		        <p className='text-[40px] text-white'> Server Error -- 500 </p>
+                        <Link href='/' className='text-white font-light hover:text-aquamarine'> Go to Home </Link>                        
+                      </div>
+                    </div>}
         {!isError && (
           <>
             <CoverImage />
@@ -274,4 +257,25 @@ export default function Profile(props) {
       <Footer />
     </div>
   );
+}
+
+
+export async function getStaticProps(context){
+  // const { userData } = await UserService.getUser(context.params?.id);
+
+  const userData = null;
+
+  return {
+    props: {
+      userData: userData
+    }
+  };
+}
+
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: "blocking"
+  };
 }
