@@ -23,7 +23,7 @@ export default function Login(){
   const email = useRef();
   const password = useRef();
 
-  const { user, error, loading, loginWithGoogle, loginWithEmailAndPassword, logout } = useAuth();
+  const { user, error, fetching, loginWithGoogle, loginWithEmailAndPassword, logout } = useAuth();
   const [passwordShow, setPasswordShow] = useState(false);
 
   const particlesInit = useCallback(async engine => {
@@ -66,8 +66,8 @@ export default function Login(){
       </Head>
       <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>
       <main className={'flex w-full min-h-screen h-full justify-center items-center bg-gradient-[-45deg] from-eggblue to-slategray'}>
-        { loading &&  <div> <PuffLoader/> </div> }
-        { !loading &&
+        { fetching &&  <div> <PuffLoader/> </div> }
+        { !fetching &&
           <form className={styles.loginContainer} onSubmit={onSubmitHandler}>
             <div className={'min-w-md w-full h-full flex justify-center items-center'}>
               <Image className="shadow-md" alt='charicha pc hero image' src='/ci_pc.svg' width={'500'} height={'300'}/>

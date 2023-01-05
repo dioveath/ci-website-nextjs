@@ -64,9 +64,9 @@ export default function Register(){
     router.push("/");
     return <div className='flex w-full min-h-screen h-full justify-center items-center bg-gradient-[-45deg] from-eggblue to-slategray'>
              <PuffLoader className='text-eggblue'/>
-           </div>;    
+           </div>;          
   }
-  
+    
   return (
     <div className={styles.container}>
       <Head>
