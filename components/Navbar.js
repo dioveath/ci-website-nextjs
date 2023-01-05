@@ -21,8 +21,6 @@ export default function Navbar({ path }) {
   const [showMenu, setShowMenu] = useState(false);
   const { user, userData, logout } = useAuth();
 
-  console.log(isDesktop);
-
   const dropdownList = [
     {
       name: "Profile",
@@ -137,7 +135,7 @@ const NavList = ({
         <DropdownMenu
           title={
             <>
-              {(user?.photoURL || userData?.photoURL) && (
+              {(userData?.profileURL || userData?.photoURL) && (
                 <img
                   alt={user.displayName}
                   src={userData?.photoURL}

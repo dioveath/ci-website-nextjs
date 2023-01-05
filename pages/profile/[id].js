@@ -16,9 +16,11 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { coursesList } from "../../components/course/coursesList.js";
 
-export default function Profile({ userData }) {
+import { UserService } from '../../lib/service/UserService';
+
+export default function Profile({ userData, error }) {
   const loadingUser = !userData;
-  const isError = !userData;
+  const isError = error;
 
   const userJoinedDate = userData?.createdAt;
 
@@ -221,7 +223,7 @@ export default function Profile({ userData }) {
         <Navbar />
         {isError && <div className='min-h-[85vh] h-full w-full flex justify-center items-center'>
 		      <div>
-		        <p className='text-[40px] text-white'> Server Error -- 500 </p>
+		        <p className='text-[40px] text-white'> ERROR 404 : USER NOT FOUND </p>
                         <Link href='/' className='text-white font-light hover:text-aquamarine'> Go to Home </Link>                        
                       </div>
                     </div>}
@@ -261,15 +263,21 @@ export default function Profile({ userData }) {
 
 
 export async function getStaticProps(context){
-  // const { userData } = await UserService.getUser(context.params?.id);
+  try {
+    const user = await UserService.getUser(context.params?.id);
+    return {
+      props: {
+        userData: user.userData
+      }
+    };    
+  } catch(e){
+    return {
+      props: {
+        userData: null
+      }
+    };
+  }
 
-  const userData = null;
-
-  return {
-    props: {
-      userData: userData
-    }
-  };
 }
 
 
