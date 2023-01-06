@@ -15,7 +15,7 @@
     transform: translateX(-50%);
     list-style-type: none;
     background-color: ghostwhite;
-    padding: 10px 0px;
+    padding: 5px 5px;
     border-radius: 5px;
     box-shadow: 0px 0.1px 3px 1px #22222255;
     z-index: 100;

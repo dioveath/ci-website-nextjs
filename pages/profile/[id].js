@@ -21,8 +21,7 @@ import { UserService } from '../../lib/service/UserService';
 export default function Profile({ userData, error }) {
   const loadingUser = !userData;
   const isError = error;
-
-  const userJoinedDate = userData?.createdAt;
+  const userJoinedDate = new Date(userData?.joined_at);
 
   const Roles = (props) =>
     loadingUser ? (
@@ -56,7 +55,7 @@ export default function Profile({ userData, error }) {
     ) : userData?.photoURL == "" ? (
       <div className={styles.profileTextImg}>
         {" "}
-        <p> {userData?.firstName[0]} </p>{" "}
+        <p> {userData?.fisrt_name[0]} </p>{" "}
       </div>
     ) : (
       <img
@@ -82,7 +81,7 @@ export default function Profile({ userData, error }) {
       <div className={styles.userTextInfoContainer}>
         <p className={styles.titleText}>
           {!isError ? (
-            userData?.firstName + " " + userData?.lastName
+            userData?.first_name + " " + userData?.last_name
           ) : (
             <Skeleton />
           )}

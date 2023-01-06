@@ -125,8 +125,7 @@ const NavList = ({
               "px-8 py-2 h-10 w-32 flex justify-center items-center bg-slategray hover:bg-brightaqua text-white rounded-3xl transition-all drop-shadow-md"
             }
           >
-            {" "}
-            Register{" "}
+            Register
           </a>
         </Link>
       </div>
@@ -134,16 +133,16 @@ const NavList = ({
       <div>
         <DropdownMenu
           title={
-            <>
+            <div className='rounded-full overflow-clip'>
               {(userData?.profileURL || userData?.photoURL) && (
                 <img
                   alt={user.displayName}
-                  src={userData?.photoURL}
+                  src={userData?.profileURL || userData?.photoURL}
                   className={styles.userProfilePhoto}
                 />
               )}
-              {user?.photoURL === undefined && <BsPersonFill size={24} />}
-            </>
+              {!user?.profileURL && <BsPersonFill className='text-white text-2xl'/>}
+            </div>
           }
           itemList={dropdownList}
         />
