@@ -8,9 +8,8 @@ import Marginer from '../../components/utils/Marginer.js';
 import PrimaryButton from '../../components/buttons/PrimaryButton.js';
 
 import useAuth from '../../lib/hooks/Auth.js';
-import { validateEmail, validatePassword } from '../../lib/utils/validator';
+import { validateEmail, validatePassword, validateName } from '../../lib/utils/validator';
 import PuffLoader from 'react-spinners/PuffLoader';
-
 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
@@ -27,6 +26,8 @@ export default function Register(){
   const [ passwordShow, setPasswordShow ] = useState(false);
   const [ confirmPasswordShow, setConfirmPasswordShow ] = useState(false);
 
+  const firstNameRef = useRef();
+  const lastNameRef = useRef();
   const email = useRef();
   const password = useRef();
   const confirmPassword = useRef();
@@ -44,6 +45,16 @@ export default function Register(){
     e.preventDefault();
     setFieldError(null);
 
+    if(!validateName(firstNameRef.current.value)) {
+      setFieldError("Please enter a valid first name");
+      return;
+    }
+
+    if(!validateName(lastNameRef.current.value)) {
+      setFieldError("Please enter a valid last name");
+      return;
+    }    
+
     if(!validateEmail(email.current.value)) {
       setFieldError("Please enter a valid email!");
       return;
@@ -56,7 +67,7 @@ export default function Register(){
       setFieldError("Password & Confirm Password doesn't match!");
       return;
     }
-    registerWithEmailAndPassword(email.current.value, password.current.value);
+    registerWithEmailAndPassword(email.current.value, password.current.value, firstNameRef.current.value, lastNameRef.current.value);
   };
 
   const router = useRouter();
@@ -64,7 +75,7 @@ export default function Register(){
     router.push("/");
     return <div className='flex w-full min-h-screen h-full justify-center items-center bg-gradient-[-45deg] from-eggblue to-slategray'>
              <PuffLoader className='text-eggblue'/>
-           </div>;          
+           </div>;
   }
     
   return (
@@ -84,16 +95,21 @@ export default function Register(){
             <Marginer vertical="20px"/>
             <p className={'text-sm text-white font-light'}> Provide your details </p>
             <Marginer vertical="6px"/>          
+	    <div className='flex gap-4'>
+              <input name="firstName" type="text" placeholder="First Name" ref={firstNameRef} className={styles.inputText}/>
+              <input name="lastName" type="text" placeholder="Last Name" ref={lastNameRef} className={styles.inputText}/>              
+            </div>
+            <Marginer vertical="14px"/>          
             <input name="email" type="email" placeholder="Email" ref={email} className={styles.inputText}/>
             <Marginer vertical="14px"/>
             <div className={styles.field}>
               <div className={styles.eyeIcon} onClick={() => { setPasswordShow(!passwordShow); }}> { passwordShow ? <AiFillEyeInvisible/> : <AiFillEye/>}</div>
-              <input name="password" type={ passwordShow ? "text" : "password"} placeholder="Password" ref={password} className={styles.inputText}/>
+              <input name="password" type={ passwordShow ? "text" : "password"} placeholder="Password" ref={password} className={styles.inputText} autoComplete='new-password'/>
             </div>
             <Marginer vertical="14px"/>
             <div className={styles.field}>
               <div className={styles.eyeIcon} onClick={() => { setConfirmPasswordShow(!confirmPasswordShow); }}> { confirmPasswordShow ? <AiFillEyeInvisible/> : <AiFillEye/>}</div>
-              <input name="confirmPassword" type={ confirmPasswordShow ? "text" : "password"}  placeholder="Confirm Password" ref={confirmPassword} className={styles.inputText}/>
+              <input name="confirmPassword" type={ confirmPasswordShow ? "text" : "password"}  placeholder="Confirm Password" ref={confirmPassword} className={styles.inputText} autoComplete='new-password'/>
             </div>
 	    <div className='max-h-12 h-full my-2'>
             {(fieldError || error) &&
