@@ -12,7 +12,7 @@ export default function Stories(){
 	  <div>
 	    <p className='text-lg lg:text-2xl text-white uppercase mx-6'> How it all started? </p>
 	    <p className='max-w-md text-sm lg:text-base text-white font-light mx-6'>
-            Initially, Charicha Institute was established in a garage with bunch of friends taking over computer parts. Charicha Institute has now paved its path through hardships & efforts to a great Business. Now, Charicha Institute is turning over thousands in a year. This is our success story.            
+            Initially, Charicha Institute was established in a garage with bunch of friends taking over computer parts. Charicha Institute has now paved its path through hardships & efforts to a great Company. Now, Charicha Institute is turning over thousands in a year. This is our success story.            
             </p>
           </div>
         </div>

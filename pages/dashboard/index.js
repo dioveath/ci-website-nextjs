@@ -1,13 +1,9 @@
 import Head from "next/head";
-import Image from "next/image";
-import Link from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 import styles from "../../styles/dashboard/index.module.css";
-import Navbar from "../../components/Navbar.js";
-import Footer from "../../components/footer/Footer.js";
-import Tabbar from '../../components/tabbar/Tabbar.js';
 import LoadingScreen from '../../components/LoadingScreen/index.js';
 
 import useAuth from "../../lib/hooks/Auth.js";
@@ -18,11 +14,14 @@ export default function Dashboard() {
   
 
   useEffect(() => {
+    if(fetching) return;
     if(!user) router.push('/');
-  }, [router, user]);
+  }, [router, user, fetching]);
 
 
-  if(!user && !userData) return <LoadingScreen/>;
+  if(fetching) {
+    return <LoadingScreen/>;
+  }
 
   return (
     <div className={styles.container}>
@@ -32,25 +31,25 @@ export default function Dashboard() {
         <meta property="og:image" itemProp="image" content="_image.png" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-
       
       <main className='bg-gradient-[-45deg] from-eggblue to-slategray'>
-        <Navbar />
-        {user && userData && <PageContent userData={userData} />}
+        {user && userData && <PageContent userData={userData} path={router.asPath}/>}
       </main>
-      <Footer />
+      {/* <Footer /> */}
 
     </div>
   );
 }
 
 
-const PageContent = ({userData}) => {
+const PageContent = ({userData, path}) => {
 
   return (
-    <div className='bg-red-300'>
+    <div className='w-full'>
       <p className='text-3xl'> Welcome to Dashboard, { userData?.first_name } </p>
+      <div>
+        <Link href={`${path}/article`}> Add New Article </Link>
+      </div>
     </div>
   );
 };
