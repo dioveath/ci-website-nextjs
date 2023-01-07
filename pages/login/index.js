@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import styles from '../../styles/login/login.module.css';
 import Marginer from '../../components/utils/Marginer.js';
 import PrimaryButton from '../../components/buttons/PrimaryButton.js';
+import LoadingScreen from '../../components/LoadingScreen';
 
 import useAuth from '../../lib/hooks/Auth.js';
 import { validateEmail, validatePassword } from '../../lib/utils/validator';
@@ -23,7 +24,7 @@ export default function Login(){
   const email = useRef();
   const password = useRef();
 
-  const { user, error, fetching, loginWithGoogle, loginWithEmailAndPassword, logout } = useAuth();
+  const {  error, fetching, loading, isLoggedIn, loginWithGoogle, loginWithEmailAndPassword } = useAuth();
   const [passwordShow, setPasswordShow] = useState(false);
 
   const particlesInit = useCallback(async engine => {
@@ -35,11 +36,15 @@ export default function Login(){
   }, []);  
 
   const router = useRouter();
-  if(user != null) {
+
+
+  if(loading){
+    return <LoadingScreen/>;
+  }
+
+  if(!fetching && !loading && isLoggedIn) {
     router.push("/");
-    return <div className='flex w-full min-h-screen h-full justify-center items-center bg-gradient-[-45deg] from-eggblue to-slategray'>
-             <PuffLoader className='text-eggblue'/>
-           </div>;
+    return <LoadingScreen/>;
   }
 
   const onSubmitHandler = (e) => {
@@ -66,8 +71,6 @@ export default function Login(){
       </Head>
       <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>
       <main className={'flex w-full min-h-screen h-full justify-center items-center bg-gradient-[-45deg] from-eggblue to-slategray'}>
-        { fetching &&  <div> <PuffLoader/> </div> }
-        { !fetching &&
           <form className={styles.loginContainer} onSubmit={onSubmitHandler}>
             <div className={'min-w-md w-full h-full flex justify-center items-center'}>
               <Image className="shadow-md" alt='charicha pc hero image' src='/ci_pc.svg' width={'500'} height={'300'}/>
@@ -88,9 +91,9 @@ export default function Login(){
                <p className='text-red-600 text-xs animate-wiggle'> { fieldError || error }</p>              
              </div>}
             </div>
-            <PrimaryButton type="submit" text="LOGIN"/>
+            <PrimaryButton type="submit" text="LOGIN" disabled={fetching}/>
             <Marginer vertical="6px"/>          
-            <PrimaryButton onClick={() => loginWithGoogle() } text={ <div style={{
+            <PrimaryButton disabled={fetching} onClick={() => loginWithGoogle() } text={ <div style={{
               "display": "flex",
               "justifyContent": "center",
               "alignItems": "center"
@@ -105,7 +108,6 @@ export default function Login(){
               }}> Register </p>
             </div>
           </form> 
-        }
       </main>
 
     </div>

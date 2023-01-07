@@ -9,11 +9,8 @@ import Marginer from '../../components/utils/Marginer.js';
 import parse from 'html-react-parser';
 
 export default function BlogCard(props){
-
   const blog = props.blog;
-  let result = blog.body.match(/<p>(.*?)<\/p>/g).map((val) => val.replace(/<\/?p>/g, ''));
-  let summary = result.filter((res) => res[0].match(/[a-z]/i))[0] || 'Loading...';
-  summary = summary.substr(0, 200) + '....';
+  let summary = blog.body.blocks[0].text;
 
   const [userData, setUserData] = useState({ first_name: "null", last_name: "null"});
   const [isLoading, setLoading] = useState(true);
@@ -32,7 +29,7 @@ export default function BlogCard(props){
     <Link href={"/blog/" + blog.id} passHref>
     <div className={'w-full max-w-lg p-10 bg-slategray/80 rounded-2xl flex flex-col items-center shadow-2xl cursor-pointer hover:bg-slategray transition-all'}>
       <div className={''}>
-        <img src={blog.imageURL} className={'h-40 object-cover'}/>
+        <img src={blog.thumbnail.downloadURL} className={'h-40 object-cover'}/>
       </div>
 
       <Marginer vertical="10px"/>

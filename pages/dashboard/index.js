@@ -12,7 +12,6 @@ export default function Dashboard() {
   const { user, userData, fetching, error } = useAuth();
   const router = useRouter();
   
-
   useEffect(() => {
     if(fetching) return;
     if(!user) router.push('/');
@@ -35,7 +34,6 @@ export default function Dashboard() {
       <main className='bg-gradient-[-45deg] from-eggblue to-slategray'>
         {user && userData && <PageContent userData={userData} path={router.asPath}/>}
       </main>
-      {/* <Footer /> */}
 
     </div>
   );
@@ -49,6 +47,7 @@ const PageContent = ({userData, path}) => {
       <p className='text-3xl'> Welcome to Dashboard, { userData?.first_name } </p>
       <div>
         <Link href={`${path}/article`}> Add New Article </Link>
+        <Link href={`${path}/media`}> See your medias </Link>
       </div>
     </div>
   );
