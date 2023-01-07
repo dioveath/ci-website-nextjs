@@ -1,7 +1,8 @@
 import { useContext } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 import useAuth from '../../lib/hooks/Auth';
+import queryClient from "../../lib/queryclient";
 import { ArticleService } from '../../lib/service/ArticleService';
 import { pageContext } from './index';
 
@@ -12,10 +13,18 @@ export default function ArticleContainer(){
     queryKey: ['articles'],
     queryFn: async () => {
       const articles =  await ArticleService.listArticles(user?.uid);
-      console.log(articles);
       return articles;
     },
     enabled: !!user
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (articleId) => {
+      return ArticleService.deleteArticle(articleId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['articles']});
+    }
   });
 
   const { setPage, setArticle } = useContext(pageContext);
@@ -35,9 +44,15 @@ export default function ArticleContainer(){
 	  <div className='flex gap-2 cursor-pointer'>
 	    <button onClick={() => {
               setArticle(article);
+              setPage(2);
+            }}> View </button>
+	    <button onClick={() => {
+              setArticle(article);
               setPage(1);
             }}> Edit </button>
-	    <button> Delete </button>
+	    <button onClick={() => {
+              deleteMutation.mutate(article.id);
+            }}> Delete </button>
           </div>
         </div>)}
       <button

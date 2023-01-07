@@ -1,4 +1,5 @@
 import { useState, useRef, useContext } from "react";
+import Image from 'next/image';
 import dynamic from "next/dynamic";
 
 import { useMutation } from "@tanstack/react-query";
@@ -10,6 +11,8 @@ import useAuth from "../../lib/hooks/Auth";
 import queryClient from "../../lib/queryclient";
 import { pageContext } from './index';
 import { ArticleService } from "../../lib/service/ArticleService";
+import { StorageService } from '../../lib/service/StorageService';
+import MediaSelectModal from '../media/MediaSelectModal';
 
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
@@ -19,17 +22,18 @@ const Editor = dynamic(
 export default function AddArticleContainer({ article }) {
   const state = article ? EditorState.createWithContent(convertFromRaw(article.body)) : EditorState.createEmpty();
   const [editorState, setEditorState] = useState(state);
-
   const [title, setTitle] = useState(article?.title);
+  const [fieldError, setFieldError] = useState(null);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [thumbnail, setThumbnail] = useState(null);
 
   const { user } = useAuth();
   const isEdit = !!article;
 
-
   const onEditorStateChange = (editState) => {
     setEditorState(editState);
   };
-
 
   const addMutation = useMutation({
     mutationFn: (newArticle) => {
@@ -51,25 +55,54 @@ export default function AddArticleContainer({ article }) {
 
   const mutation = isEdit ? updateMutation : addMutation; 
 
-  const onAddClick = (e) => {
+  const onAddClick = async (e) => {
     e.preventDefault();
     const rawContentState = convertToRaw(editorState.getCurrentContent());
 
+    if(!title) {
+      setFieldError('Title shoud be set!');
+      return;
+    }
+
+    if(rawContentState.blocks.length <= 0) {
+      setFieldError('Please add some content!');
+      return;
+    }
+    
     if(isEdit) {
       const articleData = {
-        id: article.id,
         body: rawContentState,
-        title: title
+        title: title,
+        ...(thumbnail && {
+          thumbnail: {
+            id: thumbnail.uid,
+            downloadURL: thumbnail.downloadURL            
+          }
+        })
       };
+
+      console.log(articleData);
+
       updateMutation.mutate(articleData);
     } else {
+      if(!thumbnail) {
+        setFieldError('Enter beautiful thumbnail!');
+        return;
+      }
+
       const articleData = {
         body: rawContentState,
         title: title,
         writtenBy: user.uid,
+        ...(thumbnail && {
+          thumbnail: {
+            id: thumbnail.uid,
+            downloadURL: thumbnail.downloadURL
+          }
+        })
       };
 
-      addMutation.mutate(articleData);      
+      addMutation.mutate(articleData);
     }
 
   };
@@ -90,6 +123,12 @@ export default function AddArticleContainer({ article }) {
         placeholder="Article Title"
         className="w-full py-4 mb-4 rounded-lg"
       />
+
+      {<Image alt='thumb upload' src={(thumbnail ? thumbnail.downloadURL : isEdit ? article.thumbnail.downloadURL : "/upload.webp")} width={'100px'} height={'100px'} objectFit={'cover'}/>}
+
+      {!modalOpen && <button onClick={() => setModalOpen(true)}> Select Thumbnail </button>}
+      { modalOpen && <MediaSelectModal onClose={() => setModalOpen(false)} setSelect={(image) => setThumbnail(image)}/> }
+
       {mutation.isError && <p> { mutation.error.message }</p>}
       {mutation.isSuccess && <p> Successfully { isEdit ? "Edited" : "Added"} </p>}
       <Editor

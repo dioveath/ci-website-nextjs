@@ -53,14 +53,14 @@
 
 @media only screen and (min-width: 640px){
     .contentContainer {
-	padding: 2rem 6rem;
+	padding: 2rem 4rem;
     }
 }
 
 @media only screen and (min-width: 1024px){
     .contentContainer {
 	grid-template-columns: 8fr 2fr;
-	padding: 2rem 10rem;	
+	padding: 2rem 6rem;	
     }
 }
 

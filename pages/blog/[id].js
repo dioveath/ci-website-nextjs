@@ -2,14 +2,11 @@ import Image from 'next/image';
 import Head from 'next/head';
 import Navbar from '../../components/Navbar.js';
 
-import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
 import { FaFacebook, FaInstagram, FaDotCircle } from 'react-icons/fa';
 import { AiFillHeart } from 'react-icons/ai';
 
-import Marginer from '../../components/utils/Marginer.js';
 import styles from './blogpage.module.css';
-import htmr from 'htmr';
+import DraftRenderer from '../../components/DraftRenderer';
 
 import { getPost } from '../api/posts/[postId].js';
 import { UserService } from '../../lib/service/UserService.js';
@@ -18,11 +15,12 @@ import { serialize } from 'bson';
 
 export default function BlogPage({ blog: blogData, user: userData }){
 
+
   return (
     <div>
       <Head>
         <title> Charicha Insitute Blogs | { blogData?.title || "Empty Blog" } </title>
-        <meta name="description" content={htmr(blogData?.body || "") + "..."} />
+        <meta name="description" />
         {/* <meta property="og:image" itemProp="image" content={"landing_image.png"}/> */}
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -54,7 +52,8 @@ export default function BlogPage({ blog: blogData, user: userData }){
 
         <div className={styles.contentContainer}>
           <div className={styles.content}>
-            { htmr(blogData?.body || "") }
+            <DraftRenderer raw={blogData.body}/>
+            {/* { htmr(blogData?.body || "") } */}
           </div>
           <div className={styles.rightContents}>
             <Image alt={userData.first_name + "'s Profile Picture"}
@@ -96,8 +95,8 @@ export async function getServerSideProps(context){
   let { createdAt, ...serializableBlog } = blog;
   createdAt = createdAt.toDate().toString();
 
-  let { joinedAt, ...serializableUser} = user.userData;
-  joinedAt = joinedAt.toDate().toString();
+  let { joined_at, ...serializableUser} = user.userData;
+  const joinedAt = new Date(joined_at).toString();
 
   return {
     props: {

@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react';
 import ListArticlesContainer from './ListArticlesContainer';
 import AddArticleContainer from './AddArticleContainer';
+import ViewArticleContainer from './ViewArticleContainer';
 
 const pageContext = createContext();
 
@@ -14,8 +15,9 @@ export default function ArticleContainer(){
       page, setPage, setArticle
     }}>
       <div className='py-4'>
-        { page === 1 && <AddArticleContainer article={article}/> }
         { page === 0 && <ListArticlesContainer/> }
+        { page === 1 && <AddArticleContainer article={article}/> }
+        { page === 2 && <ViewArticleContainer article={article}/>}
       </div>
 
     </pageContext.Provider>
