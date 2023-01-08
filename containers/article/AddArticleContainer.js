@@ -14,6 +14,8 @@ import { ArticleService } from "../../lib/service/ArticleService";
 import { StorageService } from '../../lib/service/StorageService';
 import MediaSelectModal from '../media/MediaSelectModal';
 
+import { IoIosArrowBack } from 'react-icons/io';
+
 const Editor = dynamic(
   () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
   { ssr: false }
@@ -50,6 +52,7 @@ export default function AddArticleContainer({ article }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"]});
+      console.log('onsuccess');
     }
   });
 
@@ -110,36 +113,55 @@ export default function AddArticleContainer({ article }) {
   const { setPage, setArticle } = useContext(pageContext);
 
   return (
-    <div className="w-full px-8 md:px-10 xl:px-20 2xl:px-48">
-      <button onClick={() => {
+    <div className="w-full">
+
+      <div className='px-4'>
+        <p className="uppercase font-light text-3xl text-white"> { isEdit ? 'Edit' : 'Add'} an article </p>
+        <p className='font-light text-white'> {new Date().toDateString()} </p>
+      </div>
+
+      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+        <p className="text-white text-xl font-light"> { isEdit ? 'Edit' : 'Add'} an Article </p>
+      </div>
+
+      <button className='flex items-center text-white' onClick={() => {
         setPage(0);
         setArticle(null);
-      }}> Back </button>
+      }}>
+        <IoIosArrowBack className='text-4xl'/> Back
+      </button>
+
       <input
         onChange={(e) => {setTitle(e.target.value);}}
         value={title}
         name="title"
         type="text"
         placeholder="Article Title"
-        className="w-full py-4 mb-4 rounded-lg"
+        className="w-full py-4 my-4 px-4 rounded-lg"
       />
 
-      {<Image alt='thumb upload' src={(thumbnail ? thumbnail.downloadURL : isEdit ? article.thumbnail.downloadURL : "/upload.webp")} width={'100px'} height={'100px'} objectFit={'cover'}/>}
+      { modalOpen && <MediaSelectModal onClose={() => setModalOpen(false)} setSelect={(image) => setThumbnail(image)}/> }      
+      <div className='flex flex-col items-center gap-2 my-4'>
+        {<Image alt='thumb upload'
+                src={(thumbnail ? thumbnail.downloadURL : isEdit ? article.thumbnail.downloadURL : "/upload.webp")}
+                width={'100px'} height={'100px'} objectFit={'cover'}/>}
 
-      {!modalOpen && <button onClick={() => setModalOpen(true)}> Select Thumbnail </button>}
-      { modalOpen && <MediaSelectModal onClose={() => setModalOpen(false)} setSelect={(image) => setThumbnail(image)}/> }
+        {!modalOpen && <button className='w-full bg-pinegreen py-3 text-white font-light rounded-full' onClick={() => setModalOpen(true)}> Select Thumbnail </button>}
+      </div>
+      
 
       {mutation.isError && <p> { mutation.error.message }</p>}
       {mutation.isSuccess && <p> Successfully { isEdit ? "Edited" : "Added"} </p>}
       <Editor
         readOnly={mutation.isLoading}
         editorState={editorState}
-        wrapperClassName="demo-wrapper"
-        editorClassName="demo-editor"
+        wrapperClassName=""
+        editorClassName="text-white"
+        toolbarClassName=""
         onEditorStateChange={onEditorStateChange}
       />
       <button
-        className="w-full bg-eggblue text-white py-4 rounded-lg shadow-lg"
+        className="w-full bg-eggblue text-white py-4 rounded-full shadow-lg"
         onClick={onAddClick}
         disabled={mutation.isLoading}
       >

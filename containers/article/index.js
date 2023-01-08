@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import ListArticlesContainer from './ListArticlesContainer';
 import AddArticleContainer from './AddArticleContainer';
 import ViewArticleContainer from './ViewArticleContainer';
@@ -9,6 +9,11 @@ const pageContext = createContext();
 export default function ArticleContainer(){
   const [page, setPage] = useState(0);
   const [article, setArticle] = useState(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    console.log("fasdf");
+  }, []);
 
   return (
     <pageContext.Provider value={{

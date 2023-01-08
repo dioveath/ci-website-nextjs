@@ -5,15 +5,23 @@ module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
+    "./containers/**/*.{js,ts,jsx,tsx}",    
   ],
   theme: {
     extend: {
       colors: {
-        eggblue: "#0FD3BB",
-        slategray: "#2A4041",
+        eggblue: "#14B2A2",
+        slategray: "#283F41",
         aquamarine: "#95FDF8",
         cheeseyellow: "#EFB53A",
         brightaqua: "#00FFE9",
+
+        mint: "#A4EFE9",
+        neonblue: "#08E8DE",
+        timbergreen: "#1E2C2D",
+        riverbed: "#384B54",
+        greenpea: "#19564B",
+        pinegreen: "#0E8573"
       },
       fontFamily: {
         montserrat: "Montserrat",

@@ -23,7 +23,7 @@ const config = {
                     src={entity.data.src}
                     width={entity.data.width}
                     height={entity.data.height}
-               />;               
+               />
              </div>;
     }
     return originalText;
