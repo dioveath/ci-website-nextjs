@@ -6,10 +6,11 @@ import queryClient from '../../lib/queryclient';
 
 import useAuth from '../../lib/hooks/Auth';
 import { UserService } from '../../lib/service/UserService';
-import LoadingScreen from '../../components/LoadingScreen';
+
+import FileUploader from '../../components/FileUploader';
 
 export default function MediaContainer(){
-  const { isLoggedIn, userData, loading } = useAuth();
+  const { isLoggedIn, userData } = useAuth();
   const [file, setFile] = useState(null);
 
   const clearForm = () => setFile(null);
@@ -55,35 +56,53 @@ export default function MediaContainer(){
     removeMutation.mutate(m);
   };
 
-  if(loading) return <LoadingScreen/>;
-  if(!isLoggedIn){ return <p> Redirect here! </p>; }  
-
   return (
-    <div>
-      <p> Welcome to your Media Center. </p>
-      <p> These are all your files. </p>
+    <div className=''>
       { isLoading && <p> Loading... </p> }
       { isFetching && <p> Fetching... </p> }
+
+      <div className='px-4'>
+        <p className="uppercase font-light text-3xl text-white"> Resources </p>
+        <p className='font-light text-white'> {new Date().toDateString()} </p>
+      </div>
+
+      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+        <p className="text-white text-xl font-light"> Media Center </p>
+      </div>      
+
+      <div className='w-full flex flex-wrap gap-2 justify-center lg:justify-start'>
       { medias && medias.map((m) => {
-        return <div key={m.uid} className='text-xs text-white'>
-                 <Image alt={m.name} src={m.downloadURL} width={300} height={300} objectFit={'cover'}/>
-		 <div>
-      		   <p> ID: { m.uid }</p>
-      		   <p> Name: { m.name }</p>
+        return <div key={m.uid} className={`text-xs text-white font-light w-[250px] p-4 flex 
+                    flex-col items-center rounded-2xl overflow-clip  shadow-lg
+                    bg-timbergreen gap-2`}>
+                 <Image alt={m.name} src={m.downloadURL} width={200} height={200} objectFit={'cover'}/>
+
+		 <div className='w-full flex flex-col justify-start'>
+      		   <p className='text-ellipsis'> Name: { m.name.substring(0, 24) + (m.name.length > 24 ? '...' : '')}</p>
       		   <p> Size: { m.size }</p>
       		   <p> Content Type: { m.contentType }</p>
-      		   <p> DownloadURL: { m.downloadURL }</p>
-      		   <button className='bg-red-300 py-4' onClick={() => {onDelete(m); }}> Delete </button>
                  </div>
+      		 <a className='w-full' href={m.downloadURL}>
+                   <button className='w-full py-2 bg-pinegreen hover:bg-greenpea rounded-full transition-all'> Download </button>
+                 </a>
+                   
+      		 <button className='w-full py-2 bg-pinegreen hover:bg-greenpea rounded-full transition-all' onClick={() => {onDelete(m); }}> Delete </button>
                </div>;
       })}
+      </div>
 
 
-      <p> Upload new file! </p>
-      { file && <Image alt="upload file" src={URL.createObjectURL(file)} width={300} height={300} objectFit={'cover'}/>}
-      <input name="" type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])}/>
-      <button onClick={onUpload} className='bg-eggblue w-full py-4 hover:bg-slategray'> Upload </button>
+      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+        <p className="text-white text-xl font-light"> Upload New File </p>
+      </div>            
 
+
+      <FileUploader setFile={setFile} file={file}/>
+      <button onClick={onUpload}
+              className={`text-white bg-eggblue hover:bg-greenpea disabled:bg-riverbed  
+                          w-full py-4 mt-5 rounded-full shadow-md transition-all 
+                          ${addMutation.isLoading ? 'animate-pulse' : ''}`}
+              disabled={addMutation.isLoading || !file}> Upload </button>
     </div>
   );
   

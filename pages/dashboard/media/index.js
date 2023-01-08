@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useRouter } from 'next/router';
 
 import styles from "../../../styles/dashboard/index.module.css";
 import Footer from "../../../components/footer/Footer.js";
@@ -6,10 +7,21 @@ import MediaContainer from '../../../containers/media';
 
 import queryClient from '../../../lib/queryclient';
 import { QueryClientProvider } from "@tanstack/react-query";
-
-
+import useAuth from "../../../lib/hooks/Auth";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 export default function Article() {
+  const { loading, isLoggedIn } = useAuth();
+  const router = useRouter();
+  
+  if(loading) return <LoadingScreen/>;
+  if(!isLoggedIn){
+    router.push('/');
+    return <LoadingScreen/>;
+  }
+  
+  window.scrollTo(0, 0);    
+
   return (
     <div className={styles.container}>
       <Head>
