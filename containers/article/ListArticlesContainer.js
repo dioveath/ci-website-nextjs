@@ -20,6 +20,7 @@ export default function ArticleContainer() {
       return articles;
     },
     enabled: !!user,
+    refetchOnMount: true
   });
 
   const deleteMutation = useMutation({
@@ -28,6 +29,7 @@ export default function ArticleContainer() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"] });
+      console.log('deleted');
     },
   });
 
@@ -72,7 +74,8 @@ export default function ArticleContainer() {
               </div>
               <div className="flex justify-between gap-2 ">
                 <button
-                  className="w-full py-2 bg-pinegreen hover:bg-greenpea rounded-full transition-all"
+                  disabled={isFetching}
+                  className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${isFetching ? 'animate-pulse' : ''}`}
                   onClick={() => {
                     setArticle(article);
                     setPage(2);
@@ -81,7 +84,8 @@ export default function ArticleContainer() {
                   View
                 </button>
                 <button
-                  className='w-full py-2 bg-pinegreen hover:bg-greenpea rounded-full transition-all'
+                  disabled={isFetching}                  
+                  className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${isFetching ? 'animate-pulse' : ''}`}
                   onClick={() => {
                     setArticle(article);
                     setPage(1);
@@ -90,7 +94,8 @@ export default function ArticleContainer() {
                   Edit
                 </button>
                 <button
-                  className='w-full py-2 bg-pinegreen hover:bg-greenpea rounded-full transition-all'
+                  disabled={isFetching}                  
+                  className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${isFetching ? 'animate-pulse' : ''}`}
                   onClick={() => {
                     deleteMutation.mutate(article.id);
                   }}
