@@ -72,7 +72,7 @@ export default function Dashboard() {
     return <LoadingScreen/>;    
   }
 
-  window.scrollTo(0, 0);
+  
 
   return (
     <div className={styles.container}>

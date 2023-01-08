@@ -11,7 +11,6 @@ import useAuth from "../../lib/hooks/Auth";
 import queryClient from "../../lib/queryclient";
 import { pageContext } from './index';
 import { ArticleService } from "../../lib/service/ArticleService";
-import { StorageService } from '../../lib/service/StorageService';
 import MediaSelectModal from '../media/MediaSelectModal';
 
 import { IoIosArrowBack } from 'react-icons/io';
@@ -52,7 +51,7 @@ export default function AddArticleContainer({ article }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"]});
-      console.log('onsuccess');
+      console.log('updated article');
     }
   });
 
@@ -84,7 +83,6 @@ export default function AddArticleContainer({ article }) {
         })
       };
 
-      console.log(articleData);
 
       updateMutation.mutate(articleData);
     } else {
