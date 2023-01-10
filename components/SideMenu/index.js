@@ -36,13 +36,13 @@ export default function SideMenu({ pages, setPage, currentPage }){
           <ProfileImage fetching={fetching} photoURL={photoURL}/>
         </div>
 	<div className='w-full flex justify-center pb-4 items-center'>
-	  <p className='text-white text-lg font-light'> { name } </p>
+	  <p className='text-white text-md font-light'> { name } </p>
         </div>        
         <nav className='flex flex-col gap-1'>
           { pages.map((page, idx) => {
 	    return (<li key={page.label}
                         onClick={() => setPage(idx)}
-                        className={`flex gap-2 items-center list-none cursor-pointer py-4 px-10 w-64 rounded-r-full text-white text-xl font-light
+                        className={`flex gap-2 items-center list-none cursor-pointer py-4 px-10 w-64 rounded-r-full text-white text-sm md:text-md  font-light
                                     transition-all ${currentPage === idx ? 'bg-slategray' : 'hover:bg-eggblue'}`}>
                       {page.icon} { page.label }
                     </li>);

@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useAuth from "../../lib/hooks/Auth.js";
 
 import queryClient from '../../lib/queryclient';
@@ -66,13 +66,13 @@ export default function Dashboard() {
   const [sideOpen, setSideOpen] = useState(isDesktop);
   const router = useRouter();
 
+
   if(loading) return <LoadingScreen/>;
   if(!isLoggedIn) {
     router.push('/');
     return <LoadingScreen/>;    
   }
 
-  
 
   return (
     <div className={styles.container}>
