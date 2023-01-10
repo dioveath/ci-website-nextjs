@@ -54,7 +54,6 @@ export default function AddArticleContainer({ article }) {
 
   const onAddClick = async (e) => {
     e.preventDefault();
-    // const rawContentState = convertToRaw(editorState.getCurrentContent());
     const rawContentState = await new Promise((resolve, reject) => {
       editorCoreRef.current.save().then((output) => {
         resolve(output);
@@ -73,7 +72,7 @@ export default function AddArticleContainer({ article }) {
     
     if(isEdit) {
       const articleData = {
-        body: rawContentState,
+        body: JSON.stringify(rawContentState),
         title: title,
         ...(thumbnail && {
           thumbnail: {
@@ -92,7 +91,7 @@ export default function AddArticleContainer({ article }) {
       }
 
       const articleData = {
-        body: rawContentState,
+        body: JSON.stringify(rawContentState),
         title: title,
         writtenBy: user.uid,
         ...(thumbnail && {
@@ -155,8 +154,8 @@ export default function AddArticleContainer({ article }) {
 	<div className='w-full h-full overflow-scroll-y bg-timbergreen p-4 rounded-xl prose dark:prose-invert'>
           {
             ReactEditorJS && <ReactEditorJS className='prose'
-                         innerRef={editorCoreRef}
-            data={isEdit ? article.body : null}/>
+                                            innerRef={editorCoreRef}
+                                            data={isEdit ? JSON.parse(article.body) : null}/>
           }
         </div>
       </div>
