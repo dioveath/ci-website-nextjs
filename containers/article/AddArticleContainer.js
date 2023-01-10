@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useCallback } from "react";
 import Image from 'next/image';
 import dynamic from "next/dynamic";
 
@@ -7,11 +7,14 @@ import { useMutation } from "@tanstack/react-query";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
+import { EDITOR_JS_TOOLS } from '../../lib/editorjs/tools.js';
+
 import useAuth from "../../lib/hooks/Auth";
 import queryClient from "../../lib/queryclient";
 import { pageContext } from './index';
 import { ArticleService } from "../../lib/service/ArticleService";
 import MediaSelectModal from '../media/MediaSelectModal';
+import ReactEditorJS from '../../components/ReactEditorJS';
 
 import { IoIosArrowBack } from 'react-icons/io';
 
@@ -20,9 +23,11 @@ const Editor = dynamic(
   { ssr: false }
 );
 
+
+
 export default function AddArticleContainer({ article }) {
-  const state = article ? EditorState.createWithContent(convertFromRaw(article.body)) : EditorState.createEmpty();
-  const [editorState, setEditorState] = useState(state);
+  // const state = article ? EditorState.createWithContent(convertFromRaw(article.body)) : EditorState.createEmpty();
+  // const [editorState, setEditorState] = useState(state);
   const [title, setTitle] = useState(article?.title);
   const [fieldError, setFieldError] = useState(null);
 
@@ -32,9 +37,16 @@ export default function AddArticleContainer({ article }) {
   const { user } = useAuth();
   const isEdit = !!article;
 
-  const onEditorStateChange = (editState) => {
-    setEditorState(editState);
-  };
+  const editorCore = useRef(null);
+
+  const handleInitialize = useCallback((instance) => {
+    editorCore.current = instance;
+  }, []);
+
+
+  // const onEditorStateChange = (editState) => {
+  //   setEditorState(editState);
+  // };
 
   const addMutation = useMutation({
     mutationFn: (newArticle) => {
@@ -59,7 +71,12 @@ export default function AddArticleContainer({ article }) {
 
   const onAddClick = async (e) => {
     e.preventDefault();
-    const rawContentState = convertToRaw(editorState.getCurrentContent());
+    // const rawContentState = convertToRaw(editorState.getCurrentContent());
+    const rawContentState = await new Promise((resolve, reject) => {
+      editorCore.current.save().then((output) => {
+        resolve(output);
+      }).catch((error) => { reject(error); });
+    });
 
     if(!title) {
       setFieldError('Title shoud be set!');
@@ -147,17 +164,26 @@ export default function AddArticleContainer({ article }) {
         {!modalOpen && <button className='w-full bg-pinegreen py-3 text-white font-light rounded-full' onClick={() => setModalOpen(true)}> Select Thumbnail </button>}
       </div>
       
+      
 
       {mutation.isError && <p> { mutation.error.message }</p>}
       {mutation.isSuccess && <p> Successfully { isEdit ? "Edited" : "Added"} </p>}
-      <Editor
-        readOnly={mutation.isLoading}
-        editorState={editorState}
-        wrapperClassName=""
-        editorClassName="text-white"
-        toolbarClassName=""
-        onEditorStateChange={onEditorStateChange}
-      />
+
+      {/* <Editor */}
+      {/*   readOnly={mutation.isLoading} */}
+      {/*   editorState={editorState} */}
+      {/*   wrapperClassName="" */}
+      {/*   editorClassName="text-white" */}
+      {/*   toolbarClassName="" */}
+      {/*   onEditorStateChange={onEditorStateChange} */}
+      {/* /> */}
+
+      <div className='w-full h-full rounded-xl mt-10 mb-4 py-2 flex justify-center items-center'>
+	<div className='w-full bg-timbergreen p-4 rounded-xl prose dark:prose-invert'>
+    <ReactEditorJS className='prose' onInitialize={handleInitialize} tools={EDITOR_JS_TOOLS} value={isEdit ? article.body : null}/>
+        </div>
+      </div>
+
       <button
         className="w-full bg-eggblue text-white py-4 rounded-full shadow-lg"
         onClick={onAddClick}

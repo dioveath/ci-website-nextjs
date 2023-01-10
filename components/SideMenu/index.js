@@ -38,7 +38,7 @@ export default function SideMenu({ pages, setPage, currentPage }){
 	<div className='w-full flex justify-center pb-4 items-center'>
 	  <p className='text-white text-lg font-light'> { name } </p>
         </div>        
-        <nav>
+        <nav className='flex flex-col gap-1'>
           { pages.map((page, idx) => {
 	    return (<li key={page.label}
                         onClick={() => setPage(idx)}
