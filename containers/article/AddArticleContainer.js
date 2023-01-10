@@ -14,20 +14,12 @@ import queryClient from "../../lib/queryclient";
 import { pageContext } from './index';
 import { ArticleService } from "../../lib/service/ArticleService";
 import MediaSelectModal from '../media/MediaSelectModal';
-import ReactEditorJS from '../../components/ReactEditorJS';
-
 import { IoIosArrowBack } from 'react-icons/io';
 
-const Editor = dynamic(
-  () => import("react-draft-wysiwyg").then((mod) => mod.Editor),
-  { ssr: false }
-);
-
+let ReactEditorJS = dynamic(() => import('../../components/ReactEditorJS'));
 
 
 export default function AddArticleContainer({ article }) {
-  // const state = article ? EditorState.createWithContent(convertFromRaw(article.body)) : EditorState.createEmpty();
-  // const [editorState, setEditorState] = useState(state);
   const [title, setTitle] = useState(article?.title);
   const [fieldError, setFieldError] = useState(null);
 
@@ -37,16 +29,8 @@ export default function AddArticleContainer({ article }) {
   const { user } = useAuth();
   const isEdit = !!article;
 
-  const editorCore = useRef(null);
+  const editorCoreRef = useRef(null);
 
-  const handleInitialize = useCallback((instance) => {
-    editorCore.current = instance;
-  }, []);
-
-
-  // const onEditorStateChange = (editState) => {
-  //   setEditorState(editState);
-  // };
 
   const addMutation = useMutation({
     mutationFn: (newArticle) => {
@@ -63,7 +47,6 @@ export default function AddArticleContainer({ article }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"]});
-      console.log('updated article');
     }
   });
 
@@ -73,7 +56,7 @@ export default function AddArticleContainer({ article }) {
     e.preventDefault();
     // const rawContentState = convertToRaw(editorState.getCurrentContent());
     const rawContentState = await new Promise((resolve, reject) => {
-      editorCore.current.save().then((output) => {
+      editorCoreRef.current.save().then((output) => {
         resolve(output);
       }).catch((error) => { reject(error); });
     });
@@ -152,40 +135,42 @@ export default function AddArticleContainer({ article }) {
         name="title"
         type="text"
         placeholder="Article Title"
-        className="w-full py-4 my-4 px-4 rounded-lg"
+        className="w-full py-3 mt-4 px-4 rounded-lg outline-none focus:shadow-outline shadow"
       />
 
       { modalOpen && <MediaSelectModal onClose={() => setModalOpen(false)} setSelect={(image) => setThumbnail(image)}/> }      
       <div className='flex flex-col items-center gap-2 my-4'>
         {<Image alt='thumb upload'
                 src={(thumbnail ? thumbnail.downloadURL : isEdit ? article.thumbnail.downloadURL : "/upload.webp")}
-                width={'100px'} height={'100px'} objectFit={'cover'}/>}
+                width={'320px'} height={'200px'} objectFit={'cover'}/>}
 
         {!modalOpen && <button className='w-full bg-pinegreen py-3 text-white font-light rounded-full' onClick={() => setModalOpen(true)}> Select Thumbnail </button>}
       </div>
       
       
 
-      {mutation.isError && <p> { mutation.error.message }</p>}
-      {mutation.isSuccess && <p> Successfully { isEdit ? "Edited" : "Added"} </p>}
 
-      {/* <Editor */}
-      {/*   readOnly={mutation.isLoading} */}
-      {/*   editorState={editorState} */}
-      {/*   wrapperClassName="" */}
-      {/*   editorClassName="text-white" */}
-      {/*   toolbarClassName="" */}
-      {/*   onEditorStateChange={onEditorStateChange} */}
-      {/* /> */}
 
-      <div className='w-full h-full rounded-xl mt-10 mb-4 py-2 flex justify-center items-center'>
-	<div className='w-full bg-timbergreen p-4 rounded-xl prose dark:prose-invert'>
-    <ReactEditorJS className='prose' onInitialize={handleInitialize} tools={EDITOR_JS_TOOLS} value={isEdit ? article.body : null}/>
+      <div className='w-full h-full rounded-xl flex justify-center items-center'>
+	<div className='w-full h-full overflow-scroll-y bg-timbergreen p-4 rounded-xl prose dark:prose-invert'>
+          {
+            ReactEditorJS && <ReactEditorJS className='prose'
+                         innerRef={editorCoreRef}
+            data={isEdit ? article.body : null}/>
+          }
         </div>
       </div>
 
+      <div className='py-4 px-4'>
+        {mutation.isError && <p className='text-red-500 text-xs italic'> { mutation.error.message }</p>}
+        {mutation.isSuccess && <p className='text-eggblue text-xs italic'> Successfully { isEdit ? "Edited" : "Added"} </p>}
+        {fieldError && <p className='text-red-500 text-xs italic'> { fieldError }</p>}
+      </div>
+
       <button
-        className="w-full bg-eggblue text-white py-4 rounded-full shadow-lg"
+        className={`text-white bg-eggblue hover:bg-greenpea disabled:bg-riverbed  
+                          w-full py-4 mt-5 rounded-full shadow-md transition-all 
+                          ${mutation.isLoading ? 'animate-pulse' : ''}`}
         onClick={onAddClick}
         disabled={mutation.isLoading}
       >

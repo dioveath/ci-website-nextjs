@@ -20,7 +20,7 @@ export default function ArticleContainer() {
       return articles;
     },
     enabled: !!user,
-    refetchOnMount: true
+    refetchOnMount: true,
   });
 
   const deleteMutation = useMutation({
@@ -29,21 +29,20 @@ export default function ArticleContainer() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"] });
-      console.log('deleted');
+      console.log("deleted");
     },
   });
 
   const { setPage, setArticle } = useContext(pageContext);
-
 
   return (
     <div className="">
       {isLoading && <p> Loading... </p>}
       {isFetching && <p> Fetching... </p>}
 
-      <div className='px-4'>
+      <div className="px-4">
         <p className="uppercase font-light text-3xl text-white"> Articles </p>
-        <p className='font-light text-white'> {new Date().toDateString()} </p>
+        <p className="font-light text-white"> {new Date().toDateString()} </p>
       </div>
 
       <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
@@ -55,53 +54,61 @@ export default function ArticleContainer() {
           articles.map((article) => (
             <div
               key={article.id}
-              className="w-full overflow-clip text-white font-light py-2 px-4 gap-3 rounded-md flex flex-col justify-between"
+              className="w-full overflow-clip bg-timbergreen text-white font-light p-4 gap-3 rounded-md flex flex-col justify-between"
             >
               <div className="w-full flex flex-wrap gap-3">
                 <div className="flex justify-center items-center h-full max-w-[400px] bg-riverbed">
                   <Image
                     src={article.thumbnail.downloadURL}
                     alt={article.title + " thumbnail"}
-                    width={400}
+                    width={320}
                     height={200}
                     objectFit={"cover"}
                   />
                 </div>
-                <div className={"flex-1"}>
-                  <p className="text-lg font-medium"> {article.title} </p>
-                  {/* <p> {article.body.blocks[0].text.substring(0, 250)}...</p> */}
+                <div className={"flex-1 flex flex-col justify-between"}>
+		  <div>
+                    <p className="text-base lg:text-lg font-medium"> {article.title} </p>
+                    {/* <p> {article.body.blocks[0].text.substring(0, 250)}...</p> */}
+                  </div>
+                  <div className="flex justify-between gap-2 ">
+                    <button
+                      disabled={isFetching}
+                      className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${
+                        isFetching ? "animate-pulse" : ""
+                      }`}
+                      onClick={() => {
+                        setArticle(article);
+                        setPage(2);
+                      }}
+                    >
+                      View
+                    </button>
+                    <button
+                      disabled={isFetching}
+                      className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${
+                        isFetching ? "animate-pulse" : ""
+                      }`}
+                      onClick={() => {
+                        setArticle(article);
+                        setPage(1);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      disabled={isFetching}
+                      className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${
+                        isFetching ? "animate-pulse" : ""
+                      }`}
+                      onClick={() => {
+                        deleteMutation.mutate(article.id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div className="flex justify-between gap-2 ">
-                <button
-                  disabled={isFetching}
-                  className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${isFetching ? 'animate-pulse' : ''}`}
-                  onClick={() => {
-                    setArticle(article);
-                    setPage(2);
-                  }}
-                >
-                  View
-                </button>
-                <button
-                  disabled={isFetching}                  
-                  className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${isFetching ? 'animate-pulse' : ''}`}
-                  onClick={() => {
-                    setArticle(article);
-                    setPage(1);
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  disabled={isFetching}                  
-                  className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${isFetching ? 'animate-pulse' : ''}`}
-                  onClick={() => {
-                    deleteMutation.mutate(article.id);
-                  }}
-                >
-                  Delete
-                </button>
               </div>
             </div>
           ))}
