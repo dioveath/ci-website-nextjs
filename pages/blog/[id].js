@@ -26,7 +26,7 @@ export default function BlogPage({ blog: blogData, user: userData }){
       </Head>
 
 
-      <main className={'bg-gradient-[-45deg] from-eggblue to-slategray pb-10'}>
+      <main className={'bg-riverbed pb-10'}>
         <Navbar/>
 
 	<div className='px-8 md:px-10 xl:px-20 2xl:px-48 mt-10 text-white'>

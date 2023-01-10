@@ -58,7 +58,7 @@ export default function ArticleContainer() {
               className="w-full overflow-clip text-white font-light py-2 px-4 gap-3 rounded-md flex flex-col justify-between"
             >
               <div className="w-full flex flex-wrap gap-3">
-                <div className="flex justify-center items-center h-full max-w-[400px] bg-yellow-200">
+                <div className="flex justify-center items-center h-full max-w-[400px] bg-riverbed">
                   <Image
                     src={article.thumbnail.downloadURL}
                     alt={article.title + " thumbnail"}
@@ -69,7 +69,7 @@ export default function ArticleContainer() {
                 </div>
                 <div className={"flex-1"}>
                   <p className="text-lg font-medium"> {article.title} </p>
-                  <p> {article.body.blocks[0].text.substring(0, 250)}...</p>
+                  {/* <p> {article.body.blocks[0].text.substring(0, 250)}...</p> */}
                 </div>
               </div>
               <div className="flex justify-between gap-2 ">

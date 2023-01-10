@@ -1,11 +1,34 @@
 const config = {
   blockToHTML: (block) => {
+
     switch(block.type){
     case 'code':
-      return <pre/>;
+      return <pre className='language-js'/>;
     case 'atomic':
       return <div className="w-full"/>;
+    case 'unstyled':
+    case 'paragraph':
+      const style = ``;
+      const { text } = block;
+
+      if(block.data['text-align']){
+        style += `text-${block.data['text-align']}`;
+      }
+
+      // let spans = [];
+      // if(block.inlineStyleRanges){
+      //   block.inlineStyleRanges.forEach(range => {
+      //     spans.push(<span>{ text.substring(range.offset, range.offset + range.length) }</span>);
+      //   });
+      // }
+
+      return <p className={style}></p>;
+    case 'subscript':
+      return <sub/>;
+    case 'header-two':
+      return <h2/>;
     }
+
     return null;
   },
   entityToHTML: (entity, originalText) => {
