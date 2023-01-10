@@ -6,6 +6,7 @@ import useAuth from "../../lib/hooks/Auth";
 import queryClient from "../../lib/queryclient";
 import { ArticleService } from "../../lib/service/ArticleService";
 import { pageContext } from "./index";
+import { extractSummary } from '../../lib/utils/summaryHelper';
 
 export default function ArticleContainer() {
   const { user } = useAuth();
@@ -68,8 +69,10 @@ export default function ArticleContainer() {
                 </div>
                 <div className={"flex-1 flex flex-col justify-between"}>
 		  <div>
-                    <p className="text-base lg:text-lg font-medium"> {article.title} </p>
-                    {/* <p> {article.body.blocks[0].text.substring(0, 250)}...</p> */}
+                    <p className="text-base lg:text-lg text-cheeseyellow font-medium"> {article.title} </p>
+                    <p> {extractSummary(article.body).substring(0, 250)}...</p>
+		    <p className='text-xs text-red-500'> { article.heartsBy.length || '0' } Hearts </p>
+		    <p className='text-xs text-cheeseyellow'> { new Date(article.createdAt.seconds * 1000).toDateString() } </p>
                   </div>
                   <div className="flex justify-between gap-2 ">
                     <button
