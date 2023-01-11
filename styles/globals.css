@@ -118,8 +118,8 @@ a {
   background: white;
 }
 
-.codex-editor {
-    position: static;
-    height: 384px;
-    overflow-y: scroll;
-}
+/* .codex-editor { */
+/*     position: static; */
+/*     height: 384px; */
+/*     overflow-y: scroll; */
+/* } */

@@ -7,6 +7,7 @@ import queryClient from "../../lib/queryclient";
 import { ArticleService } from "../../lib/service/ArticleService";
 import { pageContext } from "./index";
 import { extractSummary } from '../../lib/utils/summaryHelper';
+import { RiQuillPenFill } from 'react-icons/ri';
 
 export default function ArticleContainer() {
   const { user } = useAuth();
@@ -47,6 +48,24 @@ export default function ArticleContainer() {
       </div>
 
       <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+        <p className="text-white text-xl font-light"> Write an Article </p>
+      </div>
+
+      <div className="py-2">
+        <p className="font-light text-white"> Whats on your mind? </p>
+      </div>      
+
+        <button
+          className="w-full bg-eggblue text-white flex justify-center items-center gap-2 py-3 px-2 hover:bg-pinegreen rounded-full transition-all"
+          onClick={() => {
+            setPage(1);
+          }}
+        >
+          <RiQuillPenFill className='text-white hover:animate-ping text-xl'/>
+          Write an Article
+        </button>
+
+      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4 mt-10">
         <p className="text-white text-xl font-light"> Article Management </p>
       </div>
 
@@ -116,14 +135,7 @@ export default function ArticleContainer() {
             </div>
           ))}
 
-        <button
-          className="w-full bg-eggblue text-white flex justify-center items-center py-4 px-2 hover:bg-pinegreen rounded-full transition-all"
-          onClick={() => {
-            setPage(1);
-          }}
-        >
-          Add Article
-        </button>
+
       </div>
     </div>
   );
