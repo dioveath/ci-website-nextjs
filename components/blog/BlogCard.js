@@ -8,9 +8,11 @@ import { BsFillCircleFill } from 'react-icons/bs';
 import Marginer from '../../components/utils/Marginer.js';
 import parse from 'html-react-parser';
 
+import { extractSummary } from '../../lib/utils/summaryHelper';
+
 export default function BlogCard(props){
   const blog = props.blog;
-  let summary = blog.body.blocks[0].text;
+  const summary = `${extractSummary(blog.body).substring(0, 250)}...`;
 
   const [userData, setUserData] = useState({ first_name: "null", last_name: "null"});
   const [isLoading, setLoading] = useState(true);
@@ -29,7 +31,7 @@ export default function BlogCard(props){
     <Link href={"/blog/" + blog.id} passHref>
     <div className={'w-full max-w-lg p-10 bg-slategray/80 rounded-2xl flex flex-col items-center shadow-2xl cursor-pointer hover:bg-slategray transition-all'}>
       <div className={''}>
-        <img src={blog.thumbnail.downloadURL} className={'h-40 object-cover'}/>
+        <Image alt={'best class thumbnail'} src={blog.thumbnail.downloadURL} className={'h-40 object-cover'} width="100%" height={200} objectFit='cover'/>
       </div>
 
       <Marginer vertical="10px"/>
@@ -44,7 +46,8 @@ export default function BlogCard(props){
         </div>
 
         <div className={'text-2xl font-semibold text-cheeseyellow'}> { blog.title }</div>
-        <div className={styles["blog-summary"]}> { parse(summary) } </div>
+        <div className={styles["blog-summary"]}> { summary } </div>
+
         <div style={{height: "10px"}}></div>
 
 

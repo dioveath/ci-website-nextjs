@@ -6,7 +6,7 @@ import { FaFacebook, FaInstagram, FaDotCircle } from 'react-icons/fa';
 import { AiFillHeart } from 'react-icons/ai';
 
 import styles from './blogpage.module.css';
-import DraftRenderer from '../../components/DraftRenderer';
+import EditorJSRenderer from '../../components/EditorJSRenderer';
 
 import { getPost } from '../api/posts/[postId].js';
 import { UserService } from '../../lib/service/UserService.js';
@@ -14,7 +14,6 @@ import Footer from '../../components/footer/Footer.js';
 import { serialize } from 'bson';
 
 export default function BlogPage({ blog: blogData, user: userData }){
-
 
   return (
     <div>
@@ -52,7 +51,7 @@ export default function BlogPage({ blog: blogData, user: userData }){
 
         <div className={styles.contentContainer}>
           <div className={styles.content}>
-            <DraftRenderer raw={blogData.body}/>
+            <EditorJSRenderer data={blogData.body}/>
             {/* { htmr(blogData?.body || "") } */}
           </div>
           <div className={styles.rightContents}>

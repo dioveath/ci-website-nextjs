@@ -135,10 +135,14 @@ const NavList = ({
           title={
             <div className='rounded-full overflow-clip'>
               {(userData?.profileURL || userData?.photoURL) && (
-                <img
+                <Image
                   alt={user.displayName}
                   src={userData?.profileURL || userData?.photoURL}
                   className={styles.userProfilePhoto}
+                  width={40}
+                  height={40}
+                  objectFit="cover"
+                  quality={100}
                 />
               )}
               {!user?.profileURL && <BsPersonFill className='text-white text-2xl'/>}
@@ -150,7 +154,7 @@ const NavList = ({
     )}
   </ul>
 );
-}
+};
 
 const NavHamburger = ({ setShowMenu, showMenu }) => (
   <div

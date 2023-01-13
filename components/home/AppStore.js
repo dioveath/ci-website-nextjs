@@ -11,6 +11,7 @@ export default function AppStore() {
   return (
     <div className="w-full flex justify-center px-8 md:px-10 xl:px-20 2xl:px-48">
       <div className="flex flex-wrap justify-center gap-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="max-w-xs object-contain"
           alt="Charicha Institute App"
@@ -41,6 +42,7 @@ export default function AppStore() {
             & Privacy Policy.
           </p>
           <a href="https:play.google.com/store/apps/dev?id=8427452924742673238&hl=en&gl=US&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img alt="Get it on Google Play" src="/google-play-badge.png" />
           </a>
         </div>

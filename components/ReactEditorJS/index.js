@@ -1,5 +1,5 @@
+import dynamic from 'next/dynamic';
 import { createReactEditorJS } from "react-editor-js";
-import Undo from "editorjs-undo";
 import "../../styles/react-editor/react-editor.module.css";
 import { UserService } from "../../lib/service/UserService";
 
@@ -21,8 +21,9 @@ import SimpleImage from "@editorjs/simple-image";
 
 const EditorJS = createReactEditorJS();
 
-const ReactEditorJS = ({ data, images, innerRef, userId }) => {
+import Undo from 'editorjs-undo';
 
+const ReactEditorJS = ({ data, images, innerRef, userId }) => {
   const EDITOR_JS_TOOLS = {
     embed: Embed,
     table: Table,

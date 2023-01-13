@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 const config = {
   blockToHTML: (block) => {
 
@@ -42,10 +44,11 @@ const config = {
       else if(entity.data?.alignment === 'left')
         classStyle = 'justify-start';
       return <div className={`w-full flex ${classStyle}`}>
-               <img alt={"Image"}
+               <Image alt={"Image"}
                     src={entity.data.src}
                     width={entity.data.width}
-                    height={entity.data.height}
+                      height={entity.data.height}
+                      objectFit={'cover'}
                />
              </div>;
     }
