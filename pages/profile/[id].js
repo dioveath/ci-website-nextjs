@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { FaFacebook, FaInstagram, FaDotCircle } from "react-icons/fa";
 import { AiFillHeart } from "react-icons/ai";
@@ -42,10 +43,13 @@ export default function Profile({ userData, error }) {
         <Skeleton style={{ height: "200px", zIndex: "-10" }} />
       </div>
     ) : (
-      <img
+      <Image
         alt="cover image"
         src="/landing_image.jpg"
         className={styles.coverImg}
+        width={"100%"}
+        height={200}
+        objectFit={'cover'}
       />
     );
 
@@ -54,14 +58,16 @@ export default function Profile({ userData, error }) {
       <Skeleton circle={true} width={100} height={100} />
     ) : userData?.photoURL == "" ? (
       <div className={styles.profileTextImg}>
-        {" "}
         <p> {userData?.fisrt_name[0]} </p>{" "}
       </div>
     ) : (
-      <img
+      <Image
         alt=""
         src={userData?.photoURL ?? "/profile.jpg"}
         className={styles.profileImg}
+        width={"200px"}
+        height={"200px"}
+        objectFit={"cover"}
       />
     );
 

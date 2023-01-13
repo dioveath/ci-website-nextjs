@@ -73,24 +73,18 @@ const PAGES = [
 
 export default function Dashboard() {
   const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
-  const { isLoggedIn, loading } = useAuth();
+  const { userData, isLoggedIn, loading, fetching, error } = useAuth();
   const [page, setPage] = useState(0);
   const [sideOpen, setSideOpen] = useState(isDesktop);
-  const [onClient, setOnClient] = useState(false);
   const router = useRouter();
 
 
-  useEffect(() => {
-    if(typeof window !== 'undefined')
-      setOnClient(true);
-  }, []);
+  if(loading) return <LoadingScreen/>;
 
-  if(loading || !onClient) return <LoadingScreen/>;
   if(!isLoggedIn) {
     router.push('/');
     return <LoadingScreen/>;    
   }
-
 
   return (
     <div className={styles.container}>

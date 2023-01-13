@@ -13,7 +13,7 @@ export default function TestimonialCard(props){
         </p>        
       </div>
       <div className={styles.profile}>
-        <Image src="/profile.jpg" width={300} height={300} className={styles["profile-image"]}/>
+        <Image alt='testimonial profile' src="/profile.jpg" width={300} height={300} className={styles["profile-image"]}/>
       </div>
     </div>
   );

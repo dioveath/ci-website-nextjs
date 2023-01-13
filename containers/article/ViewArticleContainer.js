@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import DraftRenderer from '../../components/DraftRenderer';
 import EditorJSRenderer from '../../components/EditorJSRenderer';
 
 import { pageContext } from './index';

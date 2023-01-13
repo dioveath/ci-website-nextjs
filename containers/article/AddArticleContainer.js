@@ -7,8 +7,6 @@ import { useMutation } from "@tanstack/react-query";
 import { EditorState, convertToRaw, convertFromRaw } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-import { EDITOR_JS_TOOLS } from "../../lib/editorjs/tools.js";
-
 import useAuth from "../../lib/hooks/Auth";
 import queryClient from "../../lib/queryclient";
 import { pageContext } from "./index";
