@@ -15,7 +15,7 @@ import { UserService } from '../../lib/service/UserService';
 import MediaSelectModal from "../media/MediaSelectModal";
 import { IoIosArrowBack } from "react-icons/io";
 
-let ReactEditorJS = dynamic(() => import("../../components/ReactEditorJS"));
+let ReactEditorJS = dynamic(() => import("../../components/ReactEditorJS"), { ssr: false});
 
 export default function AddArticleContainer({ article }) {
   const [title, setTitle] = useState(article?.title);
