@@ -26,7 +26,6 @@ import { VscFileMedia } from 'react-icons/vsc';
 
 
 const Logout = () => {
-  // const router = useRouter();
   const { logout } = useAuth();
 
   useEffect(() => {
@@ -76,16 +75,16 @@ export default function Dashboard() {
   const { isLoggedIn, loading } = useAuth();
   const [page, setPage] = useState(0);
   const [sideOpen, setSideOpen] = useState(isDesktop);
-  const [onClient, setOnClient] = useState(false);
+  const [onServer, setOnServer] = useState(true);
   const router = useRouter();
 
 
   useEffect(() => {
     if(typeof window !== 'undefined')
-      setOnClient(true);
+      setOnServer(false);
   }, []);
 
-  if(loading || !onClient) return <LoadingScreen/>;
+  if(onServer || loading) return <LoadingScreen/>;
   if(!isLoggedIn) {
     router.push('/');
     return <LoadingScreen/>;    
