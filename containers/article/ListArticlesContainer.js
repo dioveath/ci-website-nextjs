@@ -22,7 +22,7 @@ export default function ArticleContainer() {
     useInfiniteQuery({
       queryKey: ["articles"],
       queryFn: async ({ pageParam }) => {
-        const articles = await ArticleService.paginateArticles(
+        const articles = await ArticleService.paginateUserArticles(
           user?.uid,
           10,
           undefined,
@@ -97,7 +97,7 @@ export default function ArticleContainer() {
 
       <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4 mt-10 flex gap-4 items-end">
         <p className="text-white text-xl font-light"> Article Management </p>
-	{ isFetching && <PulseLoader color='white'/> }                
+	{ (isFetching || isRefetching) && <PulseLoader color='white'/> }                
       </div>
 
       <div className="flex flex-col gap-2">
@@ -124,12 +124,10 @@ export default function ArticleContainer() {
                 <div className={"flex-1 flex flex-col justify-between"}>
                   <div>
                     <p className="text-base lg:text-lg text-cheeseyellow font-medium">
-                      {" "}
                       {article.title}{" "}
                     </p>
                     <p> {extractSummary(article.body).substring(0, 250)}...</p>
                     <p className="text-xs text-red-500">
-                      {" "}
                       {article.heartsBy.length || "0"} Hearts{" "}
                     </p>
                     <p className="text-xs text-cheeseyellow">

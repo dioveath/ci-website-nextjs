@@ -18,7 +18,7 @@ export default function SideMenu({ pages, setPage, currentPage }){
   const name = `${userData?.first_name} ${userData?.last_name}`;
 
   return (
-    <div className={'min-h-screen h-full bg-gradient-[-45deg] from-eggblue/70 to-slategray shadow-lg transition-all ' + isOpenStyle }>
+    <div className={'min-h-screen h-screen overflow-y-scroll bg-gradient-[-45deg] from-eggblue/70 to-slategray shadow-lg transition-all ' + isOpenStyle }>
       <div className={`w-full mt-4 flex justify-center items-center ${isOpen ? 'hidden' : ''}`}>
         <GiHamburgerMenu className='text-white text-3xl cursor-pointer hover:animate-pulse' onClick={() => setOpen(true)}/>
       </div>
