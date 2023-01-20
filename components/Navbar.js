@@ -1,22 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 
 import styles from "../styles/components/Navbar.module.css";
 import Marginer from "../components/utils/Marginer.js";
 import { useMediaQuery } from "react-responsive";
 import { SCREENS } from "../lib/utils/Responsive.js";
-import { MdOutlineCancel } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BsPersonFill } from "react-icons/bs";
+import { RxCross2 } from 'react-icons/rx';
 
 import { DropdownMenu } from "../components/DropdownMenu/index.js";
 
+import NavItem from "./Navbar/NavItem";
 import useAuth from "../lib/hooks/Auth.js";
 
-export default function Navbar() {
-  const isMobile = useMediaQuery({ maxWidth: SCREENS.md });
+export default function Navbar({ path }) {
+  const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
   const [showMenu, setShowMenu] = useState(false);
   const { user, userData, logout } = useAuth();
 
@@ -30,7 +31,7 @@ export default function Navbar() {
     {
       name: "Dashboard",
       onClick: () => {
-        Router.push("/dashboard");        
+        Router.push("/dashboard");
       },
     },
     {
@@ -42,30 +43,35 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className={styles.nav}>
+    <nav
+      className={
+        `w-full flex justify-between py-4 px-8 md:px-10 xl:px-20 2xl:px-48 font-normal`
+      }
+    >
       <Link href="/">
         <a>
           <Image
-            src="/ci_logo_full.png"
+            src="/ci_logo_light_blue.png"
             alt="Charicha Institute Logo"
             width={140}
             height={50}
-          />{" "}
+          />
         </a>
       </Link>
 
-      {isMobile && (
+      {!isDesktop && !showMenu && (
         <NavHamburger setShowMenu={setShowMenu} showMenu={showMenu} />
       )}
 
-        <NavList
-          showMenu={showMenu}
-          isMobile={isMobile}
-          user={user}
-          userData={userData}
-          setShowMenu={setShowMenu}
-          dropdownList={dropdownList}
-        />
+      <NavList
+        showMenu={showMenu}
+        isMobile={!isDesktop}
+        user={user}
+        userData={userData}
+        setShowMenu={setShowMenu}
+        dropdownList={dropdownList}
+        path={path}
+      />
     </nav>
   );
 }
@@ -77,73 +83,70 @@ const NavList = ({
   userData,
   setShowMenu,
   dropdownList,
-}) => (
+  path,
+}) => {
+  return (
   <ul
-    className={`${styles.navlist} ${
-      showMenu ? styles.navActive : styles.navInActive
-    }`}
+    className={`${styles.navlist} ${(showMenu ? styles.navActive : styles.navInActive)}`}
   >
-    {isMobile ? (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          cursor: "pointer",
-        }}
-      >
-        <MdOutlineCancel
-          size={20}
-          onClick={() => {
-            setShowMenu(!showMenu);
-          }}
-        />
-      </div>
-    ) : (
-      ""
-    )}
+    {isMobile && showMenu &&
+     (<div className='w-full h-4 flex justify-end cursor-pointer'>
+         <RxCross2
+           className='text-2xl text-white hover:text-red'
+           onClick={() => {
+             setShowMenu(!showMenu);
+           }}
+      />         
+       </div>)}
 
-    <Link className={styles.navitem} href="/">
-      <a className={styles.anchorTag}> Home </a>
-    </Link>
-    <Link className={styles.navitem} href="/courses">
-      <a className={styles.anchorTag}> Courses </a>
-    </Link>
-    <Link className={styles.navitem} href="/services">
-      <a className={styles.anchorTag}> Services </a>
-    </Link>
-    <Link className={styles.navitem} href="/blog">
-      <a className={styles.anchorTag}> Blog </a>
-    </Link>
-    <Link className={styles.navitem} href="/contact">
-      <a className={styles.anchorTag}> Contact </a>
-    </Link>
+    <NavItem path={path} to={"/"} label={"Home"} />
+    <NavItem path={path} to={"/courses"} label={"Courses"} />
+    <NavItem path={path} to={"/services"} label={"Services"} />
+    <NavItem path={path} to={"/blog"} label={"Blog"} />
+    <NavItem path={path} to={"/contact"} label={"Contact"} />
 
     <Marginer horizontal="20px" />
 
     {user === null ? (
-      <div>
-        <Link className={styles.navitem} href="/login">
-          <a className={styles.loginButton}> Login </a>
+      <div className={`flex gap-4`}>
+        <Link className="" href="/login">
+          <a
+            className={
+              "px-8 py-2 h-10 w-32 flex justify-center items-center bg-brightaqua hover:bg-slategray text-white rounded-3xl transition-all drop-shadow-md"
+            }
+          >
+            Login
+          </a>
         </Link>
 
         <Link className={styles.navitem} href="/register">
-          <a className={styles.registerButton}> Register </a>
+          <a
+            className={
+              "px-8 py-2 h-10 w-32 flex justify-center items-center bg-slategray hover:bg-brightaqua text-white rounded-3xl transition-all drop-shadow-md"
+            }
+          >
+            Register
+          </a>
         </Link>
       </div>
     ) : (
       <div>
         <DropdownMenu
           title={
-            <>
-              {(user?.photoURL || userData?.photoURL) && (
-                <img
+            <div className='rounded-full overflow-clip'>
+              {userData?.profile_URL && (
+                <Image
                   alt={user.displayName}
-                  src={userData?.photoURL}
+                  src={userData.profile_URL}
                   className={styles.userProfilePhoto}
+                  width={40}
+                  height={40}
+                  objectFit="cover"
+                  quality={100}
                 />
               )}
-              {user?.photoURL === undefined && <BsPersonFill size={24} />}
-            </>
+              {!userData?.profile_URL && <BsPersonFill className='text-white text-2xl'/>}
+            </div>
           }
           itemList={dropdownList}
         />
@@ -151,6 +154,7 @@ const NavList = ({
     )}
   </ul>
 );
+};
 
 const NavHamburger = ({ setShowMenu, showMenu }) => (
   <div
@@ -159,9 +163,10 @@ const NavHamburger = ({ setShowMenu, showMenu }) => (
       cursor: "pointer",
     }}
     onClick={() => {
+      console.log(showMenu);
       if (!showMenu) setShowMenu(true);
     }}
   >
-    <GiHamburgerMenu size={30} />
+    <GiHamburgerMenu className="text-[32px] text-white" />
   </div>
 );

@@ -1,19 +1,112 @@
-import { useEffect, useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
-
-import PuffLoader from "react-spinners/PuffLoader";
-import styles from "../../styles/dashboard/index.module.css";
-import Navbar from "../../components/Navbar.js";
-import Footer from "../../components/footer/Footer.js";
-import Tabbar from '../../components/tabbar/Tabbar.js';
-
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 import useAuth from "../../lib/hooks/Auth.js";
 
-export default function Dashboard() {
-  const { user, userData, loading, error } = useAuth();
+import queryClient from "../../lib/queryclient";
+import { QueryClientProvider } from "@tanstack/react-query";
 
-  console.log(loading, userData);
+import { useMediaQuery } from "react-responsive";
+import { SCREENS } from "../../lib/utils/Responsive.js";
+import styles from "../../styles/dashboard/index.module.css";
+import "react-loading-skeleton/dist/skeleton.css";
+import LoadingScreen from "../../components/LoadingScreen/index.js";
+import SideMenu from "../../components/SideMenu/index.js";
+
+import MediaContainer from "../../containers/media";
+import ArticleContainer from "../../containers/article";
+
+import { IoIosSettings, IoIosConstruct } from "react-icons/io";
+import { TfiStatsUp } from "react-icons/tfi";
+import { GiBookshelf } from "react-icons/gi";
+import { RiArticleLine, RiLogoutCircleRLine } from "react-icons/ri";
+import { VscFileMedia } from "react-icons/vsc";
+import { MdAdminPanelSettings } from "react-icons/md";
+
+const Logout = () => {
+  const { logout } = useAuth();
+  useEffect(() => {
+    logout();
+  }, [logout]);
+  return <LoadingScreen />;
+};
+
+const ToAdmin = () => {
+  const router = useRouter();
+  useEffect(() => {
+    router.push("/admin");
+  }, [router]);
+
+  return <LoadingScreen />;
+};
+
+const AdminDashboard = {
+  label: "Admin Dashboard",
+  icon: <MdAdminPanelSettings />,
+  element: <ToAdmin />,
+};
+
+const UnderConstruction = ({ pageName }) => {
+  return <div className='flex flex-col w-full justify-center items-center'>
+	   <div className='h-20'></div>
+           <IoIosConstruct className='text-white text-[100px] animate-pulse'/>
+	   <h1 className='text-white text-4xl uppercase'> Under construction </h1>
+	   <h2 className='text-gray-500 text-xl '> Please visit &apos;{ pageName }&apos; shortly! </h2>
+         </div>;
+};
+
+export default function Dashboard() {
+  const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
+  const { userData, isLoggedIn, loading } = useAuth();
+  const [page, setPage] = useState(0);
+  const [sideOpen, setSideOpen] = useState(isDesktop);
+  const [onServer, setOnServer] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== "undefined") setOnServer(false);
+  }, []);
+
+  if (onServer || loading) return <LoadingScreen />;
+  if (!isLoggedIn) {
+    router.push("/");
+    return <LoadingScreen />;
+  }
+
+  let PAGES = [
+    {
+      label: "Performance",
+      icon: <TfiStatsUp />,
+      element: <UnderConstruction pageName={'Performance'}/>
+    },
+    {
+      label: "Courses",
+      icon: <GiBookshelf />,
+      element: <UnderConstruction pageName={'Courses'}/>
+    },
+    {
+      label: "Articles",
+      icon: <RiArticleLine />,
+      element: <ArticleContainer />,
+    },
+    {
+      label: "Resources",
+      icon: <VscFileMedia />,
+      element: <MediaContainer />,
+    },
+    {
+      label: "Settings",
+      icon: <IoIosSettings />,
+      element: <UnderConstruction pageName={'Settings'}/>
+    },
+    {
+      label: "Logout",
+      icon: <RiLogoutCircleRLine />,
+      element: <Logout />,
+    },
+  ];
+
+  if(userData.roles?.manager) PAGES.push(AdminDashboard);
 
   return (
     <div className={styles.container}>
@@ -24,102 +117,22 @@ export default function Dashboard() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar />
-
-      {loading && (
-        <div className="loading-container">
-          <PuffLoader color="#0EE8E1" />
-        </div>
-      )}
-
-      {!loading && userData &&  <PageContent userData={userData}/>}
-
-      <Footer />
+      <QueryClientProvider client={queryClient}>
+        <main className="bg-slategray">
+          <div className="flex">
+            <SideMenu
+              pages={PAGES}
+              currentPage={page}
+              setPage={setPage}
+              isOpen={sideOpen}
+              setSideOpen={setSideOpen}
+            />
+            <div className="w-full h-screen overflow-y-scroll pb-96 px-0 md:px-4">
+              {PAGES[page].element}
+            </div>
+          </div>
+        </main>
+      </QueryClientProvider>
     </div>
   );
 }
-
-
-
-
-const PageContent = ({userData}) => {
-  const tabs = [
-    {
-      id: "Night",
-      header: "Good",
-      content: <p> Welcome to the good night </p>
-    },
-    {
-      id: "Shit",
-      header: "What",
-      content: <p> What is this? </p>
-    }    
-  ];
-
-  return (<div className={styles.main}>
-    {/* <nav className={styles.sidebar}> */}
-    {/*   <h2> Charicha Institute </h2> */}
-    {/*   <div> */}
-    {/*     <img alt="" src="" /> */}
-    {/*     <div> */}
-    {/*       <p> </p> */}
-    {/*     </div> */}
-    {/*   </div> */}
-    {/*   <ul> */}
-    {/*     {/\* <li></li> *\/} */}
-    {/*   </ul> */}
-    {/* </nav> */}
-
-    <main className={styles.mainContent}>
-      <div className={styles.myCourses}>
-	<p className={styles.headingOne}> My Classes </p>
-      </div>
-      <div className={styles.profilePhoto}>
-        <Image src={userData.photoURL} width="80" height="80" objectFit="fill" objectPosition={"center"}/>
-      </div>
-      <p className={styles.headingThree}>
-        Welcome back { userData.firstName }, ready for your next lesson? 
-      </p>
-
-      <Tabbar tabs={tabs}/>
-
-      <div className={styles.card}>
-	<div className={styles.cardImage}>
-          <Image src={userData.photoURL} alt={`{userData.firstName} Profile Photo`} width="100" height="100" objectFit="cover"/>
-	  <div className={styles.progressContainer}></div>          
-	  <div className={styles.progress}></div>
-        </div>
-	<div className={styles.cardBody}>
-	  <div className={styles.cardTitle}> Illustration </div>
-	  <div className={styles.cardContent}> Illustration in UI Designs </div>
-        </div>
-      </div>
-
-      <div className={styles.table}>
-      <div className={styles.header}>
-	<p className={styles.month}> July </p>
-	<p className={styles.day}> M </p>
-	<p className={styles.day}> T </p>
-	<p className={styles.day}> W </p>
-	<p className={styles.day}> Th </p>
-	<p className={styles.day}> Fr </p>
-	<p className={styles.day}> S </p>
-      </div>
-
-      <div className={styles.row}>
-	<p className={styles.data}> 8:00 </p>
-	<p className={styles.data}>  </p>
-	<p className={styles.data}>  </p>
-	<p className={styles.data}>  </p>
-	<p className={styles.data}>  </p>
-	<p className={styles.data}>  </p>
-	<p className={styles.data}>  </p>
-	<p className={styles.data}>  </p>                
-      </div>
-      </div>
-
-    </main>
-
-    {/* <aside> Extra </aside> */}
-  </div>
-)};

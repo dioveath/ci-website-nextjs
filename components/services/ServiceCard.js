@@ -1,17 +1,13 @@
-import Image from 'next/image';
-import styles from '../../styles/components/service/ServiceCard.module.css';
-import Marginer from '../utils/Marginer.js';
-
 export default function ServiceCard(props){
 
   return(
-    <div className={styles["service-card"]}>
-      {/* <Image src={ props.srcImg !== undefined ? props.srcImg : "image.png"}/> */}
-      <div className={styles.title}>
+    <div className={'flex flex-col gap-2 w-[350px] h-[300px] bg-slategray p-6 rounded-2xl shadow-md'}>
+      <div className={'text-2xl text-cheeseyellow'}>
         { props.title }
       </div>
-      <Marginer vertical="12px"/>
-      <div className={styles.content}>
+      <div className='w-full h-1 bg-white rounded-2xl'> </div>
+
+      <div className={'text-white font-light'}>
         { props.children }
       </div>
     </div>

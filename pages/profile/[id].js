@@ -1,6 +1,6 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import Link from 'next/link';
+import Image from 'next/image';
 
 import { FaFacebook, FaInstagram, FaDotCircle } from "react-icons/fa";
 import { AiFillHeart } from "react-icons/ai";
@@ -15,33 +15,14 @@ import Footer from "../../components/footer/Footer.js";
 
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
-import { UserService } from "../../lib/service/UserService.js";
 import { coursesList } from "../../components/course/coursesList.js";
 
-export default function Profile(props) {
-  const router = useRouter();
-  const { id } = router.query;
+import { UserService } from '../../lib/service/UserService';
 
-  const [userData, setUserData] = useState({ id: "" });
-  const [loadingUser, setLoadingUser] = useState(true);
-  const [isError, setError] = useState(false);
-
-  const userJoinedDate = new Date(userData?.joinedAt);
-
-  useEffect(() => {
-    (async () => {
-      setLoadingUser(true);
-      let result = await UserService.getUser(id);
-      if (result.userData !== undefined) {
-        setUserData(result.userData);
-        setError(false);
-      } else {
-        setError(result.error);
-      }
-      setLoadingUser(false);
-    })();
-  }, [id, userData?.id]);
+export default function Profile({ userData, error }) {
+  const loadingUser = !userData;
+  const isError = error;
+  const userJoinedDate = new Date(userData?.joined_at);
 
   const Roles = (props) =>
     loadingUser ? (
@@ -62,10 +43,13 @@ export default function Profile(props) {
         <Skeleton style={{ height: "200px", zIndex: "-10" }} />
       </div>
     ) : (
-      <img
+      <Image
         alt="cover image"
         src="/landing_image.jpg"
         className={styles.coverImg}
+        width={"100%"}
+        height={200}
+        objectFit={'cover'}
       />
     );
 
@@ -74,14 +58,16 @@ export default function Profile(props) {
       <Skeleton circle={true} width={100} height={100} />
     ) : userData?.photoURL == "" ? (
       <div className={styles.profileTextImg}>
-        {" "}
-        <p> {userData?.firstName[0]} </p>{" "}
+        <p> {userData?.fisrt_name[0]} </p>{" "}
       </div>
     ) : (
-      <img
+      <Image
         alt=""
         src={userData?.photoURL ?? "/profile.jpg"}
         className={styles.profileImg}
+        width={"200px"}
+        height={"200px"}
+        objectFit={"cover"}
       />
     );
 
@@ -101,15 +87,14 @@ export default function Profile(props) {
       <div className={styles.userTextInfoContainer}>
         <p className={styles.titleText}>
           {!isError ? (
-            userData?.firstName + " " + userData?.lastName
+            userData?.first_name + " " + userData?.last_name
           ) : (
             <Skeleton />
           )}
         </p>
         <p className={styles.subTitleText}> {userData?.rank} </p>
         <p className={styles.subTitleText}>
-          {" "}
-          Since{" "}
+          Since
           {!isError ? (
             userJoinedDate?.toDateString()
           ) : (
@@ -238,10 +223,15 @@ export default function Profile(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar />
 
-      <main className={styles.main}>
-        {isError && <div> Server Error: {isError} </div>}
+      <main className={'bg-gradient-[-45deg] from-eggblue to-slategray'}>
+        <Navbar />
+        {isError && <div className='min-h-[85vh] h-full w-full flex justify-center items-center'>
+		      <div>
+		        <p className='text-[40px] text-white'> ERROR 404 : USER NOT FOUND </p>
+                        <Link href='/' className='text-white font-light hover:text-aquamarine'> Go to Home </Link>                        
+                      </div>
+                    </div>}
         {!isError && (
           <>
             <CoverImage />
@@ -274,4 +264,31 @@ export default function Profile(props) {
       <Footer />
     </div>
   );
+}
+
+
+export async function getStaticProps(context){
+  try {
+    const user = await UserService.getUser(context.params?.id);
+    return {
+      props: {
+        userData: user.userData
+      }
+    };    
+  } catch(e){
+    return {
+      props: {
+        userData: null
+      }
+    };
+  }
+
+}
+
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: "blocking"
+  };
 }
