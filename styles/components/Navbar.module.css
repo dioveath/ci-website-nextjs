@@ -1,138 +1,117 @@
 .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* background-color: #F6FEFF; */
-    background-color: white;
-    padding: 5px 0px;
-    box-shadow: 1px 1px 2px 0.2px #eeeeee;
-    transition: all .8s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* background-color: #F6FEFF; */
+  padding: 5px 0px;
+  /* box-shadow: 1px 1px 2px 0.2px #eeeeee; */
+  transition: all 0.8s ease;
 }
 
 .navlist {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    list-style-type: none;
-    
-    gap: 20px;
-    position: fixed;
-    top: 0;
-    z-index: 10;
-    background-color: #F6FEFF;
-    height: 100vh;
-    padding: 1rem 2rem;
-    transition: all 1s ease;
-    overflow: visible;
-}
-
-@media only screen and (min-width: 768px) {
-  .navlist {
-    background-color: transparent;
-  }
+  position: fixed;
+  z-index: 40;
+  height: 100vh;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #2A4041;
+  padding: 0 2rem;
+  gap: 1.5rem;
 }
 
 .navInActive {
-    right: -100%;
-    animation-duration: 0.4s;
-    animation-name: swipeFromLeft;
+  right: -100%;
+  animation-duration: 0.4s;
+  animation-name: swipeFromLeft;
 }
 
 .navActive {
-    right: 0;
-    animation-duration: 0.4s;
-    animation-name: swipeFromRight;
+  right: 0;
+  animation-duration: 0.4s;
+  animation-name: swipeFromRight;
 }
 
-
-.hamburger {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.hamburger:hover {
-    cursor: pointer;
-}
-
-
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 1024px) {
     .navlist {
-	flex-direction: row;
-	padding: 0px;
+	padding: 0 0;
 	height: inherit;
-	position: inherit;
-    }
+	position: static;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	background: transparent;
+	gap: 0;
+  }
 
-    .nav {
-	justify-content: space-around;
-    }
+  .navActive {
+  }
 }
 
-.navitem {
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 15px;
-    background-color: white;
-    /* background-color: red; */
-}
 
 .anchorTag {
-    font-weight: bold;
-    transition: all .2s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
 }
 
 .anchorTag:hover {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
-
 .loginButton {
-    border: 2px solid var(--primary-color);
-    padding: 5px 20px;
-    border-radius: 4px;
-    text-align: center;
-    vertical-align: center;
-    color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  padding: 5px 20px;
+  border-radius: 4px;
+  text-align: center;
+  vertical-align: center;
+  color: var(--primary-color);
 }
 
 .loginButton:hover {
-    box-shadow: 1px 1px 2px 0.2px #eeeeee;
+  box-shadow: 1px 1px 2px 0.2px #eeeeee;
 }
 
 .registerButton {
-    border: 2px solid var(--primary-color);
-    padding: 5px 20px;
-    border-radius: 4px;
-    text-align: center;
-    vertical-align: center;
-    background-color: var(--primary-color);
-    color: white;
+  border: 2px solid var(--primary-color);
+  padding: 5px 20px;
+  border-radius: 4px;
+  text-align: center;
+  vertical-align: center;
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .registerButton:hover {
-    box-shadow: 1px 1px 2px 0.2px #eeeeee;    
+  box-shadow: 1px 1px 2px 0.2px #eeeeee;
 }
-
 
 .userProfilePhoto {
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
-
 @keyframes swipeFromRight {
-    0% { right: -100%;}
-    100% { right: 0;}
+  0% {
+    right: -100%;
+  }
+  100% {
+    right: 0;
+  }
 }
 
 @keyframes swipeFromLeft {
-    0% { right: 0%;}
-    100% { right: -100%;}
+  0% {
+    right: 0%;
+  }
+  100% {
+    right: -100%;
+  }
 }

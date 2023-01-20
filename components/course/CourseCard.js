@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import styles from './coursecard.module.css';
-import { BsFillCircleFill } from 'react-icons/bs';
 import Marginer from '../../components/utils/Marginer.js';
 import { FaLayerGroup } from 'react-icons/fa';
 import { AiOutlineCalendar } from 'react-icons/ai';

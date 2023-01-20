@@ -1,27 +1,23 @@
 import Head from 'next/head';
-import Image from 'next/image';
 import Navbar from '../../components/Navbar.js';
 import { useState } from 'react';
 import styles from '../../styles/courses/Courses.module.css';
-import { BsFillArrowDownCircleFill } from 'react-icons/bs';
-import { AiFillDownCircle } from 'react-icons/ai';
+import { BsChevronDoubleDown } from 'react-icons/bs';
 import { FiSearch } from 'react-icons/fi';
-import { Accordian } from '../../components/Accordian.js';
 
 import CourseCard from '../../components/course/CourseCard.js';
-import TestimonialCard from '../../components/testimonial/TestimonialCard.js';
-import Collapsible from 'react-collapsible';
-import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 import Marginer from '../../components/utils/Marginer.js';
 import Footer from '../../components/footer/Footer.js';
-import { GrSort } from 'react-icons/gr';
-import { FaLayerGroup } from 'react-icons/fa';
-import { AiOutlineCalendar } from 'react-icons/ai';
+
 
 import { DropdownMenu } from '../../components/DropdownMenu/index.js';
-
 import { coursesList } from '../../components/course/coursesList.js';
+
+import { useCallback } from 'react';
+import { loadFull } from 'tsparticles';
+import Particles from 'react-particles';
+import { particleConfig } from '../../lib/particle_config';
 
 const AllCourses = (props) => {
   return (
@@ -69,6 +65,14 @@ export default function Courses(){
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(0);
 
+  const particlesInit = useCallback(async engine => {
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async container => {
+    console.log(container);
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -77,20 +81,23 @@ export default function Courses(){
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Navbar/>
 
-      <main className={styles.main}>
-        <Marginer vertical="20px"/>
-        <h2> Our Courses </h2>
-        <Marginer vertical="20px"/>        
-        <BsFillArrowDownCircleFill size={24}/>
-        <Marginer vertical="20px"/>        
+      <main className={'bg-gradient-[-45deg] from-eggblue to-slategray'}>
+        <Navbar path={'/courses'}/>
+        <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>        
+
+	<div className='w-full flex flex-col justify-center items-center'>
+          <h2 className='text-[40px] text-white'> Our Courses </h2>
+        </div>
+        <div className="w-full flex justify-center mt-6 mb-6">
+          <BsChevronDoubleDown className="text-white text-[40px] animate-bounce"/>
+        </div>        
+
 
         <div className={styles.tabNavBar}>
-          <div className={styles.searchBar}>
-            <FiSearch size={24}/>
-            <Marginer/>
-            {/* <input name="" type="text" value="" className={styles.searchInput}/> */}
+          <div className={'flex gap-4 items-center'}>
+            <input className='bg-gray-100 p-2 px-8 rounded-2xl outline-none' name="" placeholder="Search..." type="text"/>
+            <FiSearch className='text-2xl text-gray-100 hover:text-aquamarine cursor-pointer'/>
           </div>
           <ul className={styles.tabItems}>
             <li className={currentTabIndex == 0 ? styles.tabItemActive : styles.tabItem}
@@ -129,10 +136,8 @@ export default function Courses(){
 
             <DropdownMenu
               title={
-                <div className={styles.smallIcon}>
+                <div className={'text-white flex gap-2'}>
                   Sort
-                  <Marginer/>
-                  <GrSort size={20}/>
                 </div>              
               }
               itemList={
@@ -183,13 +188,7 @@ export default function Courses(){
           </div>
         </div>
 
-
-
-        <Marginer vertical="30px"/>
-
       </main>
-
-      <div style={{height: "30px"}}></div>
 
       <Footer/>
 

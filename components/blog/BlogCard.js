@@ -6,14 +6,13 @@ import styles from './blogcard.module.css';
 import { BsFillCircleFill } from 'react-icons/bs';
 
 import Marginer from '../../components/utils/Marginer.js';
+import parse from 'html-react-parser';
+
+import { extractSummary } from '../../lib/utils/summaryHelper';
 
 export default function BlogCard(props){
-
   const blog = props.blog;
-  let summary = "Summary";
-  blog.body.replace(/<p>(.*?)<\/p>/g, function () {
-    summary = arguments[0];
-  });
+  const summary = `${extractSummary(blog.body).substring(0, 250)}...`;
 
   const [userData, setUserData] = useState({ first_name: "null", last_name: "null"});
   const [isLoading, setLoading] = useState(true);
@@ -30,31 +29,31 @@ export default function BlogCard(props){
 
   return(
     <Link href={"/blog/" + blog.id} passHref>
-    <div className={styles["blog-container"]}>
-      <div className={styles["image-container"]}>
-        <img src={blog.imageURL} className={styles["blog-image"]}/>
+    <div className={'w-full max-w-sm p-10 bg-slategray/80 rounded-2xl flex flex-col items-start shadow-2xl cursor-pointer hover:bg-slategray transition-all'}>
+      <div className={'flex justify-center items-center w-full  bg-red-400'}>
+        <img alt={'best class thumbnail'} src={blog.thumbnail.downloadURL} className='h-[200px]' width="100%" height={"200"} objectFit='cover'/>
       </div>
 
-      <Marginer vertical="10px"/>
       
       <div className={styles["info-container"]}>
         <div className={styles["smallinfo"]}>
-          <p className={styles["small-category-text"]}> Travels </p>
+          <p className={styles["small-category-text"] + ' text-cheeseyellow mt-2'}> Tech </p>
           <div style={{ width: "10px"}}></div>
           <BsFillCircleFill size={4}/>
           <div style={{ width: "10px"}}></div>          
-          <p className={styles["small-publish-date"]}> { Date(blog.createdAt.seconds * 100).toLocaleString() } </p>  
+          <p className={styles["small-publish-date"]}> { new Date(blog.createdAt.seconds * 1000).toUTCString() } </p>  
         </div>
 
-        <Marginer vertical="10px"/>
+        <div className={'text-2xl font-semibold text-cheeseyellow'}> { blog.title }</div>
+        <div className={styles["blog-summary"]}> { summary } </div>
 
-        <div className={styles["blog-title"]}> { blog.title }</div>
-        <Marginer vertical="10px"/>        
-        <div className={styles["blog-summary"]}> Pharetra pharetra, massa massa ultricies mi, quis hendrerit dolor magna eget est lorem ipsum dolor. Maecenas volutpat blandit aliquam etiam erat velit, scelerisque in dictum non, consectetur a erat nam. </div>
         <div style={{height: "10px"}}></div>
 
-        <Marginer vertical="10px"/>
 
+
+
+      </div>
+ 
         {
           isLoading ? "Loading...."
             : <div className={styles["blog-author-container"]}>
@@ -63,14 +62,12 @@ export default function BlogCard(props){
                 </div>
                 <Marginer horizontal="10px"/>
                 <div className={styles["blog-author-info-container"]}>
-                  <p className={styles["blog-author-name"]}> { userData.first_name + " " + userData.last_name} </p>
+                  <p className={styles["blog-author-name"] + ' text-aquamarine'}> { userData.first_name + " " + userData.last_name} </p>
                   <Marginer vertical="2px"/>                  
                   <p className={styles["blog-author-post"]}> { userData.rank }</p>          
                 </div>
               </div>
-        }
-
-      </div>      
+        }     
     </div>
     </Link>
   );
