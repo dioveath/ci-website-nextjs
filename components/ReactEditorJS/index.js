@@ -22,8 +22,6 @@ import Undo  from 'editorjs-undo';
 
 const EditorJS = createReactEditorJS();
 
-console.log(Embed);
-
 const ReactEditorJS = ({ data, images, innerRef, userId }) => {
   const EDITOR_JS_TOOLS = {
     embed: Embed,
@@ -65,7 +63,7 @@ const ReactEditorJS = ({ data, images, innerRef, userId }) => {
 
   const handleReady = () => {
     const editor = innerRef.current._editorJS;
-    // new Undo({ editor });
+    new Undo({ editor });
   };
 
   return (

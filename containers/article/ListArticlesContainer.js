@@ -8,10 +8,9 @@ import { ArticleService } from "../../lib/service/ArticleService";
 import { pageContext } from "./index";
 import { extractSummary } from "../../lib/utils/summaryHelper";
 import { RiQuillPenFill } from "react-icons/ri";
-import PulseLoader from 'react-spinners/PulseLoader';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
-
+import PulseLoader from "react-spinners/PulseLoader";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function ArticleContainer() {
   const { user, isLoggedIn } = useAuth();
@@ -65,25 +64,26 @@ export default function ArticleContainer() {
   const onClickPrevPage = (e) => {
     e.preventDefault();
     if (!data && articlePage <= 0) return;
-    setArticlePage(articlePage - 1);    
+    setArticlePage(articlePage - 1);
   };
 
   return (
     <div className="">
+      {/* <div className="fixed z-10 w-full h-48 bg-slategray"> */}
+        <div className="px-4">
+          <p className="uppercase font-light text-3xl text-white"> Articles </p>
+          <p className="font-light text-white"> {new Date().toDateString()} </p>
+        </div>
 
+        <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+          <p className="text-white text-xl font-light"> Write an Article </p>
+        </div>
 
-      <div className="px-4">
-        <p className="uppercase font-light text-3xl text-white"> Articles </p>
-        <p className="font-light text-white"> {new Date().toDateString()} </p>
-      </div>
-
-      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
-        <p className="text-white text-xl font-light"> Write an Article </p>
-      </div>
-
-      <div className="py-2">
-        <p className="font-light text-white"> Whats on your mind? </p>
-      </div>
+        <div className="py-2">
+          <p className="font-light text-white"> Whats on your mind? </p>
+        </div>
+      {/* </div> */}
+      {/* <div className="h-48 w-full"> </div> */}
 
       <button
         className="w-full bg-eggblue text-white flex justify-center items-center gap-2 py-3 px-2 hover:bg-pinegreen rounded-full transition-all"
@@ -97,13 +97,15 @@ export default function ArticleContainer() {
 
       <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4 mt-10 flex gap-4 items-end">
         <p className="text-white text-xl font-light"> Article Management </p>
-	{ (isFetching || isRefetching) && <PulseLoader color='white'/> }                
+        {(isFetching || isRefetching) && <PulseLoader color="white" />}
       </div>
 
       <div className="flex flex-col gap-2">
-        {isLoading && <Skeleton height={200}/>}
+        {isLoading && <Skeleton height={200} />}
 
-	{data && !isRefetching && data.pages[articlePage].length === 0 && <p className='text-white'> No more articles... </p>}
+        {data && !isRefetching && data.pages[articlePage].length === 0 && (
+          <p className="text-white"> No more articles... </p>
+        )}
         {data &&
           !isRefetching &&
           data.pages[articlePage].map((article) => (
@@ -180,24 +182,23 @@ export default function ArticleContainer() {
           ))}
       </div>
 
-      <div className='w-full flex justify-end gap-2 mt-6'>
-      <button
-        className="bg-red-400 text-white py-3 px-10 rounded-full disabled:bg-riverbed"
-        disabled={articlePage === 0 ? true : false}
-        onClick={onClickPrevPage}
-      >
-        Previous
-      </button>
+      <div className="w-full flex justify-end gap-2 mt-6">
+        <button
+          className="bg-red-400 text-white py-3 px-10 rounded-full disabled:bg-riverbed"
+          disabled={articlePage === 0 ? true : false}
+          onClick={onClickPrevPage}
+        >
+          Previous
+        </button>
 
-      <button
-        className="bg-blue-400 text-white py-3 px-10 rounded-full disabled:bg-riverbed"
-        disabled={data && data.pages[articlePage].length < 2 ? true : false}
-        onClick={onClickNextPage}
-      >
-        Next
-      </button>
+        <button
+          className="bg-blue-400 text-white py-3 px-10 rounded-full disabled:bg-riverbed"
+          disabled={data && data.pages[articlePage].length < 2 ? true : false}
+          onClick={onClickNextPage}
+        >
+          Next
+        </button>
       </div>
-
     </div>
   );
 }

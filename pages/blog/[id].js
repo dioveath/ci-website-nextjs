@@ -25,10 +25,14 @@ export default function BlogPage({ blog: blogData, user: userData }){
       </Head>
 
 
-      <main className={'bg-riverbed pb-10'}>
+      <main className={'bg-gradient-[-45deg] from-eggblue to-slategray pb-10'}>
         <Navbar/>
 
 	<div className='px-8 md:px-10 xl:px-20 2xl:px-48 mt-10 text-white'>
+
+	<header>
+	  <h1 className='text-2xl mb-4 lg:text-4xl text-cheeseyellow'> { blogData.title } </h1>
+        </header>          
         
         <div className={'flex flex-col gap-2'}>
           <div className={'flex gap-2 xl:gap-4 items-center'}>

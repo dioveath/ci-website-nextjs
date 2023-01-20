@@ -8,6 +8,7 @@ import BlogCard from '../../components/blog/BlogCard.js';
 
 import Footer from '../../components/footer/Footer.js';
 import { getPostsFirestore } from '../api/posts/index.js';
+import { ArticleService } from '../../lib/service/ArticleService.js';
 
 import { useCallback } from 'react';
 import { loadFull } from 'tsparticles';
@@ -35,10 +36,12 @@ export default function Contact(props){
 
       <main className={'bg-gradient-[-45deg] from-eggblue to-slategray pb-10'}>
         <Navbar path={'/blog'}/>
-        <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>        
+        <Particles init={particlesInit} loaded={particlesLoaded} options={particleConfig}/>
 
 	<div className='px-8 md:px-10 xl:px-20 2xl:px-48 mt-10'>
-        {/* <TopBlog/> */}
+          {/* <TopBlog/> */}
+	  <h1 className='text-white text-2xl lg:text-4xl mb-2'> What&apos;s on the run?</h1>
+          <h2 className='text-gray-400 text-lg lg:text-xl'> These are handpicked articles for you! </h2>          
         <div style={{height: "40px"}}></div>
         <div className={styles["cards-container"]}>
           {
@@ -57,7 +60,11 @@ export default function Contact(props){
 }
 
 export async function getStaticProps(){
-  const res = await getPostsFirestore();
+  const { listPublishedArticles } = ArticleService;
+  let res = await ArticleService.listPublishedArticles();
+
+  res = JSON.parse(JSON.stringify(res));
+
   const posts = {
     posts: res
   };
