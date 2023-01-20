@@ -49,7 +49,7 @@ export default function Contact(){
             <input name="" type="email" className={styles["form-input"]} placeholder="Email"/>
             <input name="" type="number"  className={styles["form-input"]} placeholder="Phone Number"/>
 
-            <textarea cols="30" id="" name="" rows="10" className={styles["text-area"]} placeholder="Your message here..."> </textarea>
+            <textarea cols="30" id="" name="" rows="10" className={styles["text-area"]} placeholder="Your message here..."></textarea>
             <PrimaryButton text="Submit" onClick={()=> {
               console.log("something");
             }}/>
@@ -64,7 +64,7 @@ export default function Contact(){
             </div>
 
 	    <div className='w-full h-full rounded-2xl overflow-clip shadow-md'>
-              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14263.539457521121!2d87.4492403!3d26.6521686!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xec11a5cb93e0fac1!2sCharicha%20Institute!5e0!3m2!1sen!2suk!4v1672662347634!5m2!1sen!2suk" width="100%" height="100%" style={{'border': 0}} allowFullScreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+              <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14263.539457521121!2d87.4492403!3d26.6521686!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xec11a5cb93e0fac1!2sCharicha%20Institute!5e0!3m2!1sen!2suk!4v1672662347634!5m2!1sen!2suk" width="100%" height="100%" style={{'border': 0}} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
             </div>
 
           </div>
