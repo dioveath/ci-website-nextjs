@@ -59,9 +59,9 @@ export default function Contact(props){
 
 }
 
-export async function getStaticProps(){
+export async function getServerSideProps(context){
   const { listPublishedArticles } = ArticleService;
-  let res = await ArticleService.listPublishedArticles();
+  let res = await listPublishedArticles();
 
   res = JSON.parse(JSON.stringify(res));
 

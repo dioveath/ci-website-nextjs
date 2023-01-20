@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar.js';
 import Hero from '../components/home/Hero.js';
 import Footer from '../components/footer/Footer.js';
 
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { loadFull } from 'tsparticles';
 import Particles from 'react-particles';
 import { particleConfig } from '../lib/particle_config';
@@ -12,6 +12,7 @@ import { particleConfig } from '../lib/particle_config';
 import ReactPlayer from 'react-player';
 import Stories from '../components/home/Stories';
 import AppStore from '../components/home/AppStore';
+import { useRouter } from 'next/router';
 
 export default function Home() {
   const particlesInit = useCallback(async engine => {
