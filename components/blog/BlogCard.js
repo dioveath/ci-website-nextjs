@@ -29,16 +29,15 @@ export default function BlogCard(props){
 
   return(
     <Link href={"/blog/" + blog.id} passHref>
-    <div className={'w-full max-w-lg p-10 bg-slategray/80 rounded-2xl flex flex-col items-center shadow-2xl cursor-pointer hover:bg-slategray transition-all'}>
-      <div className={''}>
-        <Image alt={'best class thumbnail'} src={blog.thumbnail.downloadURL} className={'h-40 object-cover'} width="100%" height={200} objectFit='cover'/>
+    <div className={'w-full max-w-sm p-10 bg-slategray/80 rounded-2xl flex flex-col items-start shadow-2xl cursor-pointer hover:bg-slategray transition-all'}>
+      <div className={'flex justify-center items-center w-full  bg-red-400'}>
+        <img alt={'best class thumbnail'} src={blog.thumbnail.downloadURL} className='h-[200px]' width="100%" height={"200"} objectFit='cover'/>
       </div>
 
-      <Marginer vertical="10px"/>
       
       <div className={styles["info-container"]}>
         <div className={styles["smallinfo"]}>
-          <p className={styles["small-category-text"] + ' text-cheeseyellow'}> Travels </p>
+          <p className={styles["small-category-text"] + ' text-cheeseyellow mt-2'}> Tech </p>
           <div style={{ width: "10px"}}></div>
           <BsFillCircleFill size={4}/>
           <div style={{ width: "10px"}}></div>          
@@ -51,6 +50,10 @@ export default function BlogCard(props){
         <div style={{height: "10px"}}></div>
 
 
+
+
+      </div>
+ 
         {
           isLoading ? "Loading...."
             : <div className={styles["blog-author-container"]}>
@@ -64,9 +67,7 @@ export default function BlogCard(props){
                   <p className={styles["blog-author-post"]}> { userData.rank }</p>          
                 </div>
               </div>
-        }
-
-      </div>      
+        }     
     </div>
     </Link>
   );

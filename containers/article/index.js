@@ -10,11 +10,6 @@ export default function ArticleContainer(){
   const [page, setPage] = useState(0);
   const [article, setArticle] = useState(null);
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    console.log("fasdf");
-  }, []);
-
   return (
     <pageContext.Provider value={{
       page, setPage, setArticle
