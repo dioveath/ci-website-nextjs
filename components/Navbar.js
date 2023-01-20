@@ -134,10 +134,10 @@ const NavList = ({
         <DropdownMenu
           title={
             <div className='rounded-full overflow-clip'>
-              {(userData?.profileURL || userData?.photoURL) && (
+              {userData?.profile_URL && (
                 <Image
                   alt={user.displayName}
-                  src={userData?.profileURL || userData?.photoURL}
+                  src={userData.profile_URL}
                   className={styles.userProfilePhoto}
                   width={40}
                   height={40}
@@ -145,7 +145,7 @@ const NavList = ({
                   quality={100}
                 />
               )}
-              {!user?.profileURL && <BsPersonFill className='text-white text-2xl'/>}
+              {!userData?.profile_URL && <BsPersonFill className='text-white text-2xl'/>}
             </div>
           }
           itemList={dropdownList}

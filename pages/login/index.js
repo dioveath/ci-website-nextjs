@@ -37,13 +37,12 @@ export default function Login(){
 
   const router = useRouter();
 
-
   if(loading){
     return <LoadingScreen/>;
   }
 
   if(!fetching && !loading && isLoggedIn) {
-    router.push("/");
+    router.push("/dashboard");
     return <LoadingScreen/>;
   }
 
