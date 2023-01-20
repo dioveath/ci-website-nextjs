@@ -16,7 +16,7 @@ import SideMenu from "../../components/SideMenu/index.js";
 import MediaContainer from "../../containers/media";
 import ArticleContainer from "../../containers/article";
 
-import { IoIosSettings } from "react-icons/io";
+import { IoIosSettings, IoIosConstruct } from "react-icons/io";
 import { TfiStatsUp } from "react-icons/tfi";
 import { GiBookshelf } from "react-icons/gi";
 import { RiArticleLine, RiLogoutCircleRLine } from "react-icons/ri";
@@ -46,6 +46,15 @@ const AdminDashboard = {
   element: <ToAdmin />,
 };
 
+const UnderConstruction = ({ pageName }) => {
+  return <div className='flex flex-col w-full justify-center items-center'>
+	   <div className='h-20'></div>
+           <IoIosConstruct className='text-white text-[100px] animate-pulse'/>
+	   <h1 className='text-white text-4xl uppercase'> Under construction </h1>
+	   <h2 className='text-gray-500 text-xl '> Please visit &apos;{ pageName }&apos; shortly! </h2>
+         </div>;
+};
+
 export default function Dashboard() {
   const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
   const { userData, isLoggedIn, loading } = useAuth();
@@ -68,12 +77,12 @@ export default function Dashboard() {
     {
       label: "Performance",
       icon: <TfiStatsUp />,
-      element: <p> PERFORMANCE Working </p>,
+      element: <UnderConstruction pageName={'Performance'}/>
     },
     {
       label: "Courses",
       icon: <GiBookshelf />,
-      element: <p> COURSES Working </p>,
+      element: <UnderConstruction pageName={'Courses'}/>
     },
     {
       label: "Articles",
@@ -85,13 +94,10 @@ export default function Dashboard() {
       icon: <VscFileMedia />,
       element: <MediaContainer />,
     },
-    
-    
-    
     {
       label: "Settings",
       icon: <IoIosSettings />,
-      element: <p> Working </p>,
+      element: <UnderConstruction pageName={'Settings'}/>
     },
     {
       label: "Logout",
