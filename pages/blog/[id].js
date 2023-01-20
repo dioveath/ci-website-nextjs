@@ -10,22 +10,28 @@ import EditorJSRenderer from '../../components/EditorJSRenderer';
 
 import { getPost } from '../api/posts/[postId].js';
 import { UserService } from '../../lib/service/UserService.js';
+import { extractSummary } from '../../lib/utils/summaryHelper';
 import Footer from '../../components/footer/Footer.js';
-import { serialize } from 'bson';
 
 export default function BlogPage({ blog: blogData, user: userData }){
 
   return (
     <div>
       <Head>
-        <title> Charicha Insitute Blogs | { blogData?.title || "Empty Blog" } </title>
-        <meta name="description" />
-        {/* <meta property="og:image" itemProp="image" content={"landing_image.png"}/> */}
+        <title> { blogData?.title || "Empty Blog" } </title>
+        <meta name="og:title" content={`${blogData?.title || "Empty Blog"}` }/>
+        <meta name="og:description" content={extractSummary(blogData.body)}/>
+        <meta name="og:type" content={"article"}/>        
+        <meta property="og:image" itemProp="image" content={blogData.thumbnail.downloadURL}/>
+        <meta property="og:url" content={`https://www.charichinstitute.com.np/blog/${blogData.id}`}/>
+        <meta property="og:locale" content="en_GB" />
+        <meta name="google-site-verification" content="Mhz5cignZECA0cM-uCWNNKXWfQcHIjkM0bNrPEcipZE" />        
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
 
-      <main className={'bg-gradient-[-45deg] from-eggblue to-slategray pb-10'}>
+      {/* <main className={'bg-gradient-[-45deg] from-eggblue to-slategray pb-10'}> */}
+      <main className={'bg-riverbed'}>
         <Navbar/>
 
 	<div className='px-8 md:px-10 xl:px-20 2xl:px-48 mt-10 text-white'>
