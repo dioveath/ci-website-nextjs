@@ -37,7 +37,7 @@ const customRenderers = {
 
 export default function EditorJSRenderer({ data }){
   const convertedData = JSON.parse(data);
-  return <section className='prose dark:prose-invert'> <Output
+  return <section className='prose'> <Output
                                                          renderers={customRenderers}
                                                          data={convertedData} /> </section>;
 }
