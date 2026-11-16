@@ -12,14 +12,22 @@
     "import-seed": "sanity dataset import ../seed/seed.ndjson production"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "sanity": "^3.57.0",
-    "@sanity/vision": "^3.57.0",
-    "styled-components": "^6.1.15"
+    "@sanity/vision": "^6.23.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sanity": "^6.23.0",
+    "styled-components": "^6.6.0"
   },
-  "devDependencies": {
-    "@sanity/eslint-config-studio": "^4.0.0",
-    "eslint": "^8.57.0"
+  "engines": {
+    "node": ">=22.12"
+  },
+  "overrides": {
+    "@vercel/frameworks": {
+      "js-yaml": "^3.15.2",
+      "smol-toml": "^1.9.1"
+    },
+    "@oclif/core": {
+      "minimatch": "^11.0.8"
+    }
   }
 }
