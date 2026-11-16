@@ -18,26 +18,26 @@ Sanity — both are merged on `/blog`, newest first. See "Hybrid blog" below.
 
 | Piece | Where | Notes |
 |---|---|---|
-| **Sanity Studio** (editing UI) | [`studio/`](studio/) | Separate project. Runs on React 18, so it is **not** embedded in the Next 12 site (which is React 17). Deploy free to `*.sanity.studio`. |
+| **Sanity Studio** (editing UI) | [`studio/`](studio/) | Separate project on Sanity 6 / React 19, needs Node >=22.12. Not embedded in the Next site (both are React 19 now, so embedding is possible, but it is deliberately kept separate). Deploy free to `*.sanity.studio`. |
 | **Schemas** | [`studio/schemaTypes/`](studio/schemaTypes/) | `course`, `service`, `post` (documents) + `homePage`, `siteSettings`, `contactPage`, `navigation` (singletons). |
 | **Seed data** | [`seed/seed.ndjson`](seed/seed.ndjson) | The current hardcoded content, ready to import. |
-| **Read client** | [`lib/sanity/`](lib/sanity/) | `@sanity/client` + GROQ. Used inside the Next app's `getStaticProps`. |
+| **Read client** | [`lib/sanity/`](lib/sanity/) | `@sanity/client` + GROQ. Called from the Next app's server components (App Router). |
 
 Wired pages / components:
-- [`pages/services/index.js`](pages/services/index.js) — `getServices()` (ISR)
-- [`pages/courses/index.js`](pages/courses/index.js) — `getCourses()` (ISR)
-- [`pages/courses/[id].js`](pages/courses/[id].js) — `getCourseById()` (SSG)
-- [`pages/index.js`](pages/index.js) — `getHomePage()` → hero / stories / app promo / feature video
-- [`pages/contact/index.js`](pages/contact/index.js) — `getContactPage()` → title / description / contact / map
-- [`components/footer/Footer.js`](components/footer/Footer.js) — global, driven by
-  [`useSiteSettings()`](lib/sanity/useSiteSettings.js). It is rendered on every
-  page and can't use `getStaticProps`, so it renders the static fallback on the
+- [`app/services/page.tsx`](app/services/page.tsx) — `getServices()` (ISR, `revalidate = 60`)
+- [`app/courses/page.tsx`](app/courses/page.tsx) — `getCourses()` (ISR, `revalidate = 60`)
+- [`app/courses/[id]/page.tsx`](app/courses/[id]/page.tsx) — `getCourseById()` (SSG via `generateStaticParams`, `revalidate = 60`)
+- [`app/page.tsx`](app/page.tsx) — `getHomePage()` → hero / stories / app promo / feature video
+- [`app/contact/page.tsx`](app/contact/page.tsx) — `getContactPage()` → title / description / contact / map
+- [`components/footer/Footer.tsx`](components/footer/Footer.tsx) — global, driven by
+  [`useSiteSettings()`](lib/sanity/useSiteSettings.ts). It is rendered on every
+  page as a client component, so it renders the static fallback on the
   server / first client render (no hydration mismatch) and swaps in CMS data
   after mount.
-- [`components/Navbar.js`](components/Navbar.js) — global header nav, driven by
-  [`useNavigation()`](lib/sanity/useNavigation.js) (`navigation.headerLinks`).
+- [`components/Navbar.tsx`](components/Navbar.tsx) — global header nav, driven by
+  [`useNavigation()`](lib/sanity/useNavigation.ts) (`navigation.headerLinks`).
   Same render strategy as the footer: static fallback first, CMS data after mount.
-- [`pages/blog/index.js`](pages/blog/index.js) — **hybrid** (see below).
+- [`app/blog/page.tsx`](app/blog/page.tsx) — **hybrid** (see below).
 
 ---
 
@@ -46,29 +46,29 @@ Wired pages / components:
 `/blog` merges two sources, newest first:
 
 - **Firebase** — user-written articles (`ArticleService.listPublishedArticles()`),
-  authored in-app with EditorJS. Author resolved from the Firebase user record.
+  authored in-app with the Tiptap editor (older articles may still be stored as EditorJS blocks; both render). Author resolved from the Firebase user record.
 - **Sanity** — editorial `post` documents authored by the team in the Studio.
   Inline author (`authorName` / `authorImage`), Portable Text body.
 
 How it fits together:
-- [`getBlogPosts()`](lib/sanity/fetchers.js) returns `[]` when Sanity is
+- [`getBlogPosts()`](lib/sanity/fetchers.ts) returns `[]` when Sanity is
   unconfigured, so with no CMS the blog simply shows the Firebase articles —
   nothing breaks (consistent with the rest of the integration).
-- [`pages/blog/index.js`](pages/blog/index.js) `getServerSideProps` normalises
+- [`app/blog/page.tsx`](app/blog/page.tsx) (rendered per request) normalises
   both sources with a `source` discriminator + `sortTime`, then sorts by date.
-- [`components/blog/BlogCard.js`](components/blog/BlogCard.js) branches on
+- [`components/blog/BlogCard.tsx`](components/blog/BlogCard.tsx) branches on
   `blog.source` (Firebase keeps its client-side author fetch; Sanity uses the
   inline author).
-- [`pages/blog/[id].js`](pages/blog/[id].js) resolves a slug by trying Firebase
-  (`getPost`) first, then Sanity (`getBlogPostBySlug`); 404 if neither matches.
-  Sanity bodies render via [`PortableBody`](components/blog/PortableBody.js)
-  (`@portabletext/react`), Firebase bodies via `EditorJSRenderer`.
+- [`app/blog/[id]/page.tsx`](app/blog/[id]/page.tsx) resolves a slug by trying Firebase
+  (`ArticleService.getArticle`) first, then Sanity (`getBlogPostBySlug`); 404 if neither matches.
+  Sanity bodies render via [`PortableBody`](components/blog/PortableBody.tsx)
+  (`@portabletext/react`), Firebase bodies via [`ArticleRenderer`](components/ArticleRenderer/index.tsx).
 
 Posts are ordered by `publishedAt` — set it when publishing. The body uses
 Portable Text (`block` + inline `image`); embedded images resolve through
-[`urlFor()`](lib/sanity/image.js).
+[`urlFor()`](lib/sanity/image.ts).
 
-All copy fallbacks live in [`lib/sanity/fallbacks.js`](lib/sanity/fallbacks.js).
+All copy fallbacks live in [`lib/sanity/fallbacks.ts`](lib/sanity/fallbacks.ts).
 
 ---
 
@@ -98,7 +98,7 @@ npm run import-seed
 # (equivalent to: npx sanity dataset import ../seed/seed.ndjson production)
 ```
 
-This loads the 9 courses, 6 services, and the 4 singleton documents.
+This loads the 9 courses, 6 services, the 4 singleton documents, and one sample blog post.
 Cover images aren't in the seed — re-upload them per course in the Studio
 (the site falls back to `/george.jpg` until you do).
 
@@ -120,7 +120,7 @@ NEXT_PUBLIC_SANITY_DATASET=production
 # optional: NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
 ```
 
-Then in the project root: `nvm use 18 && npm run dev`. The wired pages now read
+Then in the project root: `npm run dev` (Node >=20.9). The wired pages now read
 from Sanity. Edit a course in the Studio → it shows on `/courses` (ISR
 revalidates every 60s).
 
@@ -131,13 +131,13 @@ fallback data and nothing breaks.
 
 ## How the fallback works
 
-[`lib/sanity/client.js`](lib/sanity/client.js) exports `isSanityConfigured`
+[`lib/sanity/client.ts`](lib/sanity/client.ts) exports `isSanityConfigured`
 (true only when `NEXT_PUBLIC_SANITY_PROJECT_ID` is set). Each fetcher in
-[`lib/sanity/fetchers.js`](lib/sanity/fetchers.js) returns the bundled static
+[`lib/sanity/fetchers.ts`](lib/sanity/fetchers.ts) returns the bundled static
 array when Sanity is unconfigured, empty, or errors — so a misconfigured or
 down CMS can never blank out the site.
 
-GROQ projections in [`lib/sanity/queries.js`](lib/sanity/queries.js) are shaped
+GROQ projections in [`lib/sanity/queries.ts`](lib/sanity/queries.ts) are shaped
 to match the legacy objects exactly (`{id, level, title, coverImg, lessons,
 description, time}`), so no display components needed changes.
 
