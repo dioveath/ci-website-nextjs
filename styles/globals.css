@@ -1,9 +1,60 @@
-@import url('https://fonts.googleapis.com/css2?family=Abel&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Abel&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap')
+layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
+@plugin '@tailwindcss/typography';
+
+/* Explicit, since this stylesheet does not sit at the project root. */
+@source '../app';
+@source '../components';
+@source '../containers';
+
+@theme {
+  --color-eggblue: #14B2A2;
+  --color-slategray: #283F41;
+  --color-aquamarine: #95FDF8;
+  --color-cheeseyellow: #EFB53A;
+  --color-brightaqua: #00FFE9;
+  --color-mint: #A4EFE9;
+  --color-neonblue: #08E8DE;
+  --color-timbergreen: #1E2C2D;
+  --color-riverbed: #384B54;
+  --color-greenpea: #19564B;
+  --color-pinegreen: #0E8573;
+
+  --font-montserrat: Montserrat, sans-serif;
+  --font-poppins: Poppins, sans-serif;
+
+  /* The v3 config spelled this `keyFrames`, which Tailwind never read, so
+     animate-wiggle resolved to an animation with no keyframes and did
+     nothing. Spelled correctly it actually animates now. */
+  --animate-wiggle: wiggle 0.5s ease-out infinite;
+
+  @keyframes wiggle {
+    25%  { transform: translateX(10px);  color: blue; }
+    50%  { transform: translateX(0);     color: yellow; }
+    100% { transform: translateX(-10px); color: red; }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 :root {
     --primary-color: #0EE8E1;
@@ -63,8 +114,7 @@ a {
 .ce-settings,
 .ce-settings__button,
 .cdx-button,
-.ce-popover,
- {
+.ce-popover {
   background: white;
   color: black;
 }

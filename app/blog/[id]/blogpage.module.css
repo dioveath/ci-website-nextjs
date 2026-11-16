@@ -1,0 +1,99 @@
+.main {
+    padding: 1rem 2rem;
+}
+
+.authorDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media only screen and (min-width: 768px){
+    .authorDetailsContainer {
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+    }
+}
+
+.authorLeftContainer{
+    display: flex;
+    align-items: center;
+}
+
+.profileImg {
+    border-radius: 50%;
+}
+
+.infoText {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.timeDetails {
+    display: flex;
+    font-size: 14px;
+    font-weight: 400;
+    color: grey;
+    justify-content: center;
+    align-items: center;
+}
+
+.socialLinks {
+    display: flex;
+}
+
+.contentContainer {
+    display: grid;
+    flex-wrap: wrap;
+    column-gap: 40px;
+    grid-template-columns: 1fr;
+    padding: 2rem 0;
+}
+
+@media only screen and (min-width: 640px){
+    .contentContainer {
+	padding: 2rem 4rem;
+    }
+}
+
+@media only screen and (min-width: 1024px){
+    .contentContainer {
+	grid-template-columns: 8fr 2fr;
+	padding: 2rem 6rem;	
+    }
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.content > p {
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    word-spacing: 1px;
+    padding: 0px;
+    padding-bottom: 10px;
+    font-family: "Montserrat";
+    font-weight: 300;
+    text-align: justify;
+}
+
+.content img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 60vw;
+    text-align: center;
+    object-fit: contain;
+    padding: 0px;
+    padding-bottom: 10px;
+}
+
+.rightContents {
+    /* min-width: 400px; */
+    width: 100%;
+    padding: 2rem 0rem;    
+}
