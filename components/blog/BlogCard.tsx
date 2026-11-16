@@ -79,7 +79,9 @@ function FirebaseBlogCard({ blog }: { blog: BlogListItem }) {
     <Link href={"/blog/" + blog.id} passHref>
     <div className={'w-full max-w-sm p-10 bg-slategray/80 rounded-2xl flex flex-col items-start shadow-2xl cursor-pointer hover:bg-slategray transition-all'}>
       <div className={'flex justify-center items-center w-full  bg-red-400'}>
-        <img alt={'best class thumbnail'} src={blog.thumbnail?.downloadURL} className='w-full h-[200px] object-cover'/>
+        <div className='relative w-full h-[200px]'>
+          <Image alt={blog.title + ' thumbnail'} src={blog.thumbnail?.downloadURL ?? '/upload.webp'} fill sizes='(max-width: 640px) 100vw, 384px' className='object-cover'/>
+        </div>
       </div>
 
 

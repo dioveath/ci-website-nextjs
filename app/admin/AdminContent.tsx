@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import useAuth from "../../lib/hooks/Auth";
+import useIsClient from '../../lib/hooks/useIsClient';
 
 import queryClient from '../../lib/queryclient';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -89,25 +90,21 @@ export default function AdminContent() {
   const { userData, isLoggedIn, loading } = useAuth();
   const [page, setPage] = useState(0);
   const [sideOpen, setSideOpen] = useState(isDesktop);
-  const [onServer, setOnServer] = useState(true);
+  const isClient = useIsClient();
   const router = useRouter();
 
+  const ready = isClient && !loading;
+  const redirectTo = !ready ? null
+    : !isLoggedIn ? '/'
+    : !userData?.roles?.manager ? '/dashboard'
+    : null;
 
+  // Navigation is a side effect, so it runs after render rather than during it.
   useEffect(() => {
-    if(typeof window !== 'undefined')
-      setOnServer(false);
-  }, []);
+    if (redirectTo) router.push(redirectTo);
+  }, [redirectTo, router]);
 
-  if(onServer || loading) return <LoadingScreen/>;
-  if(!isLoggedIn) {
-    router.push('/');
-    return <LoadingScreen/>;    
-  }
-
-  if(!userData?.roles?.manager) {
-    router.push('/dashboard');
-    return <LoadingScreen/>;
-  }
+  if (!ready || redirectTo) return <LoadingScreen/>;
 
 
   return (
