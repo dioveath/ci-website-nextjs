@@ -1,5 +1,5 @@
 import { firebaseStore } from "../firebase";
-import { doc, deleteDoc, getDoc, getDocs, updateDoc, addDoc, collection, query, where, setDoc, startAfter, orderBy, limit } from "firebase/firestore";
+import { doc, deleteDoc, getDoc, getDocs, updateDoc, collection, query, where, setDoc, startAfter, orderBy, limit } from "firebase/firestore";
 import type { Article } from '../../types';
 
 const ARTICLE_COLLECTION = "articles";

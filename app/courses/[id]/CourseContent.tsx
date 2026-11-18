@@ -5,7 +5,6 @@ import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/footer/Footer";
 
 import PrimaryButton from "../../../components/buttons/PrimaryButton";
-import { getCourseById, getCourseIds } from "../../../lib/sanity/fetchers";
 
 import useAuth from "../../../lib/hooks/Auth";
 import { UserService } from "../../../lib/service/UserService";
@@ -15,7 +14,6 @@ import type { Course } from '../../../types';
 export default function CourseContent({ course }: { course: Course }) {
   const { user, userData } = useAuth();
 
-  const CourseCoverImage = (props: { course: Course }) => {};
 
   return (
     <div>

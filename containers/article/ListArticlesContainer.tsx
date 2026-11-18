@@ -1,8 +1,8 @@
 'use client';
 
 import Image from "next/image";
-import { useContext, useState, useEffect } from "react";
-import { useQuery, useMutation, useInfiniteQuery } from "@tanstack/react-query";
+import { useContext, useState } from "react";
+import { useMutation, useInfiniteQuery } from "@tanstack/react-query";
 
 import useAuth from "../../lib/hooks/Auth";
 import queryClient from "../../lib/queryclient";

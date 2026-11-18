@@ -13,7 +13,6 @@ import styles from "../../styles/services/Services.module.css";
 import ServiceCard from "../../components/services/ServiceCard";
 import Footer from "../../components/footer/Footer";
 
-import { services as servicesFallback } from "../../components/services/service_list";
 import { getServices } from "../../lib/sanity/fetchers";
 import ParticlesBackground from '../../components/ParticlesBackground';
 

@@ -16,7 +16,6 @@ import ReactPlayer from 'react-player';
 import Stories from '../components/home/Stories';
 import AppStore from '../components/home/AppStore';
 import { getHomePage } from '../lib/sanity/fetchers';
-import { homePageFallback } from '../lib/sanity/fallbacks';
 import ParticlesBackground from '../components/ParticlesBackground';
 
 export default async function HomePage() {

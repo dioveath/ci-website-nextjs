@@ -1,12 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { isSupported, getAnalytics } from "firebase/analytics";
 import { firebaseConfig } from "./firebaseConfig";
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getStorage, connectStorageEmulator } from 'firebase/storage';
 
 const firebaseApp = initializeApp(firebaseConfig);
-// const firebaseAnalytics = isSupported(getAnalytics(firebaseApp));
 const firebaseStore = getFirestore(firebaseApp);
 const firebaseStorage = getStorage(firebaseApp);
 

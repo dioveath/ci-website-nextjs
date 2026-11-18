@@ -12,7 +12,6 @@ import Navbar from '../../components/Navbar';
 
 import styles from './blog.module.css';
 
-import TopBlog from '../../components/blog/TopBlog';
 import BlogCard from '../../components/blog/BlogCard';
 
 import Footer from '../../components/footer/Footer';
@@ -60,7 +59,6 @@ export default async function BlogPage(){
         <ParticlesBackground/>
 
 	<div className='px-8 md:px-10 xl:px-20 2xl:px-48 mt-10'>
-          {/* <TopBlog/> */}
 	  <h1 className='text-white text-2xl lg:text-4xl mb-2'> What&apos;s on the run?</h1>
           <h2 className='text-gray-400 text-lg lg:text-xl'> These are handpicked articles for you! </h2>          
         <div style={{height: "40px"}}></div>

@@ -10,7 +10,6 @@ import Footer from '../../components/footer/Footer';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
 
 
-import { getContactPage } from '../../lib/sanity/fetchers';
 import { contactPageFallback } from '../../lib/sanity/fallbacks';
 import ParticlesBackground from '../../components/ParticlesBackground';
 

@@ -14,7 +14,6 @@ import Footer from '../../components/footer/Footer';
 
 import { DropdownMenu } from '../../components/DropdownMenu/index';
 import { coursesList } from '../../components/course/coursesList';
-import { getCourses } from '../../lib/sanity/fetchers';
 import ParticlesBackground from '../../components/ParticlesBackground';
 import type { Course } from '../../types';
 

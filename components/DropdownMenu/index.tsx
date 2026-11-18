@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import styles from '../DropdownMenu/dropdownmenu.module.css';
 import { AiFillCaretDown } from 'react-icons/ai';
 import useClickOutside from '../../lib/hooks/useClickOutside';
