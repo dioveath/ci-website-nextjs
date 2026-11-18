@@ -2,7 +2,7 @@
 
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
-import { urlFor } from '../../lib/sanity/image';
+import { urlFor } from '@/lib/sanity/client';
 
 // Renders the Portable Text body of a Sanity blog post. Mirrors the dark theme
 // used by the Firebase article renderer. Embedded images go through urlFor().

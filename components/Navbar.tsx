@@ -17,7 +17,7 @@ import { DropdownMenu } from "../components/DropdownMenu/index";
 
 import NavItem from "./Navbar/NavItem";
 import useAuth from '@/lib/auth';
-import { useNavigation } from "../lib/sanity/useNavigation";
+import { useNavigation } from '@/lib/sanity/hooks';
 
 import type { User } from 'firebase/auth';
 import type { UserData } from '../types';

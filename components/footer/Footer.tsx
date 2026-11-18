@@ -7,7 +7,7 @@ import FooterLinkItem from './FooterLinkItem';
 import { BsPhoneFill } from 'react-icons/bs';
 import { MdEmail, MdLocationOn } from 'react-icons/md';
 
-import { useSiteSettings } from '../../lib/sanity/useSiteSettings';
+import { useSiteSettings } from '@/lib/sanity/hooks';
 
 export default function Footer ({ path }: { path?: string }){
   const settings = useSiteSettings();

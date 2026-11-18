@@ -1,7 +1,7 @@
 import groq from 'groq';
 
-// Projections are shaped to match the legacy hardcoded objects exactly, so the
-// existing components (CourseCard, ServiceCard, course detail page) need no
+// Projections are shaped to match the static fallbacks exactly, so the
+// components (CourseCard, ServiceCard, course detail page) need no
 // changes. `coverImg` coalesces to a local /public asset when no image is set.
 
 export const coursesQuery = groq`
@@ -104,5 +104,3 @@ export const postBySlugQuery = groq`
     body
   }
 `;
-
-export const postSlugsQuery = groq`*[_type == "post" && defined(slug.current)].slug.current`;

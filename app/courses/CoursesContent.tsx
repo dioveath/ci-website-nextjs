@@ -13,7 +13,7 @@ import Footer from '../../components/footer/Footer';
 
 
 import { DropdownMenu } from '../../components/DropdownMenu/index';
-import { coursesList } from '../../components/course/coursesList';
+import { coursesFallback } from '@/lib/sanity/fallbacks';
 import ParticlesBackground from '../../components/ParticlesBackground';
 import type { Course } from '../../types';
 
@@ -60,7 +60,7 @@ const AdvanceCourses = ({ courses }: { courses: Course[] }) => {
 
 
 
-export default function CoursesContent({ courses = coursesList }: { courses?: Course[] }){
+export default function CoursesContent({ courses = coursesFallback }: { courses?: Course[] }){
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(0);
 

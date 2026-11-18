@@ -81,3 +81,219 @@ export const contactPageFallback = {
   mapEmbedUrl:
     'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14263.539457521121!2d87.4492403!3d26.6521686!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xec11a5cb93e0fac1!2sCharicha%20Institute!5e0!3m2!1sen!2suk!4v1672662347634!5m2!1sen!2suk',
 };
+
+// Courses and services, used when Sanity has none.
+export const coursesFallback = [
+  {
+    id: "1",
+    level: "Beginner",
+    title: "Computer Basics",
+    thumbImg: "/george.jpg",
+    coverImg: "/george.jpg",
+    lessons: [
+      "Diam quis", 
+      "enim lobortis", 
+      "scelerisque", 
+      "fermentum", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula"
+    ],
+    description: "Pellentesque id nibh tortor, id aliquet! Lacinia at quis risus sed vulputate odio ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat velit, scelerisque in dictum non, consectetur a.",
+    time: 56  // in days
+  },
+
+  {
+    id: "2",
+    level: "Beginner",
+    title: "Advance Basics",
+    thumbImg: "/george.jpg",    
+    coverImg: "/george.jpg",
+    lessons: [
+      "fermentum", 
+      "scelerisque", 
+      "Diam quis",
+      "volutpat maecenas",
+      "enim lobortis", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula",
+      "Pellentesque id",
+    ],
+    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
+    time: 68  // in days
+  },
+
+  {
+    id: "3",
+    level: "Beginner",
+    title: "Office Basics",
+    thumbImg: "/george.jpg",    
+    coverImg: "/george.jpg",
+    lessons: [
+      "fermentum", 
+      "scelerisque", 
+      "Diam quis",
+      "volutpat maecenas",
+      "enim lobortis", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula",
+      "Pellentesque id",
+    ],
+    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
+    time: 68  // in days
+  },
+
+  {
+    id: "4",
+    level: "Intermediate",
+    title: "Computer Operator",
+    thumbImg: "/george.jpg",    
+    coverImg: "/george.jpg",
+    lessons: [
+      "fermentum", 
+      "scelerisque", 
+      "Diam quis",
+      "volutpat maecenas",
+      "enim lobortis", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula",
+      "Pellentesque id",
+    ],
+    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
+    time: 68  // in days
+  },   
+
+
+  {
+    id: "5",
+    level: "Intermediate",
+    title: "Lok Shewa Preparation",
+    thumbImg: "/george.jpg",    
+    coverImg: "/george.jpg",
+    lessons: [
+      "fermentum", 
+      "scelerisque", 
+      "Diam quis",
+      "volutpat maecenas",
+      "enim lobortis", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula",
+      "Pellentesque id",
+    ],
+    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
+    time: 68  // in days
+  },
+
+  {
+    id: "6",
+    level: "Intermediate",
+    title: "Accounting Package",
+    thumbImg: "/george.jpg",    
+    coverImg: "/computer_course_cover_2.jpg",
+    lessons: [
+      "fermentum", 
+      "scelerisque", 
+      "Diam quis",
+      "volutpat maecenas",
+      "enim lobortis", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula",
+      "Pellentesque id",
+    ],
+    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
+    time: 68  // in days
+  },
+
+  {
+    id: "7",
+    level: "Advance",
+    title: "Introduction to Programming",
+    coverImg: "/george.jpg",
+    lessons: [
+      "fermentum", 
+      "scelerisque", 
+      "Diam quis",
+      "volutpat maecenas",
+      "enim lobortis", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula",
+      "Pellentesque id",
+    ],
+    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
+    time: 68  // in days
+  },
+
+  {
+    id: "8",
+    level: "Advance",
+    title: "Web Development",
+    coverImg: "/george.jpg",
+    lessons: [
+      "fermentum", 
+      "scelerisque", 
+      "Diam quis",
+      "volutpat maecenas",
+      "enim lobortis", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula",
+      "Pellentesque id",
+    ],
+    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
+    time: 68  // in days
+  },
+
+  {
+    id: "9",
+    level: "Advance",
+    title: "Flutter Mobile Development",
+    coverImg: "/george.jpg",
+    lessons: [
+      "fermentum", 
+      "scelerisque", 
+      "Diam quis",
+      "volutpat maecenas",
+      "enim lobortis", 
+      "dui faucibus", 
+      "Nulla facilisi",
+      "nullam vehicula",
+      "Pellentesque id",
+    ],
+    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
+    time: 68  // in days
+  },   
+     
+];
+
+export const servicesFallback = [
+  {
+    title: 'Computer training courses',
+    description: 'These may include beginner, intermediate, and advanced courses in various computer software and operating systems.'
+  },
+  {
+    title: 'Certification exam preparation',
+    description: 'Many computer institutes offer training and resources to help students prepare for industry-recognized certification exams.'
+  },
+  {
+    title: 'Computer repair and maintenance services',
+    description: 'These services can include hardware and software troubleshooting, as well as repairs and maintenance for computers and other electronic devices.'
+  },
+  {
+    title: 'Network and security consulting',
+    description: 'Computer institutes may offer services to help businesses and organizations set up and secure their networks and protect against cyber threats.'
+  },
+  {
+    title: 'Web design and development services',
+    description: 'These services may include the design and development of websites, as well as search engine optimization and digital marketing.'
+  },
+  {
+    title: 'Data recovery and backup services',
+    description: 'Computer institutes may offer services to help individuals and organizations recover lost or damaged data, as well as implement backup solutions to protect against data loss.'
+  }
+];

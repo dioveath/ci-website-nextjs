@@ -19,7 +19,7 @@ import styles from "../../../styles/profile/profile.module.css";
 import Marginer from "../../../components/utils/Marginer";
 import Footer from "../../../components/footer/Footer";
 
-import { coursesList } from "../../../components/course/coursesList";
+import { getCourses } from "@/lib/sanity/fetchers";
 
 import type { UserData } from '../../../types';
 import { getUser } from '@/lib/users';
@@ -37,7 +37,7 @@ function UserNotFound() {
 
 // Server-rendered, so there is no loading state: by the time this renders the
 // user has either been fetched or not found.
-function ProfileView({ userData }: { userData: UserData }) {
+function ProfileView({ userData, courseTitles }: { userData: UserData; courseTitles: Map<string, string> }) {
   const userJoinedDate = new Date(userData.joined_at ?? 0);
   // roles is a { roleName: boolean } map, not an array.
   const activeRoles = Object.keys(userData.roles ?? {}).filter((role) => userData.roles[role]);
@@ -138,7 +138,7 @@ function ProfileView({ userData }: { userData: UserData }) {
           >
             <BsRecordCircleFill />
             <Marginer />
-            {coursesList[Number(courseId)]?.title}
+            {courseTitles.get(courseId)}
           </p>
         </div>
       ))}
@@ -213,20 +213,14 @@ export async function generateStaticParams() {
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Resolve the data first: JSX built inside a try/catch would not have its
-  // render errors caught anyway, and React lint rightly flags that.
-  let userData: UserData | null = null;
-  try {
-    userData = await getUser(id);
-  } catch {
-    userData = null;
-  }
+  const [userData, courses] = await Promise.all([getUser(id).catch(() => null), getCourses()]);
+  const courseTitles = new Map(courses.map((c) => [String(c.id), c.title]));
 
   return (
     <div>
       <main className={'bg-linear-[-45deg] from-eggblue to-slategray'}>
         <Navbar />
-        {userData ? <ProfileView userData={userData} /> : <UserNotFound />}
+        {userData ? <ProfileView userData={userData} courseTitles={courseTitles} /> : <UserNotFound />}
       </main>
       <Footer />
     </div>

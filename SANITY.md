@@ -30,12 +30,12 @@ Wired pages / components:
 - [`app/page.tsx`](app/page.tsx) — `getHomePage()` → hero / stories / app promo / feature video
 - [`app/contact/page.tsx`](app/contact/page.tsx) — `getContactPage()` → title / description / contact / map
 - [`components/footer/Footer.tsx`](components/footer/Footer.tsx) — global, driven by
-  [`useSiteSettings()`](lib/sanity/useSiteSettings.ts). It is rendered on every
+  [`useSiteSettings()`](lib/sanity/hooks.ts). It is rendered on every
   page as a client component, so it renders the static fallback on the
   server / first client render (no hydration mismatch) and swaps in CMS data
   after mount.
 - [`components/Navbar.tsx`](components/Navbar.tsx) — global header nav, driven by
-  [`useNavigation()`](lib/sanity/useNavigation.ts) (`navigation.headerLinks`).
+  [`useNavigation()`](lib/sanity/hooks.ts) (`navigation.headerLinks`).
   Same render strategy as the footer: static fallback first, CMS data after mount.
 - [`app/blog/page.tsx`](app/blog/page.tsx) — **hybrid** (see below).
 
@@ -54,19 +54,18 @@ How it fits together:
 - [`getBlogPosts()`](lib/sanity/fetchers.ts) returns `[]` when Sanity is
   unconfigured, so with no CMS the blog simply shows the Firebase articles —
   nothing breaks (consistent with the rest of the integration).
-- [`app/blog/page.tsx`](app/blog/page.tsx) (rendered per request) normalises
-  both sources with a `source` discriminator + `sortTime`, then sorts by date.
-- [`components/blog/BlogCard.tsx`](components/blog/BlogCard.tsx) branches on
-  `blog.source` (Firebase keeps its client-side author fetch; Sanity uses the
-  inline author).
-- [`app/blog/[id]/page.tsx`](app/blog/[id]/page.tsx) resolves a slug by trying Firebase
-  (`ArticleService.getArticle`) first, then Sanity (`getBlogPostBySlug`); 404 if neither matches.
+- [`lib/blog.ts`](lib/blog.ts) is the only code that knows there are two
+  sources. `listPosts()` normalises both into one `BlogPost` shape (authors
+  resolved on the server) and sorts by date; `getPost(id)` tries a Firebase
+  article id first, then a Sanity slug, and returns null if neither matches.
+- [`app/blog/page.tsx`](app/blog/page.tsx) and [`app/blog/[id]/page.tsx`](app/blog/[id]/page.tsx)
+  render what those return; [`BlogCard`](components/blog/BlogCard.tsx) renders either source.
   Sanity bodies render via [`PortableBody`](components/blog/PortableBody.tsx)
   (`@portabletext/react`), Firebase bodies via [`ArticleRenderer`](components/ArticleRenderer/index.tsx).
 
 Posts are ordered by `publishedAt` — set it when publishing. The body uses
 Portable Text (`block` + inline `image`); embedded images resolve through
-[`urlFor()`](lib/sanity/image.ts).
+[`urlFor()`](lib/sanity/client.ts).
 
 All copy fallbacks live in [`lib/sanity/fallbacks.ts`](lib/sanity/fallbacks.ts).
 
@@ -131,8 +130,8 @@ fallback data and nothing breaks.
 
 ## How the fallback works
 
-[`lib/sanity/client.ts`](lib/sanity/client.ts) exports `isSanityConfigured`
-(true only when `NEXT_PUBLIC_SANITY_PROJECT_ID` is set). Each fetcher in
+[`lib/sanity/client.ts`](lib/sanity/client.ts) exports a null `sanityClient`
+unless `NEXT_PUBLIC_SANITY_PROJECT_ID` is set. Each fetcher in
 [`lib/sanity/fetchers.ts`](lib/sanity/fetchers.ts) returns the bundled static
 array when Sanity is unconfigured, empty, or errors — so a misconfigured or
 down CMS can never blank out the site.
