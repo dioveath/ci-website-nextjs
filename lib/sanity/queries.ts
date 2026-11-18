@@ -1,34 +1,57 @@
 import groq from 'groq';
 
-// Projections are shaped to match the legacy hardcoded objects exactly, so the
-// existing components (CourseCard, ServiceCard, course detail page) need no
-// changes. `coverImg` coalesces to a local /public asset when no image is set.
-
-export const coursesQuery = groq`
-  *[_type == "course"] | order(order asc) {
-    "id": courseId,
-    level,
+// Course projections return the RawCourse shape (lib/courses/catalog.ts);
+// fetchers run every result through normalizeCourse. Prices are stored in the
+// Studio in rupees and returned in paisa. A video lesson with no Cloudflare
+// video uid plays the placeholder video.
+const courseProjection = `{
+  "id": courseId,
+  "slug": slug.current,
+  title,
+  level,
+  "coverImg": coalesce(coverImage.asset->url, "/george.jpg"),
+  description,
+  "price": select(price > 0 => { "amount": price * 100, "currency": "NPR" }, null),
+  "listed": coalesce(listed, true),
+  "prerequisiteIds": coalesce(prerequisites[]->courseId, []),
+  "sections": coalesce(sections[]{
+    "key": _key,
     title,
-    "coverImg": coalesce(coverImage.asset->url, "/george.jpg"),
-    lessons,
-    description,
-    "time": durationDays
-  }
+    "lessons": coalesce(lessons[]{
+      "id": lessonId.current,
+      title,
+      "type": coalesce(type, "video"),
+      "durationSec": durationMinutes * 60,
+      "isPreview": coalesce(isPreview, false),
+      "video": select(
+        type == "article" => null,
+        defined(videoUid) => { "provider": "cloudflare", videoUid },
+        { "provider": "placeholder" }
+      )
+    }, [])
+  }, [])
+}`;
+
+// The public catalog: unlisted courses are hidden here but still resolvable
+// by id, so students who bought them keep access.
+export const coursesQuery = groq`
+  *[_type == "course" && defined(courseId) && coalesce(listed, true)] | order(order asc) ${courseProjection}
 `;
 
 export const courseByIdQuery = groq`
-  *[_type == "course" && courseId == $id][0] {
-    "id": courseId,
-    level,
-    title,
-    "coverImg": coalesce(coverImage.asset->url, "/george.jpg"),
-    lessons,
-    description,
-    "time": durationDays
-  }
+  *[_type == "course" && courseId == $id][0] ${courseProjection}
+`;
+
+export const coursesByIdsQuery = groq`
+  *[_type == "course" && courseId in $ids] ${courseProjection}
 `;
 
 export const courseIdsQuery = groq`*[_type == "course" && defined(courseId)].courseId`;
+
+// Private "course content" dataset: the paid body of one lesson.
+export const lessonContentQuery = groq`
+  *[_type == "lessonContent" && courseId == $courseId && lessonId == $lessonId][0]{ body }
+`;
 
 export const servicesQuery = groq`
   *[_type == "service"] | order(order asc) {

@@ -72,7 +72,7 @@ export const navigationFallback = {
 export const contactPageFallback = {
   title: 'Contact Us',
   description:
-    "Thank you for visiting our website. If you have any questions or would like to schedule a tour of our facilities, please don't hesitate to reach out to us.",
+    "Thank you for visiting our website. If you have any questions about our courses, please don't hesitate to reach out to us.",
   contact: {
     phone: '+977 9817-388966',
     email: 'charichainstitute@gmail.com',

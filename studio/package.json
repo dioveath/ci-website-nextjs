@@ -9,7 +9,9 @@
     "start": "sanity start",
     "build": "sanity build",
     "deploy": "sanity deploy",
-    "import-seed": "sanity dataset import ../seed/seed.ndjson production"
+    "import-seed": "sanity dataset import ../seed/seed.ndjson production",
+    "import-content-seed": "sanity dataset import ../seed/course-content.ndjson course-content",
+    "migrate:digital-courses": "sanity migration run digital-courses"
   },
   "dependencies": {
     "@sanity/vision": "^6.23.0",

@@ -13,46 +13,44 @@ import Footer from '../../components/footer/Footer';
 
 
 import { DropdownMenu } from '../../components/DropdownMenu/index';
-import { coursesList } from '../../components/course/coursesList';
-import { getCourses } from '../../lib/sanity/fetchers';
 import ParticlesBackground from '../../components/ParticlesBackground';
-import type { Course } from '../../types';
+import type { CatalogCourse } from '../../types/courses';
 
 
-const AllCourses = ({ courses }: { courses: Course[] }) => {
+const AllCourses = ({ courses }: { courses: CatalogCourse[] }) => {
   return (
     <div className={styles.levelCoursesContainer}>
-      { courses.map((course: Course) => {
+      { courses.map((course: CatalogCourse) => {
         return <CourseCard key={"all" + course.id} course={course}/>;
       })}
     </div>
   );
 };
 
-const BeginnerCourses = ({ courses }: { courses: Course[] }) => {
+const BeginnerCourses = ({ courses }: { courses: CatalogCourse[] }) => {
   return (
     <div className={styles.levelCoursesContainer}>
-      { courses.filter((course: Course) => course.level === "Beginner").map((course: Course) => {
+      { courses.filter((course: CatalogCourse) => course.level === "Beginner").map((course: CatalogCourse) => {
         return <CourseCard key={course.id} course={course}/>;
       })}
     </div>
   );
 };
 
-const IntermediateCourses = ({ courses }: { courses: Course[] }) => {
+const IntermediateCourses = ({ courses }: { courses: CatalogCourse[] }) => {
   return (
     <div className={styles.levelCoursesContainer}>
-      { courses.filter((course: Course) => course.level === "Intermediate").map((course: Course) => {
+      { courses.filter((course: CatalogCourse) => course.level === "Intermediate").map((course: CatalogCourse) => {
         return <CourseCard key={course.id} course={course}/>;
       })}
     </div>
   );
 };
 
-const AdvanceCourses = ({ courses }: { courses: Course[] }) => {
+const AdvanceCourses = ({ courses }: { courses: CatalogCourse[] }) => {
   return (
     <div className={styles.levelCoursesContainer}>
-      { courses.filter((course: Course) => course.level === "Advance").map((course: Course) => {
+      { courses.filter((course: CatalogCourse) => course.level === "Advance").map((course: CatalogCourse) => {
         return <CourseCard key={course.id} course={course}/>;
       })}
     </div>
@@ -61,7 +59,7 @@ const AdvanceCourses = ({ courses }: { courses: Course[] }) => {
 
 
 
-export default function CoursesContent({ courses = coursesList }: { courses?: Course[] }){
+export default function CoursesContent({ courses }: { courses: CatalogCourse[] }){
   const [currentTabIndex, setCurrentTabIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(0);
 

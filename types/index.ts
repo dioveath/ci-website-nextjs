@@ -18,8 +18,8 @@ export interface UserData {
   hearts: number;
   roles: Record<string, boolean>;
   profile_visits: number;
-  /** courseId -> attendance bitstring, per the model in README.md */
-  courses: Record<string, string>;
+  /** @deprecated Pre-digital enroll button marker. Removed by `npm run admin -- migrate-users`. */
+  courses?: Record<string, string>;
   medias: Media[];
   joined_at: number;
   on_board: boolean;
@@ -106,19 +106,8 @@ export type ArticleBody = TiptapDoc | TiptapNode | EditorJsDocument | null;
 
 /* ---------------------------------------------------------------- courses -- */
 
-export interface Course {
-  id: string;
-  title: string;
-  level?: string;
-  coverImg: string;
-  description?: string;
-  duration?: string;
-  price?: string | number;
-  /** Days; CourseCard renders this as months. */
-  time?: number | string;
-  lessons?: unknown[];
-  [key: string]: unknown;
-}
+export type * from './courses';
+export { COURSE_LEVELS, PAYMENT_PROVIDERS } from './courses';
 
 /* ------------------------------------------------------------ blog list -- */
 
