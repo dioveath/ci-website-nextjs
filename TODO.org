@@ -10,13 +10,15 @@
 ** DONE Implement the final User Model
 ** DONE Implement User Model to load with Profile Page
 ** DONE Make course enrollable to user, i.e. courses ids to user data
-** TODO Create Course Page
+** DONE Create Course Page
 ** TODO Create Artical Writer for Users      
-** TODO Load courses from Network
+** DONE Load courses from Network
 
 * MVP
 ** DONE Courses Page Overhaul
-** Payment gateway
+** DONE Payment gateway (eSewa, Khalti)
+** TODO Cloudflare Stream for lesson videos (see COURSES.md)
+** TODO Go-live checklist in COURSES.md
 
 * Milestones
 ** Profile Page

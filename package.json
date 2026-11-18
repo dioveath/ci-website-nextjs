@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "admin": "tsx --conditions=react-server scripts/admin.ts",
+    "admin:emulators": "FIRESTORE_EMULATOR_HOST=127.0.0.1:8085 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 FIREBASE_PROJECT_ID=demo-charicha tsx --conditions=react-server scripts/admin.ts",
     "test": "tsx --conditions=react-server --test 'tests/unit/**/*.test.ts'",
     "test:integration": "firebase emulators:exec --config emulators/firebase.test.json --project demo-charicha-test --only auth,firestore \"tsx --conditions=react-server --test --test-concurrency=1 'tests/integration/**/*.test.ts'\"",
     "test:rules": "firebase emulators:exec --config emulators/firebase.test.json --project demo-charicha-test --only firestore \"tsx --test 'tests/rules/**/*.test.ts'\""

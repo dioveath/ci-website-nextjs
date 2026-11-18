@@ -19,7 +19,8 @@ Sanity — both are merged on `/blog`, newest first. See "Hybrid blog" below.
 | Piece | Where | Notes |
 |---|---|---|
 | **Sanity Studio** (editing UI) | [`studio/`](studio/) | Separate project on Sanity 6 / React 19, needs Node >=22.12. Not embedded in the Next site (both are React 19 now, so embedding is possible, but it is deliberately kept separate). Deploy free to `*.sanity.studio`. |
-| **Schemas** | [`studio/schemaTypes/`](studio/schemaTypes/) | `course`, `service`, `post` (documents) + `homePage`, `siteSettings`, `contactPage`, `navigation` (singletons). |
+| **Schemas** | [`studio/schemaTypes/`](studio/schemaTypes/) | `course` (with `courseSection` / `courseLesson`), `service`, `post` (documents) + `homePage`, `siteSettings`, `contactPage`, `navigation` (singletons). `lessonContent` belongs to the private "Course content" workspace. |
+| **Workspaces** | [`studio/sanity.config.js`](studio/sanity.config.js) | **Website** (public dataset) and **Course content** (private dataset `course-content`, paid lesson bodies). See "Course content" below. |
 | **Seed data** | [`seed/seed.ndjson`](seed/seed.ndjson) | The current hardcoded content, ready to import. |
 | **Read client** | [`lib/sanity/`](lib/sanity/) | `@sanity/client` + GROQ. Called from the Next app's server components (App Router). |
 
@@ -98,9 +99,19 @@ npm run import-seed
 # (equivalent to: npx sanity dataset import ../seed/seed.ndjson production)
 ```
 
-This loads the 9 courses, 6 services, the 4 singleton documents, and one sample blog post.
-Cover images aren't in the seed — re-upload them per course in the Studio
-(the site falls back to `/george.jpg` until you do).
+This loads the 9 courses (sample sections, lessons and prices), 6 services, the
+4 singleton documents, and one sample blog post. Cover images aren't in the seed:
+re-upload them per course in the Studio (the site falls back to `/george.jpg`
+until you do).
+
+**Already have courses from before the switch to digital courses?** Convert
+them (flat lesson list -> sections with stable lesson ids; `durationDays`
+removed) instead of re-importing:
+
+```bash
+npm run migrate:digital-courses                 # dry run
+npm run migrate:digital-courses -- --no-dry-run
+```
 
 ### 3. Run the Studio
 
@@ -137,13 +148,46 @@ fallback data and nothing breaks.
 array when Sanity is unconfigured, empty, or errors — so a misconfigured or
 down CMS can never blank out the site.
 
-GROQ projections in [`lib/sanity/queries.ts`](lib/sanity/queries.ts) are shaped
-to match the legacy objects exactly (`{id, level, title, coverImg, lessons,
-description, time}`), so no display components needed changes.
+**Courses are the exception.** They are sold, so the bundled sample catalog
+([`components/course/coursesList.ts`](components/course/coursesList.ts)) is used
+only when Sanity is **not configured**. Once it is, an empty or failing Sanity
+shows no courses rather than sample courses with sample prices.
 
-## Courses ↔ Firebase enrollment
+Course GROQ projections in [`lib/sanity/queries.ts`](lib/sanity/queries.ts)
+return the shape in `lib/courses/catalog.ts` (`RawCourse`); every result goes
+through `normalizeCourse`, so a half-filled course in the Studio cannot break a
+page.
 
-Course **content** lives in Sanity, but student **enrollment** stays in Firebase
-(`user.courses` keyed by course id). Each Sanity course carries a stable
-`courseId` (`"1"`–`"9"`) used in `/courses/<id>` URLs and enrollment records —
-**don't change it** once students are enrolled, or their enrollments won't match.
+---
+
+## Course content (private dataset)
+
+Course outlines (titles, prices, free previews) are public, but what students
+pay for is not. Lesson bodies (article text and video notes) live in a
+**private** dataset that only the website's server reads, after checking the
+student's access.
+
+One-time setup:
+
+```bash
+# from studio/
+npx sanity dataset create course-content --visibility private
+npm run import-content-seed        # optional: sample bodies for course 1
+```
+
+Then create an API token with **Viewer** access (sanity.io/manage -> API ->
+Tokens) and set it on the website as `SANITY_READ_TOKEN` (server only; see
+`.env.example`). Without it, lessons still open and play their video, minus the
+written content.
+
+In the Studio, open the **Course content** workspace and create one "Lesson
+content" document per lesson, with the course's **Course ID** and the lesson's
+**Lesson ID** copied from the Website workspace.
+
+## Courses, purchases and progress
+
+Course **content** lives in Sanity; purchases, access and progress live in
+Firestore (`orders`, `enrollments`, `certificates`). See
+[COURSES.md](COURSES.md). Each course's **Course ID** and each lesson's
+**Lesson ID** key those records: **don't change them** once a course has been
+sold.
