@@ -14,7 +14,7 @@ export default function Hero({ hero = homePageFallback.hero }) {
 	  <p className='text-white text-sm md:text-base xl:text-lg font-light'> {hero.subtitle} </p>
 	  <button className="max-w-sm py-4 text-white text-[32px] bg-brightaqua rounded-full hover:bg-slategray drop-shadow-md duration-500"> {hero.ctaLabel} </button>
         </div>
-        <div className={'min-w-md md:w-[50%] h-full flex flex-col relative md:-top-10'}>
+        <div className={'md:w-[50%] h-full flex flex-col relative md:-top-10'}>
           <Image className="shadow-md" alt='charicha pc hero image' src='/ci_pc.svg' width={'700'} height={'500'}/>
         </div>
       </div>

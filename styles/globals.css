@@ -61,28 +61,34 @@ layer(base);
     --secondary-color: #0070f3;
 }
 
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: Raleway, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-	       Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  font-weight: 500;
-  /* background: linear-gradient(247.47deg, #0DD4BC 5.76%, #0C8380 84.97%);       */
-}
+/*
+  Element resets live in the base layer. Tailwind v4 emits utilities inside
+  @layer utilities, and any CSS outside a layer beats every layered rule
+  regardless of specificity. Left unlayered (as they were under v3, where the
+  utility's class specificity won), `* { padding: 0; margin: 0 }` silently
+  cancelled every p-*, px-*, m-*, mt-*... utility on the site, and
+  `a { color: inherit }` cancelled text colour utilities on links.
+*/
+@layer base {
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+    font-family: Raleway, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+                 Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-weight: 500;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-* {
+  * {
     box-sizing: border-box;
     padding: 0px;
     margin: 0px;
-    /* cursor: none; */
-    /* cursor: url("../public/aim.svg"); */
-    
+  }
 }
 
 /* width */

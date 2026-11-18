@@ -7,8 +7,6 @@ import { useRouter } from "next/navigation";
 
 import styles from "../styles/components/Navbar.module.css";
 import Marginer from "../components/utils/Marginer";
-import { useMediaQuery } from "react-responsive";
-import { SCREENS } from "../lib/utils/Responsive";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { BsPersonFill } from "react-icons/bs";
 import { RxCross2 } from 'react-icons/rx';
@@ -27,7 +25,6 @@ export interface NavLink { href: string; label: string }
 
 interface NavListProps {
   showMenu: boolean;
-  isMobile: boolean;
   user: User | null;
   userData: UserData | null;
   setShowMenu: (v: boolean) => void;
@@ -39,7 +36,6 @@ interface NavListProps {
 export default function Navbar({ path }: { path?: string }) {
   // next/navigation has no singleton Router export, so this is now a hook.
   const router = useRouter();
-  const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
   const [showMenu, setShowMenu] = useState(false);
   const { user, userData, logout } = useAuth();
   const { headerLinks } = useNavigation();
@@ -80,13 +76,17 @@ export default function Navbar({ path }: { path?: string }) {
         />
       </Link>
 
-      {!isDesktop && !showMenu && (
+      {/* Mobile vs desktop is decided by CSS (lg = 1024px, the same breakpoint
+          as .navlist in Navbar.module.css), not by a JS media query: the
+          server cannot know the screen width, so a JS check rendered the
+          mobile markup on the server and the desktop markup in the browser,
+          which is a hydration mismatch. */}
+      {!showMenu && (
         <NavHamburger setShowMenu={setShowMenu} showMenu={showMenu} />
       )}
 
       <NavList
         showMenu={showMenu}
-        isMobile={!isDesktop}
         user={user}
         userData={userData}
         setShowMenu={setShowMenu}
@@ -100,7 +100,6 @@ export default function Navbar({ path }: { path?: string }) {
 
 const NavList = ({
   showMenu,
-  isMobile,
   user,
   userData,
   setShowMenu,
@@ -112,8 +111,8 @@ const NavList = ({
   <ul
     className={`${styles.navlist} ${(showMenu ? styles.navActive : styles.navInActive)}`}
   >
-    {isMobile && showMenu &&
-     (<div className='w-full h-4 flex justify-end cursor-pointer'>
+    {showMenu &&
+     (<div className='w-full h-4 flex justify-end cursor-pointer lg:hidden'>
          <RxCross2
            className='text-2xl text-white hover:text-red'
            onClick={() => {
@@ -167,12 +166,12 @@ const NavList = ({
 
 const NavHamburger = ({ setShowMenu, showMenu }: { setShowMenu: (v: boolean) => void; showMenu: boolean }) => (
   <div
+    className="lg:hidden"
     style={{
       marginRight: "20px",
       cursor: "pointer",
     }}
     onClick={() => {
-      console.log(showMenu);
       if (!showMenu) setShowMenu(true);
     }}
   >
