@@ -5,7 +5,8 @@ import { AiOutlineClockCircle } from 'react-icons/ai';
 
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/footer/Footer';
-import CourseCurriculum from '../../../components/course/CourseCurriculum';
+import LiveCurriculum from '../../../components/course/LiveCurriculum';
+import CourseActions from '../../../components/course/CourseActions';
 import { formatDuration, formatMoney } from '../../../lib/courses/format';
 import type { CatalogCourse } from '../../../types/courses';
 
@@ -63,11 +64,12 @@ export default function CourseContent({ course, prerequisites }: CourseContentPr
 
             <section>
               <h2 className="text-white text-2xl font-bold mb-4">Curriculum</h2>
-              <CourseCurriculum course={course} />
+              <LiveCurriculum course={course} />
             </section>
           </div>
 
-          <aside className="flex flex-col gap-6">
+          <aside className="flex flex-col gap-6 lg:sticky lg:top-6 lg:self-start">
+            <CourseActions course={course} />
             {prerequisites.length > 0 && (
               <section className="rounded-lg bg-timbergreen/60 p-5">
                 <h2 className="text-white font-semibold mb-2">Recommended first</h2>

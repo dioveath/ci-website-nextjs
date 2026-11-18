@@ -19,10 +19,10 @@ import styles from "../../../styles/profile/profile.module.css";
 import Marginer from "../../../components/utils/Marginer";
 import Footer from "../../../components/footer/Footer";
 
-import { coursesList } from "../../../components/course/coursesList";
 
 import { UserService } from '../../../lib/service/UserService';
-import type { UserData } from '../../../types';
+import { CertificateService } from '../../../lib/service/CertificateService';
+import type { CertificateDTO, UserData } from '../../../types';
 
 function UserNotFound() {
   return (
@@ -37,11 +37,10 @@ function UserNotFound() {
 
 // Server-rendered, so there is no loading state: by the time this renders the
 // user has either been fetched or not found.
-function ProfileView({ userData }: { userData: UserData }) {
+function ProfileView({ userData, certificates }: { userData: UserData; certificates: CertificateDTO[] }) {
   const userJoinedDate = new Date(userData.joined_at ?? 0);
   // roles is a { roleName: boolean } map, not an array.
   const activeRoles = Object.keys(userData.roles ?? {}).filter((role) => userData.roles[role]);
-  const enrolledCourseIds = Object.keys(userData.courses ?? {});
 
   const coverImage = (
     <Image
@@ -120,29 +119,22 @@ function ProfileView({ userData }: { userData: UserData }) {
     </div>
   );
 
-  const coursesEnrolled = (
+  // Certificates are public; what a student is currently taking is not.
+  const coursesCompleted = certificates.length ? (
     <div>
-      {enrolledCourseIds.map((courseId) => (
-        <div
-          key={courseId}
-          className={styles.roleCard}
-          style={{ marginBottom: "10px" }}
+      {certificates.map((certificate) => (
+        <Link
+          key={certificate.id}
+          href={`/certificates/${certificate.id}`}
+          className={`${styles.roleCard} mb-2 flex items-center gap-2 text-white hover:text-aquamarine`}
         >
-          <p
-            className={styles.subTitleText}
-            style={{
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <BsRecordCircleFill />
-            <Marginer />
-            {coursesList[Number(courseId)]?.title}
-          </p>
-        </div>
+          <BsRecordCircleFill />
+          <span className={styles.subTitleText}>{certificate.courseTitle}</span>
+        </Link>
       ))}
     </div>
+  ) : (
+    <p className={styles.subTitleText}> No completed courses yet. </p>
   );
 
   const secondaryStatsInfo = (
@@ -160,9 +152,9 @@ function ProfileView({ userData }: { userData: UserData }) {
       </div>
       <Marginer />
       <div>
-        <p className={styles.titleText}> Courses Enrolled </p>
+        <p className={styles.titleText}> Courses Completed </p>
         <Marginer />
-        {coursesEnrolled}
+        {coursesCompleted}
       </div>
     </div>
   );
@@ -216,9 +208,11 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
   // Resolve the data first: JSX built inside a try/catch would not have its
   // render errors caught anyway, and React lint rightly flags that.
   let userData: UserData | null = null;
+  let certificates: CertificateDTO[] = [];
   try {
     const user = await UserService.getUser(id);
     userData = user.userData;
+    if (userData) certificates = await CertificateService.listForUser(id);
   } catch {
     userData = null;
   }
@@ -227,7 +221,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
     <div>
       <main className={'bg-linear-[-45deg] from-eggblue to-slategray'}>
         <Navbar />
-        {userData ? <ProfileView userData={userData} /> : <UserNotFound />}
+        {userData ? <ProfileView userData={userData} certificates={certificates} /> : <UserNotFound />}
       </main>
       <Footer />
     </div>

@@ -17,6 +17,7 @@ import SideMenu from "../../components/SideMenu/index";
 
 import MediaContainer from "../../containers/media";
 import ArticleContainer from "../../containers/article";
+import MyCoursesContainer from "../../containers/my_courses";
 
 import { IoIosSettings, IoIosConstruct } from "react-icons/io";
 import { TfiStatsUp } from "react-icons/tfi";
@@ -77,14 +78,14 @@ export default function DashboardContent() {
 
   const PAGES = [
     {
+      label: "My Courses",
+      icon: <GiBookshelf />,
+      element: <MyCoursesContainer />
+    },
+    {
       label: "Performance",
       icon: <TfiStatsUp />,
       element: <UnderConstruction pageName={'Performance'}/>
-    },
-    {
-      label: "Courses",
-      icon: <GiBookshelf />,
-      element: <UnderConstruction pageName={'Courses'}/>
     },
     {
       label: "Articles",
