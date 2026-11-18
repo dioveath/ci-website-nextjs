@@ -6,11 +6,38 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { id } = await params;
   const article = await ArticleService.getArticle(id);
-  const post = article ?? (await getBlogPostBySlug(id));
+  const cmsPost = article ? null : await getBlogPostBySlug(id);
+  const post = article ?? cmsPost;
 
+  const title = `Charicha Institute Blogs | ${post?.title ?? 'Empty Blog'}`;
+  if (!post) return { title, description: 'Charicha Institute Blogs' };
+
+  // Firebase articles have no excerpt, so summarise the body instead. A body
+  // that fails to parse must not take the whole page down with it.
+  let summary: string = cmsPost?.excerpt ?? '';
+  if (article) {
+    try { summary = extractSummary(article.body).trim(); } catch { summary = ''; }
+  }
+  const description = summary && summary !== '...(empty)'
+    ? (summary.length > 200 ? summary.slice(0, 197).trimEnd() + '...' : summary)
+    : 'Charicha Institute Blogs';
+  const image: string | undefined = article ? article.thumbnail?.downloadURL : cmsPost?.coverImg ?? undefined;
+
+  // Link previews (Facebook, WhatsApp, LinkedIn...). Relative URLs resolve
+  // against metadataBase in the root layout.
   return {
-    title: `Charicha Institute Blogs | ${post?.title ?? 'Empty Blog'}`,
-    description: (post as { excerpt?: string } | null)?.excerpt ?? 'Charicha Institute Blogs'
+    title,
+    description,
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description,
+      url: `/blog/${id}`,
+      siteName: 'Charicha Institute',
+      locale: 'en_GB',
+      ...(image ? { images: [{ url: image, alt: post.title }] } : {}),
+      ...(cmsPost?.publishedAt ? { publishedTime: cmsPost.publishedAt } : {})
+    }
   };
 }
 
@@ -29,6 +56,7 @@ import PortableBody from '../../../components/blog/PortableBody';
 import { UserService } from '../../../lib/service/UserService';
 import { ArticleService } from '../../../lib/service/ArticleService';
 import { getBlogPostBySlug } from '../../../lib/sanity/fetchers';
+import { extractSummary } from '../../../lib/utils/summaryHelper';
 import Footer from '../../../components/footer/Footer';
 import type { BlogListItem, UserData } from '../../../types';
 

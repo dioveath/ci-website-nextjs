@@ -5,6 +5,9 @@ import '../styles/globals.css';
 import Providers from './providers';
 
 export const metadata: Metadata = {
+  // Base for URL-valued metadata (Open Graph urls/images), so pages can use
+  // relative paths. www.charichainstitute.com.np 301s to this host.
+  metadataBase: new URL('https://charichainstitute.com.np'),
   title: 'Charicha Institute',
   description: 'Charicha Institute Official Website. Student profiles, blogs and courses.',
   icons: { icon: '/favicon.ico' }
