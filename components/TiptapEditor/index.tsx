@@ -4,8 +4,6 @@ import { useCallback, useEffect, useImperativeHandle, type ReactNode, type RefOb
 import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 
 import { editorExtensions } from '../../lib/editor/extensions';
-import { editorjsToHtml, isLegacyDocument } from '../../lib/editor/serialize';
-import { UserService } from '../../lib/service/UserService';
 import type { ArticleBody, Media, TiptapDoc } from '../../types';
 
 import {
@@ -29,6 +27,7 @@ import {
   Underline,
   Undo2
 } from 'lucide-react';
+import { addMedia } from '@/lib/users';
 
 interface ToolbarButtonProps {
   onClick: () => void;
@@ -99,16 +98,6 @@ function Toolbar({ editor, onPickImage }: { editor: Editor | null; onPickImage: 
   );
 }
 
-/*
- * Drop-in replacement for the old ReactEditorJS component. It keeps the same
- * prop surface and the same innerRef.current.save() contract so the containers
- * around it did not have to change shape -- save() now resolves a Tiptap
- * document instead of EditorJS blocks.
- *
- * Legacy EditorJS bodies are converted to HTML on load, which Tiptap parses
- * into its own schema. Saving then writes the new format, so articles migrate
- * as they are edited.
- */
 /** What innerRef exposes to the containers around this editor. */
 export interface TiptapEditorHandle {
   save: () => Promise<TiptapDoc | null>;
@@ -126,7 +115,7 @@ interface TiptapEditorProps {
 export default function TiptapEditor({ data, images, innerRef, userId }: TiptapEditorProps) {
   const editor = useEditor({
     extensions: editorExtensions,
-    content: isLegacyDocument(data) ? editorjsToHtml(data) : ((data as object | null) ?? ''),
+    content: (data as object | null) ?? '',
     immediatelyRender: false, // required under SSR
     editorProps: {
       attributes: {
@@ -144,11 +133,11 @@ export default function TiptapEditor({ data, images, innerRef, userId }: TiptapE
   const uploadImage = useCallback(async (file?: File) => {
     if (!file || !editor) return;
     try {
-      const media = await UserService.addMedia(userId, file);
+      const media = await addMedia(userId, file);
       images.push(media);
       editor.chain().focus().setImage({ src: media.downloadURL, alt: file.name }).run();
     } catch (err) {
-      console.log(err instanceof Error ? err.message : String(err));
+      console.error(err);
     }
   }, [editor, images, userId]);
 
@@ -160,7 +149,7 @@ export default function TiptapEditor({ data, images, innerRef, userId }: TiptapE
     input.click();
   }, [uploadImage]);
 
-  // Paste and drop straight into the editor, matching what EditorJS allowed.
+  // Paste and drop images straight into the editor.
   useEffect(() => {
     if (!editor) return;
     const dom = editor.view.dom;

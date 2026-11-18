@@ -1,8 +1,23 @@
-import { ArticleService } from '../service/ArticleService';
-import { UserService } from '../service/UserService';
+import { cache } from 'react';
+
+import { getArticle, listPublishedArticles } from '../articles';
+import { getUser } from '../users';
 import { getBlogPosts, getBlogPostBySlug } from '../sanity/fetchers';
-import { extractSummary } from '../utils/summaryHelper';
-import type { Article, BlogListItem } from '../../types';
+import { articleSummary } from '../editor/serialize';
+import type { Article } from '../../types';
+
+/** A Sanity `post` as projected by postsQuery / postBySlugQuery. */
+interface SanityPost {
+  slug: string;
+  title: string;
+  excerpt?: string | null;
+  coverImg?: string | null;
+  category?: string | null;
+  authorName?: string | null;
+  authorImg?: string | null;
+  publishedAt?: string | null;
+  body?: unknown;
+}
 
 /**
  * One shape for a blog card, whoever wrote the post.
@@ -63,7 +78,7 @@ async function resolveAuthors(articles: Article[]) {
   const entries = await Promise.all(
     ids.map(async (id) => {
       try {
-        const { userData } = await UserService.getUser(id);
+        const userData = await getUser(id);
         if (!userData) return [id, null] as const;
         const name = [userData.first_name, userData.last_name].filter(Boolean).join(' ');
         return [id, { name: name || 'Charicha Student', img: userData.profile_URL }] as const;
@@ -86,7 +101,7 @@ function fromArticle(
   // A body that fails to parse must not take the whole list down with it.
   let excerpt = '';
   try {
-    excerpt = extractSummary(article.body);
+    excerpt = articleSummary(article.body);
   } catch {
     excerpt = '';
   }
@@ -95,7 +110,7 @@ function fromArticle(
     key: `firebase-${article.id}`,
     href: `/blog/${article.id}`,
     title: article.title,
-    excerpt: trim(excerpt === '...(empty)' ? '' : excerpt),
+    excerpt: trim(excerpt),
     coverImg: article.thumbnail?.downloadURL || FALLBACK_COVER,
     category: 'Student',
     authorName: author?.name ?? 'Charicha Student',
@@ -105,7 +120,7 @@ function fromArticle(
   };
 }
 
-function fromPost(post: BlogListItem): BlogSummary {
+function fromPost(post: SanityPost): BlogSummary {
   const sortTime = toMillis(post.publishedAt);
 
   return {
@@ -125,7 +140,7 @@ function fromPost(post: BlogListItem): BlogSummary {
 /** Both sources, newest first. Either one failing leaves the other intact. */
 export async function getBlogSummaries(): Promise<BlogSummary[]> {
   const [articles, posts] = await Promise.all([
-    ArticleService.listPublishedArticles().catch(() => [] as Article[]),
+    listPublishedArticles().catch(() => [] as Article[]),
     getBlogPosts()
   ]);
 
@@ -133,7 +148,7 @@ export async function getBlogSummaries(): Promise<BlogSummary[]> {
 
   return [
     ...articles.map((article) => fromArticle(article, authors)),
-    ...(posts ?? []).map((post: BlogListItem) => fromPost(post))
+    ...(posts as SanityPost[]).map((post) => fromPost(post))
   ].sort((a, b) => b.sortTime - a.sortTime);
 }
 
@@ -150,10 +165,11 @@ export interface BlogDetail extends BlogSummary {
  *
  * /blog/<x> is a single route serving both a Firebase document id and a Sanity
  * slug, so the lookup tries the former and falls through to the latter. Both
- * come back in the one shape the page renders.
+ * come back in the one shape the page renders. Cached per request, so
+ * generateMetadata and the page share one fetch instead of reading twice.
  */
-export async function getBlogDetail(idOrSlug: string): Promise<BlogDetail | null> {
-  const article = await ArticleService.getArticle(idOrSlug).catch(() => null);
+export const getBlogDetail = cache(async (idOrSlug: string): Promise<BlogDetail | null> => {
+  const article = await getArticle(idOrSlug).catch(() => null);
   if (article) {
     const authors = await resolveAuthors([article]);
     return { ...fromArticle(article, authors), source: 'firebase', body: article.body };
@@ -161,8 +177,8 @@ export async function getBlogDetail(idOrSlug: string): Promise<BlogDetail | null
 
   const post = await getBlogPostBySlug(idOrSlug);
   if (post) {
-    return { ...fromPost(post as BlogListItem), source: 'sanity', body: post.body };
+    return { ...fromPost(post as SanityPost), source: 'sanity', body: post.body };
   }
 
   return null;
-}
+});

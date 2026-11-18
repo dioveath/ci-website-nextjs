@@ -7,8 +7,8 @@ import { Mail, MapPin, Phone } from 'lucide-react';
 import Logo from '../brand/Logo';
 import Container from '../layout/Container';
 import { Separator } from '../ui/separator';
-import { cn } from '../../lib/utils';
-import { useSiteSettings } from '../../lib/sanity/useSiteSettings';
+import { cn } from '@/lib/utils';
+import { useSiteSettings } from '@/lib/sanity/hooks';
 
 function FooterLink({ href, label, active }: { href: string; label: string; active: boolean }) {
   return (

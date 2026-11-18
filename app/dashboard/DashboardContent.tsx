@@ -12,13 +12,13 @@ import {
   TrendingUp
 } from 'lucide-react';
 
-import ConsoleShell, { UnderConstruction } from '../../components/layout/ConsoleShell';
-import LoadingScreen from '../../components/LoadingScreen';
-import type { ConsolePage } from '../../components/SideMenu';
+import ConsoleShell, { UnderConstruction } from '@/components/layout/ConsoleShell';
+import LoadingScreen from '@/components/LoadingScreen';
+import type { ConsolePage } from '@/components/SideMenu';
+import useAuth from '@/lib/auth';
 
-import ArticleContainer from '../../containers/article';
-import MediaContainer from '../../containers/media';
-import useAuth from '../../lib/hooks/Auth';
+import ArticleContainer from './_articles';
+import MediaContainer from './_media';
 
 function Logout() {
   const { logout } = useAuth();

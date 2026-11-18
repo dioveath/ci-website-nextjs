@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 import LoadingScreen from '../../components/LoadingScreen';
-import { Button } from '../../components/ui/button';
-import { Card, CardContent } from '../../components/ui/card';
-import GoogleMark from '../../components/brand/GoogleMark';
-import useAuth from '../../lib/hooks/Auth';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import GoogleMark from '@/components/brand/GoogleMark';
+import useAuth from '@/lib/auth';
 
 // Google is the only sign-in method. There is no separate sign-up: the first
-// Google sign-in creates the user's profile (see AuthProvider in lib/hooks/Auth).
+// Google sign-in creates the user's profile (see AuthProvider in lib/auth.tsx).
 export default function LoginContent() {
   const { error, fetching, loading, isLoggedIn, loginWithGoogle } = useAuth();
   const router = useRouter();

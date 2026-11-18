@@ -7,8 +7,8 @@ import { PanelLeftClose, PanelLeftOpen, User as UserIcon } from 'lucide-react';
 import Logo from '../brand/Logo';
 import { Button } from '../ui/button';
 import { Skeleton } from '../ui/skeleton';
-import { cn } from '../../lib/utils';
-import useAuth from '../../lib/hooks/Auth';
+import { cn } from '@/lib/utils';
+import useAuth from '@/lib/auth';
 
 export interface ConsolePage {
   label: string;

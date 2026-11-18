@@ -13,13 +13,13 @@ import {
   Users
 } from 'lucide-react';
 
-import ConsoleShell, { UnderConstruction } from '../../components/layout/ConsoleShell';
-import LoadingScreen from '../../components/LoadingScreen';
-import type { ConsolePage } from '../../components/SideMenu';
+import ConsoleShell, { UnderConstruction } from '@/components/layout/ConsoleShell';
+import LoadingScreen from '@/components/LoadingScreen';
+import type { ConsolePage } from '@/components/SideMenu';
+import useAuth from '@/lib/auth';
 
-import ArticleManagementContainer from '../../containers/admin_article';
-import UserManagementContainer from '../../containers/admin_user';
-import useAuth from '../../lib/hooks/Auth';
+import ArticleManagementContainer from './ArticleManagement';
+import UserManagementContainer from './UserManagement';
 
 function Logout() {
   const { logout } = useAuth();

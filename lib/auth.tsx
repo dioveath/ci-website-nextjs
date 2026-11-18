@@ -1,12 +1,16 @@
 'use client';
 
-import { createContext, useState, useContext, useEffect, type ReactNode } from "react";
-import { deleteUser, onAuthStateChanged, type User } from "firebase/auth";
+/*
+ * Google is the only sign-in method, and there is no separate sign-up: the
+ * first sign-in creates the user's profile document.
+ */
 
-import { firebaseAuth } from "../firebase";
-import { AuthService } from "../service/AuthService";
-import { UserService } from "../service/UserService";
-import type { UserData } from "../../types";
+import { createContext, useState, useContext, useEffect, type ReactNode } from "react";
+import { deleteUser, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut, type User } from "firebase/auth";
+
+import { firebaseAuth } from "./firebase";
+import { createUser, getUser } from "./users";
+import type { UserData } from "../types";
 
 export interface AuthContextValue {
   user: User | null;
@@ -23,9 +27,6 @@ const authContext = createContext<AuthContextValue | null>(null);
 
 export default function useAuth(): AuthContextValue {
   const context = useContext(authContext);
-  // Previously this returned undefined and every caller threw a TypeError while
-  // destructuring. _app wraps the tree in AuthProvider, so this cannot fire in
-  // practice -- it just names the mistake if someone moves the provider.
   if (!context) throw new Error("useAuth must be used within an <AuthProvider>");
   return context;
 }
@@ -34,13 +35,37 @@ function messageOf(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
 }
 
+// Loads the profile for a signed-in user, creating it on their first sign-in.
+async function loadOrCreateProfile(authUser: User): Promise<UserData | null> {
+  const existing = await getUser(authUser.uid);
+  if (existing) return existing;
+
+  const profile = authUser.providerData[0];
+  const names = profile?.displayName ? profile.displayName.split(" ") : null;
+  try {
+    await createUser({
+      id: authUser.uid,
+      firstName: names && names[0],
+      lastName: names && names[names.length - 1],
+      email: authUser.email,
+      photoURL: profile?.photoURL,
+      phoneNumber: profile?.phoneNumber
+    });
+  } catch (e) {
+    // A sign-in without a profile is unusable, so undo the new account.
+    deleteUser(authUser);
+    throw e;
+  }
+  return getUser(authUser.uid);
+}
+
 export function AuthProvider(props: { children?: ReactNode }) {
   // Resolved in the browser only: reading `currentUser` at module scope ran
   // getAuth() during prerender, where there are no credentials.
   const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
-  // Only "loading" if there is actually an auth state to wait for. Firebase
-  // config is inlined at build time (next.config.js `env`), so this resolves
+  // Only "loading" if there is actually an auth state to wait for. The
+  // NEXT_PUBLIC_ Firebase config is inlined at build time, so this resolves
   // the same on the server and in the browser.
   const [loading, setLoading] = useState(() => firebaseAuth() !== null);
   const [fetching, setFetching] = useState(false);
@@ -51,19 +76,24 @@ export function AuthProvider(props: { children?: ReactNode }) {
     setTimeout(() => setError(null), 5000);
   };
 
-  const finalize = () => setFetching(false);
-  const clearError = () => setError(null);
-
   const loginWithGoogle = async () => {
-    clearError();
+    setError(null);
+    const auth = firebaseAuth();
+    if (!auth) {
+      handleError(new Error("Sign-in is unavailable: Firebase is not configured."));
+      return;
+    }
     setFetching(true);
-    await AuthService.loginWithGoogle().catch(handleError).finally(finalize);
+    const provider = new GoogleAuthProvider();
+    provider.setCustomParameters({ prompt: "select_account" });
+    await signInWithPopup(auth, provider).catch(handleError).finally(() => setFetching(false));
   };
 
   const logout = async () => {
-    clearError();
+    setError(null);
     setFetching(true);
-    await AuthService.logout().catch(handleError);
+    const auth = firebaseAuth();
+    if (auth) await signOut(auth).catch(handleError);
     setUser(null);
     setUserData(null);
     setFetching(false);
@@ -81,40 +111,15 @@ export function AuthProvider(props: { children?: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       setFetching(true);
 
-      if (!authUser) {
-        setFetching(false);
-        setLoading(false);
-        return;
-      }
-
-      setUser(authUser);
-
-      let result = await UserService.getUser(authUser.uid);
-      if (!result.userData) {
-        const { email, providerData, uid } = authUser;
-        const profile = providerData[0];
-        const names = profile?.displayName ? profile.displayName.split(" ") : null;
-
+      if (authUser) {
+        setUser(authUser);
         try {
-          await UserService.addNewUser({
-            id: uid,
-            firstName: names && names[0],
-            lastName: names && names[names.length - 1],
-            email,
-            photoURL: profile?.photoURL,
-            phoneNumber: profile?.phoneNumber
-          });
-          result = await UserService.getUser(authUser.uid);
+          setUserData(await loadOrCreateProfile(authUser));
         } catch (e) {
-          console.log(messageOf(e));
-          deleteUser(authUser);
           handleError(e);
-        } finally {
-          finalize();
         }
       }
 
-      setUserData(result.userData);
       setFetching(false);
       setLoading(false);
     });

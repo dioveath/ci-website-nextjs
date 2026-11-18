@@ -1,23 +1,23 @@
 'use client';
 
-import { useState, useRef, useContext, useCallback } from "react";
+import { useState, useRef, useContext } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 
 import { useMutation } from "@tanstack/react-query";
 
-import useAuth from "../../lib/hooks/Auth";
-import queryClient from "../../lib/queryclient";
+import useAuth from '@/lib/auth';
+import queryClient from '@/lib/queryClient';
 import { pageContext } from "./index";
-import { ArticleService } from "../../lib/service/ArticleService";
-import { isEmptyDocument } from "../../lib/editor/serialize";
-import { UserService } from '../../lib/service/UserService';
-import MediaSelectModal from "../media/MediaSelectModal";
+import { isEmptyDocument } from "@/lib/editor/serialize";
+import MediaSelectModal from "../_media/MediaSelectModal";
 import { ChevronLeft } from "lucide-react";
-import type { Article, Media } from '../../types';
-import type { TiptapEditorHandle } from '../../components/TiptapEditor';
+import type { Article, Media } from '@/types';
+import type { TiptapEditorHandle } from '@/components/TiptapEditor';
+import { removeMedia } from '@/lib/users';
+import { createArticle, updateArticle } from '@/lib/articles';
 
-const TiptapEditor = dynamic(() => import("../../components/TiptapEditor"), { ssr: false });
+const TiptapEditor = dynamic(() => import("@/components/TiptapEditor"), { ssr: false });
 
 export default function AddArticleContainer({ article }: { article?: Article | null }) {
   const [title, setTitle] = useState<string | undefined>(article?.title);
@@ -33,7 +33,7 @@ export default function AddArticleContainer({ article }: { article?: Article | n
 
   const addMutation = useMutation({
     mutationFn: (newArticle: Partial<Article>) => {
-      return ArticleService.addNewArticle(newArticle);
+      return createArticle(newArticle);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"] });
@@ -41,8 +41,8 @@ export default function AddArticleContainer({ article }: { article?: Article | n
   });
 
   const updateMutation = useMutation({
-    mutationFn: (updateArticle: Partial<Article>) => {
-      return ArticleService.updateArticle(article!.id, updateArticle);
+    mutationFn: (changes: Partial<Article>) => {
+      return updateArticle(article!.id, changes);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"] });
@@ -61,10 +61,10 @@ export default function AddArticleContainer({ article }: { article?: Article | n
         for (const img of images) {
             if (!currentImages.includes(img.downloadURL)) {
                 try {
-                  await UserService.removeMedia(user!.uid, img);
+                  await removeMedia(user!.uid, img);
                   removeImage(img);
                 } catch (err) {
-                  console.log(err instanceof Error ? err.message : String(err));
+                  console.error(err);
                 }
             }
         }

@@ -10,8 +10,8 @@ import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
 import { Card, CardContent } from '../../../components/ui/card';
 
-import useAuth from '../../../lib/hooks/Auth';
-import { UserService } from '../../../lib/service/UserService';
+import useAuth from '@/lib/auth';
+import { updateUser } from '@/lib/users';
 import type { Course } from '../../../types';
 
 function durationLabel(time: Course['time']) {
@@ -35,7 +35,7 @@ function EnrolButton({ course }: { course: Course }) {
     <Button
       size="xl"
       variant="highlight"
-      onClick={() => UserService.updateUser(user.uid, { [`courses.${course.id}`]: '' })}
+      onClick={() => updateUser(user.uid, { [`courses.${course.id}`]: '' })}
     >
       Enrol now
     </Button>

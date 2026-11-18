@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
 
-import { urlFor } from '../../lib/sanity/image';
+import { urlFor } from '@/lib/sanity/client';
 
 /*
  * Renders the Portable Text body of a Sanity post.

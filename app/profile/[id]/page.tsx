@@ -9,8 +9,8 @@ import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
 import { Card, CardContent } from '../../../components/ui/card';
 
-import { coursesList } from '../../../components/course/coursesList';
-import { UserService } from '../../../lib/service/UserService';
+import { getCourses } from '@/lib/sanity/fetchers';
+import { getUser } from '@/lib/users';
 import type { UserData } from '../../../types';
 
 export const metadata: Metadata = {
@@ -71,7 +71,9 @@ function StatCard({
   );
 }
 
-function ProfileView({ userData }: { userData: UserData }) {
+// courseTitles comes from getCourses(), so enrolled courses show their CMS
+// titles (falling back to the static list), looked up by id.
+function ProfileView({ userData, courseTitles }: { userData: UserData; courseTitles: Map<string, string> }) {
   const joined = userData.joined_at ? new Date(userData.joined_at) : null;
   // `roles` is a { roleName: boolean } map, not an array.
   const activeRoles = Object.keys(userData.roles ?? {}).filter((role) => userData.roles[role]);
@@ -127,14 +129,11 @@ function ProfileView({ userData }: { userData: UserData }) {
 
         {enrolledCourseIds.length ? (
           <ul className="mt-6 flex flex-wrap gap-3">
-            {enrolledCourseIds.map((courseId) => {
-              const course = coursesList.find((c) => String(c.id) === String(courseId));
-              return (
-                <li key={courseId}>
-                  <Badge variant="secondary">{course?.title ?? `Course ${courseId}`}</Badge>
-                </li>
-              );
-            })}
+            {enrolledCourseIds.map((courseId) => (
+              <li key={courseId}>
+                <Badge variant="secondary">{courseTitles.get(String(courseId)) ?? `Course ${courseId}`}</Badge>
+              </li>
+            ))}
           </ul>
         ) : (
           <p className="mt-4 text-muted-foreground">No courses enrolled yet.</p>
@@ -147,19 +146,12 @@ function ProfileView({ userData }: { userData: UserData }) {
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Resolve the data first: JSX built inside a try/catch would not have its
-  // render errors caught anyway, and React lint rightly flags that.
-  let userData: UserData | null = null;
-  try {
-    const user = await UserService.getUser(id);
-    userData = user.userData;
-  } catch {
-    userData = null;
-  }
+  const [userData, courses] = await Promise.all([getUser(id).catch(() => null), getCourses()]);
+  const courseTitles = new Map(courses.map((c) => [String(c.id), c.title]));
 
   return (
     <PageShell>
-      {userData ? <ProfileView userData={userData} /> : <UserNotFound />}
+      {userData ? <ProfileView userData={userData} courseTitles={courseTitles} /> : <UserNotFound />}
     </PageShell>
   );
 }

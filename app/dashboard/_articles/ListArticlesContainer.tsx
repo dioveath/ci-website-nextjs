@@ -1,18 +1,18 @@
 'use client';
 
 import Image from "next/image";
-import { useContext, useState, useEffect } from "react";
-import { useQuery, useMutation, useInfiniteQuery } from "@tanstack/react-query";
+import { useContext, useState } from "react";
+import { useMutation, useInfiniteQuery } from "@tanstack/react-query";
 
-import useAuth from "../../lib/hooks/Auth";
-import queryClient from "../../lib/queryclient";
-import { ArticleService } from "../../lib/service/ArticleService";
+import useAuth from '@/lib/auth';
+import queryClient from '@/lib/queryClient';
 import { pageContext } from "./index";
-import { extractSummary } from "../../lib/utils/summaryHelper";
+import { articleSummary } from "@/lib/editor/serialize";
 import { Loader2, PenLine } from "lucide-react";
 
-import { Skeleton } from "../../components/ui/skeleton";
-import type { Article } from '../../types';
+import { Skeleton } from "@/components/ui/skeleton";
+import type { Article } from '@/types';
+import { deleteArticle, listArticlesByAuthor } from '@/lib/articles';
 
 type ArticlePageParam = { lastDoc: Article } | undefined;
 
@@ -25,13 +25,7 @@ export default function ArticleContainer() {
     useInfiniteQuery({
       queryKey: ["articles"],
       queryFn: async ({ pageParam }) => {
-        const articles = await ArticleService.paginateUserArticles(
-          user?.uid,
-          10,
-          undefined,
-          pageParam?.lastDoc
-        );
-        return articles;
+        return listArticlesByAuthor(user?.uid, pageParam?.lastDoc);
       },
       enabled: isLoggedIn,
       refetchOnMount: true,
@@ -42,11 +36,10 @@ export default function ArticleContainer() {
 
   const deleteMutation = useMutation({
     mutationFn: (articleId: string) => {
-      return ArticleService.deleteArticle(articleId);
+      return deleteArticle(articleId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"] });
-      console.log("deleted");
     },
   });
 
@@ -131,7 +124,7 @@ export default function ArticleContainer() {
                     <p className="text-base lg:text-lg text-foreground font-medium">
                       {article.title}{" "}
                     </p>
-                    <p> {extractSummary(article.body).substring(0, 250)}...</p>
+                    <p> {articleSummary(article.body).substring(0, 250)}...</p>
                     <p className="text-xs text-destructive">
                       {article.heartsBy.length || "0"} Hearts{" "}
                     </p>

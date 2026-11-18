@@ -59,7 +59,7 @@ export interface Article {
   id: string;
   title: string;
   writtenBy: string;
-  /** JSON string holding either a TiptapDoc or a legacy EditorJsDocument. */
+  /** JSON string holding a TiptapDoc. */
   body: string;
   createdAt: Timestamp | Date | string | null;
   heartsBy: Record<string, boolean>;
@@ -67,9 +67,6 @@ export interface Article {
   likes: number;
   state: ArticleState;
 }
-
-/** An article normalised for the blog list, which merges Firebase and Sanity. */
-export type BlogSource = 'firebase' | 'sanity';
 
 /* ---------------------------------------------------------- editor bodies -- */
 
@@ -90,19 +87,7 @@ export interface TiptapDoc extends TiptapNode {
   type: 'doc';
 }
 
-/** Legacy EditorJS output, still present on articles written before the swap. */
-export interface EditorJsBlock {
-  type: string;
-  data: Record<string, any>;
-}
-
-export interface EditorJsDocument {
-  time?: number;
-  blocks: EditorJsBlock[];
-  version?: string;
-}
-
-export type ArticleBody = TiptapDoc | TiptapNode | EditorJsDocument | null;
+export type ArticleBody = TiptapDoc | TiptapNode | null;
 
 /* ---------------------------------------------------------------- courses -- */
 
@@ -117,33 +102,5 @@ export interface Course {
   /** Days; CourseCard renders this as months. */
   time?: number | string;
   lessons?: unknown[];
-  [key: string]: unknown;
-}
-
-/* ------------------------------------------------------------ blog list -- */
-
-/*
- * /blog merges Firebase user articles with Sanity editorial posts, so a card
- * receives one of two shapes discriminated by `source`. The index signature
- * keeps the merged list honest rather than pretending the two are identical.
- */
-export interface BlogListItem {
-  source?: BlogSource;
-  id?: string;
-  slug?: string;
-  title: string;
-  /** JSON string for Firebase articles; Portable Text blocks for Sanity posts. */
-  body?: any;
-  coverImg?: string;
-  excerpt?: string;
-  category?: string;
-  authorName?: string;
-  authorImage?: string;
-  authorImg?: string;
-  writtenBy?: string;
-  thumbnail?: Thumbnail;
-  createdAt?: unknown;
-  publishedAt?: string;
-  sortTime?: number;
   [key: string]: unknown;
 }

@@ -16,14 +16,14 @@ fi
 
 # A demo- project id keeps every SDK call on the emulators; the values below
 # are placeholders, not credentials.
-export FIREBASE_EMULATORS=1
-export FIREBASE_PROJECT_ID=demo-charicha
-export FIREBASE_API_KEY=demo-api-key
-export FIREBASE_AUTH_DOMAIN=demo-charicha.firebaseapp.com
-export FIREBASE_STORAGE_BUCKET=demo-charicha.appspot.com
-export FIREBASE_MESSAGING_SENDER_ID=000000000000
-export FIREBASE_APP_ID=1:000000000000:web:0000000000000000
-export FIREBASE_MEASUREMENT_ID=
+export NEXT_PUBLIC_FIREBASE_EMULATORS=1
+export NEXT_PUBLIC_FIREBASE_PROJECT_ID=demo-charicha
+export NEXT_PUBLIC_FIREBASE_API_KEY=demo-api-key
+export NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=demo-charicha.firebaseapp.com
+export NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=demo-charicha.appspot.com
+export NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=000000000000
+export NEXT_PUBLIC_FIREBASE_APP_ID=1:000000000000:web:0000000000000000
+export NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
 
 mkdir -p emulators/data
 exec firebase emulators:exec \

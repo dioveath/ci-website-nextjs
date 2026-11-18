@@ -24,10 +24,10 @@ import {
   SheetTitle,
   SheetTrigger
 } from './ui/sheet';
-import { cn } from '../lib/utils';
+import { cn } from '@/lib/utils';
 
-import useAuth from '../lib/hooks/Auth';
-import { useNavigation } from '../lib/sanity/useNavigation';
+import useAuth from '@/lib/auth';
+import { useNavigation } from '@/lib/sanity/hooks';
 
 export interface NavLink {
   href: string;
