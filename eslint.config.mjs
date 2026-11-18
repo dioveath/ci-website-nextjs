@@ -74,6 +74,20 @@ const config = [
     }
   },
 
+  // Metadata images render through Satori (next/og), which supports neither
+  // CSS classes nor custom properties -- an inline style object is the only
+  // styling mechanism available, so the rule cannot apply here. The token
+  // values these files inline are called out in a comment at each use.
+  {
+    files: [
+      "app/**/opengraph-image.tsx",
+      "app/**/twitter-image.tsx",
+      "app/**/icon.tsx",
+      "app/**/apple-icon.tsx"
+    ],
+    rules: { "shadcn/no-inline-styles": "off" }
+  },
+
   // A third-party brand mark is reproduced in its owner's colours or not at
   // all, so these files are exempt from the token rule by definition.
   {

@@ -15,7 +15,9 @@ import type { UserData } from '../../../types';
 
 export const metadata: Metadata = {
   title: 'Profile',
-  description: 'A Charicha Institute student profile.'
+  description: 'A Charicha Institute student profile.',
+  // Per-visitor personal data; robots.ts disallows the path as well.
+  robots: { index: false, follow: false }
 };
 
 // getStaticPaths returned no paths with fallback:"blocking"; the App Router
