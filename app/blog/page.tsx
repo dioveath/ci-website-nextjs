@@ -15,40 +15,12 @@ import styles from './blog.module.css';
 import BlogCard from '../../components/blog/BlogCard';
 
 import Footer from '../../components/footer/Footer';
-import { getBlogPosts } from '../../lib/sanity/fetchers';
 import ParticlesBackground from '../../components/ParticlesBackground';
-import type { BlogListItem } from '../../types';
-import { listPublishedArticles } from '@/lib/articles';
+import { listPosts } from '@/lib/blog';
 
 
 export default async function BlogPage(){
-
-  // Merge the Firebase user articles with the Sanity editorial posts, then sort
-  // newest-first. Each source is normalised with a `source` discriminator and a
-  // `sortTime` (ms epoch) so BlogCard can render the right shape.
-  const [fbRes, cmsRes] = await Promise.all([
-    listPublishedArticles().catch(() => []),
-    getBlogPosts(),
-  ]);
-
-  const firebasePosts = JSON.parse(JSON.stringify(fbRes || [])).map((a: BlogListItem) => ({
-    ...a,
-    source: 'firebase',
-    sortTime: (a.createdAt as { seconds?: number } | null)?.seconds
-      ? (a.createdAt as { seconds: number }).seconds * 1000
-      : (a.createdAt ? new Date(a.createdAt as string | number | Date).getTime() : 0),
-  }));
-
-  const cmsPosts = (cmsRes || []).map((p: BlogListItem) => ({
-    ...p,
-    source: 'sanity',
-    id: p.slug,
-    sortTime: p.publishedAt ? new Date(p.publishedAt).getTime() : 0,
-  }));
-
-  const posts = [...firebasePosts, ...cmsPosts].sort((a: BlogListItem, b: BlogListItem) => (b.sortTime ?? 0) - (a.sortTime ?? 0));
-  const props = { posts };
-
+  const posts = await listPosts();
 
   return (
     <div className={styles.container}>
@@ -64,7 +36,7 @@ export default async function BlogPage(){
         <div style={{height: "40px"}}></div>
         <div className={styles["cards-container"]}>
           {
-            (props.posts ?? []).map((blog: BlogListItem) => <BlogCard key={`${blog.source}-${blog.id}`} blog={blog}/>)
+            posts.map((blog) => <BlogCard key={`${blog.source}-${blog.id}`} blog={blog}/>)
           }
         </div>
           <div style={{height: "40px"}}></div>

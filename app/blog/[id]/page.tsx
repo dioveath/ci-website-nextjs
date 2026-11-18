@@ -5,23 +5,15 @@ export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<Metadata> {
   const { id } = await params;
-  const article = await getArticle(id);
-  const cmsPost = article ? null : await getBlogPostBySlug(id);
-  const post = article ?? cmsPost;
+  const post = await getPost(id);
 
   const title = `Charicha Institute Blogs | ${post?.title ?? 'Empty Blog'}`;
   if (!post) return { title, description: 'Charicha Institute Blogs' };
 
-  // Firebase articles have no excerpt, so summarise the body instead. A body
-  // that fails to parse must not take the whole page down with it.
-  let summary: string = cmsPost?.excerpt ?? '';
-  if (article) {
-    try { summary = articleSummary(article.body).trim(); } catch { summary = ''; }
-  }
-  const description = summary && summary !== '...(empty)'
+  const summary = post.summary.trim();
+  const description = summary
     ? (summary.length > 200 ? summary.slice(0, 197).trimEnd() + '...' : summary)
     : 'Charicha Institute Blogs';
-  const image: string | undefined = article ? article.thumbnail?.downloadURL : cmsPost?.coverImg ?? undefined;
 
   // Link previews (Facebook, WhatsApp, LinkedIn...). Relative URLs resolve
   // against metadataBase in the root layout.
@@ -35,8 +27,8 @@ export async function generateMetadata(
       url: `/blog/${id}`,
       siteName: 'Charicha Institute',
       locale: 'en_GB',
-      ...(image ? { images: [{ url: image, alt: post.title }] } : {}),
-      ...(cmsPost?.publishedAt ? { publishedTime: cmsPost.publishedAt } : {})
+      ...(post.coverImg ? { images: [{ url: post.coverImg, alt: post.title }] } : {}),
+      ...(post.source === 'sanity' && post.publishedAt ? { publishedTime: post.publishedAt } : {})
     }
   };
 }
@@ -53,15 +45,14 @@ import styles from './blogpage.module.css';
 import ArticleRenderer from '../../../components/ArticleRenderer';
 import PortableBody from '../../../components/blog/PortableBody';
 
-import { getBlogPostBySlug } from '../../../lib/sanity/fetchers';
-import { articleSummary } from '../../../lib/editor/serialize';
 import Footer from '../../../components/footer/Footer';
-import type { BlogListItem, UserData } from '../../../types';
-import { getUser } from '@/lib/users';
-import { getArticle } from '@/lib/articles';
+import { getPost, type BlogPostDetail } from '@/lib/blog';
+
+type FirebasePost = Extract<BlogPostDetail, { source: 'firebase' }>;
+type SanityPost = Extract<BlogPostDetail, { source: 'sanity' }>;
 
 // Firebase user article: author comes from the Firebase user record.
-function FirebaseBlogPage({ blog: blogData, user: userData }: { blog: BlogListItem; user?: (Partial<UserData> & { joinedAt?: string | null }) | null }){
+function FirebaseBlogPage({ blog }: { blog: FirebasePost }){
   return (
     <div>
 
@@ -72,18 +63,18 @@ function FirebaseBlogPage({ blog: blogData, user: userData }: { blog: BlogListIt
 	<div className='px-8 md:px-10 xl:px-20 2xl:px-48 mt-10 text-white'>
 
 	<header>
-	  <h1 className='text-2xl mb-4 lg:text-4xl text-cheeseyellow'> { blogData.title } </h1>
+	  <h1 className='text-2xl mb-4 lg:text-4xl text-cheeseyellow'> { blog.title } </h1>
         </header>
 
         <div className={'flex flex-col gap-2'}>
           <div className={'flex gap-2 xl:gap-4 items-center'}>
-            <Image alt={userData?.first_name + " Profile"} src={ userData?.profile_URL || "/profile.jpg" } className={styles.profileImg + ' shadow-md'} width={60} height={60}/>
+            <Image alt={blog.author.name + " Profile"} src={ blog.author.image || "/profile.jpg" } className={styles.profileImg + ' shadow-md'} width={60} height={60}/>
             <div className={''}>
-              <p className={styles.infoText}> { userData?.first_name + " " + userData?.last_name }</p>
+              <p className={styles.infoText}> { blog.author.name }</p>
               <div className={'flex items-center gap-2 text-xs lg:text-sm font-extralight text-cheeseyellow'}>
-                <p className={''}> { new Date(blogData.createdAt as string | number | Date).toUTCString() } </p>
+                <p className={''}> { blog.publishedAt ? new Date(blog.publishedAt).toUTCString() : '' } </p>
                 <FaDotCircle size="5px"/>
-                <p className={styles.infoTextGrey}> { Math.floor((blogData?.body?.length ?? 0) / 1000) + " min read"}</p>
+                <p className={styles.infoTextGrey}> { Math.floor(blog.body.length / 1000) + " min read"}</p>
               </div>
             </div>
           </div>
@@ -96,20 +87,20 @@ function FirebaseBlogPage({ blog: blogData, user: userData }: { blog: BlogListIt
 
         <div className={styles.contentContainer}>
           <div className={styles.content}>
-            <ArticleRenderer data={blogData.body}/>
+            <ArticleRenderer data={blog.body}/>
           </div>
           <div className={styles.rightContents}>
-            <Image alt={userData?.first_name + "'s Profile Picture"}
-                   src={ userData?.profile_URL || "/profile.jpg" }
+            <Image alt={blog.author.name + "'s Profile Picture"}
+                   src={ blog.author.image || "/profile.jpg" }
                    width={80}
                    height={80}
                    className='rounded-full shadow-lg'/>
             <div className='flex items-center gap-2'>
               <AiFillHeart className='text-3xl text-red-600'/>
-              <p className='text-sm font-light text-white'> { userData?.hearts } Likes </p>
+              <p className='text-sm font-light text-white'> { blog.authorHearts } Likes </p>
             </div>
-            <p className={styles.infoText}> { userData?.first_name + " " + userData?.last_name } </p>
-            <p className={'font-light text-cheeseyellow'}> { (userData as { rank?: string } | null | undefined)?.rank }</p>
+            <p className={styles.infoText}> { blog.author.name } </p>
+            <p className={'font-light text-cheeseyellow'}> { blog.author.title }</p>
             <div className={'flex gap-2 mt-2'}>
               <FaFacebook className='text-white text-3xl'/>
               <FaInstagram className='text-white text-3xl'/>
@@ -126,7 +117,7 @@ function FirebaseBlogPage({ blog: blogData, user: userData }: { blog: BlogListIt
 }
 
 // Sanity editorial post: inline author, Portable Text body, no hearts/likes.
-function SanityBlogPage({ blog }: { blog: BlogListItem }){
+function SanityBlogPage({ blog }: { blog: SanityPost }){
   return (
     <div>
 
@@ -141,13 +132,13 @@ function SanityBlogPage({ blog }: { blog: BlogListItem }){
 
         <div className={'flex gap-2 xl:gap-4 items-center mb-6'}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt={blog.authorName + " profile"} src={blog.authorImg} className={styles.profileImg + ' shadow-md'} width="60" height="60" style={{ objectFit: 'cover' }}/>
+          <img alt={blog.author.name + " profile"} src={blog.author.image ?? undefined} className={styles.profileImg + ' shadow-md'} width="60" height="60" style={{ objectFit: 'cover' }}/>
           <div>
-            <p className={styles.infoText}> { blog.authorName }</p>
+            <p className={styles.infoText}> { blog.author.name }</p>
             <div className={'flex items-center gap-2 text-xs lg:text-sm font-extralight text-cheeseyellow'}>
               <p> { blog.publishedAt ? new Date(blog.publishedAt).toUTCString() : "" } </p>
               <FaDotCircle size="5px"/>
-              <p className={styles.infoTextGrey}> { blog.category || 'Tech' } </p>
+              <p className={styles.infoTextGrey}> { blog.category } </p>
             </div>
           </div>
         </div>
@@ -173,48 +164,9 @@ function SanityBlogPage({ blog }: { blog: BlogListItem }){
   );
 }
 
-function BlogView({ blog, user }: { blog: BlogListItem; user?: (Partial<UserData> & { joinedAt?: string | null }) | null }){
-  if (blog?.source === 'sanity') return <SanityBlogPage blog={blog}/>;
-  return <FirebaseBlogPage blog={blog} user={user}/>;
-}
-
-
-
-
 export default async function BlogDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-
-  // 1) Firebase user article, matched by document id.
-  const fbBlog = await getArticle(id);
-  if (fbBlog) {
-    // Older articles can lack writtenBy; doc() throws on an undefined path
-    // segment, so skip the author lookup rather than crash the page.
-    const user = fbBlog.writtenBy ? await getUser(fbBlog.writtenBy) : null;
-
-    const { createdAt, ...serializableBlog } = fbBlog;
-    const createdAtString = (createdAt as { toDate?: () => Date })?.toDate
-      ? (createdAt as { toDate: () => Date }).toDate().toString()
-      : new Date(createdAt as string | number | Date).toString();
-
-    let serializableUser = null;
-    if (user) {
-      const { joined_at, ...rest } = user;
-      serializableUser = { ...rest, joinedAt: joined_at ? new Date(joined_at).toString() : null };
-    }
-
-    return (
-      <BlogView
-        blog={{ ...serializableBlog, source: 'firebase', createdAt: createdAtString } as BlogListItem}
-        user={serializableUser}
-      />
-    );
-  }
-
-  // 2) Sanity editorial post, matched by slug.
-  const cmsPost = await getBlogPostBySlug(id);
-  if (cmsPost) {
-    return <BlogView blog={{ ...cmsPost, source: 'sanity' } as BlogListItem} user={null} />;
-  }
-
-  notFound();
+  const post = await getPost(id);
+  if (!post) notFound();
+  return post.source === 'sanity' ? <SanityBlogPage blog={post}/> : <FirebaseBlogPage blog={post}/>;
 }

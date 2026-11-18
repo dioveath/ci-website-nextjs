@@ -95,7 +95,7 @@ export function isEmptyDocument(doc: ArticleBody): boolean {
 
 const ENTITIES: Record<string, string> = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&nbsp;': ' ' };
 
-/** Plain-text summary of an article body, for cards and link previews. */
+/** Plain-text summary of an article body, for cards and link previews. Empty when there is no text. */
 export function articleSummary(body: string | ArticleBody): string {
   const text = articleBodyToHtml(body)
     .replace(/<\/(p|h[1-6]|li|blockquote|pre)>/g, ' ')
@@ -104,5 +104,5 @@ export function articleSummary(body: string | ArticleBody): string {
     .replace(/\s+/g, ' ')
     .trim();
 
-  return text || ' ...(empty)';
+  return text;
 }

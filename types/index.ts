@@ -68,9 +68,6 @@ export interface Article {
   state: ArticleState;
 }
 
-/** An article normalised for the blog list, which merges Firebase and Sanity. */
-export type BlogSource = 'firebase' | 'sanity';
-
 /* ---------------------------------------------------------- editor bodies -- */
 
 export interface TiptapMark {
@@ -105,33 +102,5 @@ export interface Course {
   /** Days; CourseCard renders this as months. */
   time?: number | string;
   lessons?: unknown[];
-  [key: string]: unknown;
-}
-
-/* ------------------------------------------------------------ blog list -- */
-
-/*
- * /blog merges Firebase user articles with Sanity editorial posts, so a card
- * receives one of two shapes discriminated by `source`. The index signature
- * keeps the merged list honest rather than pretending the two are identical.
- */
-export interface BlogListItem {
-  source?: BlogSource;
-  id?: string;
-  slug?: string;
-  title: string;
-  /** JSON string for Firebase articles; Portable Text blocks for Sanity posts. */
-  body?: any;
-  coverImg?: string;
-  excerpt?: string;
-  category?: string;
-  authorName?: string;
-  authorImage?: string;
-  authorImg?: string;
-  writtenBy?: string;
-  thumbnail?: Thumbnail;
-  createdAt?: unknown;
-  publishedAt?: string;
-  sortTime?: number;
   [key: string]: unknown;
 }
