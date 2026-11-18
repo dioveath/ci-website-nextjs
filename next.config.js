@@ -38,7 +38,12 @@ const nextConfig = {
     FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID,
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
-    FIREBASE_EMULATORS: useEmulators ? '1' : ''
+    FIREBASE_EMULATORS: useEmulators ? '1' : '',
+    // Set by `firebase emulators:exec`; lib/firebase.ts points the browser SDK
+    // at the same emulators the Admin SDK uses.
+    FIREBASE_AUTH_EMULATOR_HOST: useEmulators ? process.env.FIREBASE_AUTH_EMULATOR_HOST ?? '' : '',
+    FIRESTORE_EMULATOR_HOST: useEmulators ? process.env.FIRESTORE_EMULATOR_HOST ?? '' : '',
+    FIREBASE_STORAGE_EMULATOR_HOST: useEmulators ? process.env.FIREBASE_STORAGE_EMULATOR_HOST ?? '' : ''
   }
 };
 
