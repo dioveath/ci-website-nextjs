@@ -6,9 +6,8 @@ import { homePageFallback } from '../../lib/sanity/fallbacks';
 export default function AppStore({ appPromo = homePageFallback.appPromo }) {
   const emailRef = useRef<HTMLInputElement>(null);
 
-  const onSendClicked = () => {
-    console.log("Mission failed successfully!");
-  };
+  // Not wired up yet: there is no mailing list to send the address to.
+  const onSendClicked = () => {};
 
   return (
     <div className="w-full flex justify-center px-8 md:px-10 xl:px-20 2xl:px-48">

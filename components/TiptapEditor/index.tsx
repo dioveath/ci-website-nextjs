@@ -120,7 +120,7 @@ export default function TiptapEditor({ data, images, innerRef, userId }: TiptapE
       images.push(media);
       editor.chain().focus().setImage({ src: media.downloadURL, alt: file.name }).run();
     } catch (err) {
-      console.log(err instanceof Error ? err.message : String(err));
+      console.error(err);
     }
   }, [editor, images, userId]);
 

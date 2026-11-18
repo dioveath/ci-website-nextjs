@@ -41,7 +41,6 @@ export default function ArticleContainer() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"] });
-      console.log("deleted");
     },
   });
 

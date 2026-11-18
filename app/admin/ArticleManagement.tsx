@@ -17,11 +17,7 @@ export default function ArticleManagementContainer() {
   
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["admin_articles"],
-    queryFn: async () => {
-      const data = await listAllArticles();
-      console.log(data);
-      return data;
-    },
+    queryFn: listAllArticles,
     enabled: isLoggedIn,
   });
 

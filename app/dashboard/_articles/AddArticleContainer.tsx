@@ -64,7 +64,7 @@ export default function AddArticleContainer({ article }: { article?: Article | n
                   await removeMedia(user!.uid, img);
                   removeImage(img);
                 } catch (err) {
-                  console.log(err instanceof Error ? err.message : String(err));
+                  console.error(err);
                 }
             }
         }

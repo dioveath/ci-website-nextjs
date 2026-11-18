@@ -38,9 +38,8 @@ export default function ContactContent({ page = contactPageFallback }: { page?: 
             <input name="" type="number"  className={styles["form-input"]} placeholder="Phone Number"/>
 
             <textarea cols={30} id="" name="" rows={10} className={styles["text-area"]} placeholder="Your message here..."> </textarea>
-            <PrimaryButton text="Submit" onClick={()=> {
-              console.log("something");
-            }}/>
+            {/* Not wired up yet: the form has nowhere to send to. */}
+            <PrimaryButton text="Submit"/>
           </form>
           <div className={'flex-1 flex flex-col gap-4'}>
             <h2 className='text-2xl text-white'> Charicha Institute </h2>

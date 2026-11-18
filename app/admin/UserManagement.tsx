@@ -10,11 +10,7 @@ export default function UserManagementContainer(){
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ['users'],
-    queryFn: async() => {
-      const data = await listUsers();
-      console.log(data);
-      return data;
-    },
+    queryFn: listUsers,
     enabled: isLoggedIn
   });
 
