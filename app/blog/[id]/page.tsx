@@ -159,7 +159,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ id:
   // 1) Firebase user article, matched by document id.
   const fbBlog = await ArticleService.getArticle(id);
   if (fbBlog) {
-    const userRes = await UserService.getUser(fbBlog.writtenBy);
+    // Older articles can lack writtenBy; doc() throws on an undefined path
+    // segment, so skip the author lookup rather than crash the page.
+    const userRes = fbBlog.writtenBy ? await UserService.getUser(fbBlog.writtenBy) : null;
     const user = userRes?.userData || null;
 
     const { createdAt, ...serializableBlog } = fbBlog;
