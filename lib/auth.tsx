@@ -5,7 +5,7 @@
  * first sign-in creates the user's profile document.
  */
 
-import { createContext, useState, useContext, useEffect, type ReactNode } from "react";
+import { createContext, useState, useContext, useEffect, useCallback, type ReactNode } from "react";
 import { deleteUser, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut, type User } from "firebase/auth";
 
 import { firebaseAuth } from "./firebase";
@@ -19,6 +19,12 @@ export interface AuthContextValue {
   error: string | null;
   fetching: boolean;
   loading: boolean;
+  /** From the `admin` custom claim on the ID token; UI only, the server re-checks. */
+  isAdmin: boolean;
+  /** A fresh ID token for server actions, or null when signed out. */
+  getIdToken: () => Promise<string | null>;
+  /** Re-read custom claims after a role change (forces a token refresh). */
+  refreshClaims: () => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -70,6 +76,7 @@ export function AuthProvider(props: { children?: ReactNode }) {
   const [loading, setLoading] = useState(() => firebaseAuth() !== null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleError = (err: unknown) => {
     setError(messageOf(err));
@@ -96,8 +103,23 @@ export function AuthProvider(props: { children?: ReactNode }) {
     if (auth) await signOut(auth).catch(handleError);
     setUser(null);
     setUserData(null);
+    setIsAdmin(false);
     setFetching(false);
   };
+
+  // getIdToken() returns the cached token and only refreshes it when it is
+  // about to expire, so calling this before every server action is cheap.
+  const getIdToken = useCallback(async () => {
+    const current = firebaseAuth()?.currentUser;
+    return current ? current.getIdToken() : null;
+  }, []);
+
+  const refreshClaims = useCallback(async () => {
+    const current = firebaseAuth()?.currentUser;
+    if (!current) return;
+    const { claims } = await current.getIdTokenResult(true);
+    setIsAdmin(claims.admin === true);
+  }, []);
 
   useEffect(() => {
     const auth = firebaseAuth();
@@ -113,11 +135,21 @@ export function AuthProvider(props: { children?: ReactNode }) {
 
       if (authUser) {
         setUser(authUser);
+        // Resolved before `loading` turns false, so admin gates never redirect
+        // an admin away while the claims are still being read.
+        try {
+          const { claims } = await authUser.getIdTokenResult();
+          setIsAdmin(claims.admin === true);
+        } catch {
+          setIsAdmin(false);
+        }
         try {
           setUserData(await loadOrCreateProfile(authUser));
         } catch (e) {
           handleError(e);
         }
+      } else {
+        setIsAdmin(false);
       }
 
       setFetching(false);
@@ -134,6 +166,9 @@ export function AuthProvider(props: { children?: ReactNode }) {
     error,
     fetching,
     loading,
+    isAdmin,
+    getIdToken,
+    refreshClaims,
     loginWithGoogle,
     logout
   };

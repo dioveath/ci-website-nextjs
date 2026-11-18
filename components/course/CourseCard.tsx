@@ -1,27 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { CalendarDays, Layers } from 'lucide-react';
+import { Clock, Layers } from 'lucide-react';
 
 import { Badge } from '../ui/badge';
 import { Card, CardContent, CardFooter } from '../ui/card';
-import type { Course } from '../../types';
-
-/** Days -> whole months, which is how the course length is advertised. */
-function durationLabel(time: Course['time']) {
-  const months = Math.floor(Number(time ?? 0) / 30);
-  if (!Number.isFinite(months) || months < 1) return 'Short course';
-  return `${months} ${months === 1 ? 'month' : 'months'}`;
-}
+import { formatDuration, formatMoney } from '../../lib/courses/format';
+import type { CatalogCourse } from '../../types/courses';
 
 export default function CourseCard({
   course,
   headingLevel = 3
 }: {
-  course: Course;
+  course: CatalogCourse;
   headingLevel?: 2 | 3;
 }) {
   const Heading = `h${headingLevel}` as 'h2' | 'h3';
-  const lessons = course.lessons?.length ?? 0;
+  const lessons = course.totalLessons;
+  const duration = formatDuration(course.totalDurationSec);
 
   return (
     <Card interactive className="h-full">
@@ -38,7 +33,10 @@ export default function CourseCard({
 
         <CardContent className="flex-1">
           <div className="flex flex-col items-start gap-2">
-            {course.level ? <Badge variant="highlight">{course.level}</Badge> : null}
+            <div className="flex w-full items-center justify-between gap-2">
+              <Badge variant="highlight">{course.level}</Badge>
+              <span className="font-semibold text-card-foreground">{formatMoney(course.price)}</span>
+            </div>
             <Heading className="text-lg font-semibold text-card-foreground">
               {course.title}
             </Heading>
@@ -55,10 +53,12 @@ export default function CourseCard({
             <Layers className="size-4" aria-hidden />
             {lessons} {lessons === 1 ? 'lesson' : 'lessons'}
           </span>
-          <span className="flex items-center gap-1.5">
-            <CalendarDays className="size-4" aria-hidden />
-            {durationLabel(course.time)}
-          </span>
+          {duration ? (
+            <span className="flex items-center gap-1.5">
+              <Clock className="size-4" aria-hidden />
+              {duration}
+            </span>
+          ) : null}
         </CardFooter>
       </Link>
     </Card>

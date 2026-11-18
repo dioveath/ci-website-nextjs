@@ -1,0 +1,127 @@
+rules_version = '2';
+
+// Production Firestore rules. Tested by `npm run test:rules` (tests/rules) and
+// used by the local emulators (emulators/firebase.json), so what runs locally
+// is what ships. Deploy with: firebase deploy --only firestore:rules
+//
+// The server (Firebase Admin SDK) bypasses these rules. Everything that
+// grants access or moves money (enrollments, orders, certificates, roles)
+// is written only by the server; the browser can read its own records.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // The `admin` custom claim, set only by the server (scripts/admin.ts or
+    // the admin panel). Never a field a user can write.
+    function isAdmin() {
+      return signedIn() && request.auth.token.get('admin', false) == true;
+    }
+
+    function changedKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    function isShortString(value, max) {
+      return value is string && value.size() <= max;
+    }
+
+    // ------------------------------------------------------------- users --
+    // Public profile: name, photo, points. Shown on /profile/<uid> and as
+    // blog author, so anyone may fetch one by id; only admins may list them.
+    match /ci_users/{uid} {
+      allow get: if true;
+      allow list: if isAdmin();
+
+      // Created by the browser on first sign-in (lib/hooks/Auth.tsx), with
+      // every privileged field at its starting value.
+      allow create: if isSelf(uid)
+        && request.resource.data.keys().hasOnly([
+          'id', 'first_name', 'last_name', 'profile_URL', 'cover_URL',
+          'exp_points', 'hearts', 'roles', 'profile_visits', 'medias',
+          'joined_at', 'on_board'
+        ])
+        && request.resource.data.id == uid
+        && isShortString(request.resource.data.first_name, 100)
+        && isShortString(request.resource.data.last_name, 100)
+        && request.resource.data.exp_points == 0
+        && request.resource.data.hearts == 0
+        && request.resource.data.profile_visits == 0
+        && request.resource.data.roles == {}
+        && request.resource.data.medias == [];
+
+      // Keep in sync with USER_EDITABLE_FIELDS in types/index.ts.
+      allow update: if isSelf(uid)
+        && changedKeys().hasOnly([
+          'first_name', 'last_name', 'profile_URL', 'cover_URL', 'medias', 'on_board'
+        ]);
+
+      // Contact details: only the user and admins.
+      match /private/{docId} {
+        allow get: if isSelf(uid) || isAdmin();
+        allow create: if isSelf(uid)
+          && docId == 'contact'
+          && request.resource.data.keys().hasOnly(['email', 'phone_number', 'address'])
+          && request.resource.data.email == request.auth.token.get('email', null);
+        allow update: if isSelf(uid)
+          && changedKeys().hasOnly(['phone_number', 'address']);
+      }
+    }
+
+    // ---------------------------------------------------------- articles --
+    // Published articles are public. Drafts ('pending') are visible to their
+    // author and admins. A get of a missing id must not be denied: /blog/<slug>
+    // looks up Firebase first and falls through to Sanity.
+    match /articles/{articleId} {
+      allow get: if resource == null
+        || resource.data.state == 'published'
+        || isSelf(resource.data.writtenBy)
+        || isAdmin();
+      allow list: if resource.data.state == 'published'
+        || isSelf(resource.data.writtenBy)
+        || isAdmin();
+
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly([
+          'id', 'title', 'writtenBy', 'body', 'createdAt', 'heartsBy',
+          'thumbnail', 'likes', 'state'
+        ])
+        && request.resource.data.id == articleId
+        && request.resource.data.writtenBy == request.auth.uid
+        && request.resource.data.state == 'pending'
+        && request.resource.data.likes == 0
+        && request.resource.data.heartsBy == {};
+
+      // Authors edit their writing; publishing is an admin decision.
+      allow update: if isAdmin()
+        || (isSelf(resource.data.writtenBy)
+            && changedKeys().hasOnly(['title', 'body', 'thumbnail']));
+
+      allow delete: if isAdmin() || isSelf(resource.data.writtenBy);
+    }
+
+    // ----------------------------------------------------------- courses --
+    // Written only by the server. Students may read their own records.
+    match /enrollments/{enrollmentId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+    }
+
+    match /orders/{orderId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+    }
+
+    // Public, so anyone holding a certificate link can verify it.
+    match /certificates/{certificateId} {
+      allow read: if true;
+    }
+
+    // Anything not matched above is denied.
+  }
+}

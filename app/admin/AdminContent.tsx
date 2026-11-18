@@ -19,6 +19,7 @@ import type { ConsolePage } from '@/components/SideMenu';
 import useAuth from '@/lib/auth';
 
 import ArticleManagementContainer from './ArticleManagement';
+import CourseManagementContainer from './CourseManagement';
 import UserManagementContainer from './UserManagement';
 
 function Logout() {
@@ -39,7 +40,7 @@ function ToDashboard() {
 
 const PAGES: ConsolePage[] = [
   { label: 'Dashboard', icon: <LayoutDashboard className="size-4" />, element: <UnderConstruction pageName="Dashboard" /> },
-  { label: 'Manage courses', icon: <BookOpen className="size-4" />, element: <UnderConstruction pageName="Manage courses" /> },
+  { label: 'Manage courses', icon: <BookOpen className="size-4" />, element: <CourseManagementContainer /> },
   { label: 'Manage articles', icon: <Newspaper className="size-4" />, element: <ArticleManagementContainer /> },
   { label: 'Manage resources', icon: <Files className="size-4" />, element: <UnderConstruction pageName="Manage resources" /> },
   { label: 'Manage users', icon: <Users className="size-4" />, element: <UserManagementContainer /> },
@@ -49,12 +50,14 @@ const PAGES: ConsolePage[] = [
 ];
 
 export default function AdminContent() {
-  // Signed in but not a manager: send them to their own dashboard. The
+  // Signed in but not an admin: send them to their own dashboard. The
   // signed-out case is handled by ConsoleShell for every console route.
+  // isAdmin comes from the server-set `admin` custom claim (never from the
+  // user-writable profile); every admin server action re-checks it.
   return (
     <ConsoleShell
       pages={PAGES}
-      guard={(auth) => (auth.userData?.roles?.manager ? null : '/dashboard')}
+      guard={(auth) => (auth.isAdmin ? null : '/dashboard')}
     />
   );
 }

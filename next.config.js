@@ -31,6 +31,15 @@ const nextConfig = {
       // Video thumbnails for the click-to-load YouTube facade.
       { protocol: "https", hostname: "i.ytimg.com" }
     ]
+  },
+  // The Firebase web config itself uses NEXT_PUBLIC_ names (lib/firebase.ts).
+  // Only the emulator addresses are passed here: `firebase emulators:exec`
+  // sets them under the Admin SDK's names, and lib/firebase.ts points the
+  // browser SDK at the same emulators. Empty outside emulator mode.
+  env: {
+    FIREBASE_AUTH_EMULATOR_HOST: useEmulators ? process.env.FIREBASE_AUTH_EMULATOR_HOST ?? '' : '',
+    FIRESTORE_EMULATOR_HOST: useEmulators ? process.env.FIRESTORE_EMULATOR_HOST ?? '' : '',
+    FIREBASE_STORAGE_EMULATOR_HOST: useEmulators ? process.env.FIREBASE_STORAGE_EMULATOR_HOST ?? '' : ''
   }
 };
 

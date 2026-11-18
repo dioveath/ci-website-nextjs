@@ -21,8 +21,15 @@ async function listWhere(...constraints: QueryConstraint[]): Promise<Article[]> 
 
 export async function getArticle(articleId?: string): Promise<Article | null> {
   if (!articleId) return null;
-  const snap = await getDoc(doc(firebaseStore, ARTICLES, articleId));
-  return snap.exists() ? (snap.data() as Article) : null;
+  try {
+    const snap = await getDoc(doc(firebaseStore, ARTICLES, articleId));
+    return snap.exists() ? (snap.data() as Article) : null;
+  } catch (e) {
+    // Drafts are readable only by their author and admins (firestore.rules):
+    // to everyone else an unpublished article simply does not exist.
+    if ((e as { code?: string })?.code === 'permission-denied') return null;
+    throw e;
+  }
 }
 
 /** Every article regardless of state, newest first (admin review). */

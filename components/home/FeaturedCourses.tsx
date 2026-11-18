@@ -6,9 +6,9 @@ import CourseCard from '../course/CourseCard';
 import Section from '../layout/Section';
 import SectionHeading from '../layout/SectionHeading';
 import { Button } from '../ui/button';
-import type { Course } from '../../types';
+import type { CatalogCourse } from '../../types/courses';
 
-export default function FeaturedCourses({ courses }: { courses: Course[] }) {
+export default function FeaturedCourses({ courses }: { courses: CatalogCourse[] }) {
   if (!courses.length) return null;
 
   return (

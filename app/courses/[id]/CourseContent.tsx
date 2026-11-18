@@ -1,85 +1,62 @@
-'use client';
-
+import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { CalendarDays, Check, Layers } from 'lucide-react';
+import { Clock, Layers, Wallet } from 'lucide-react';
 
-import PageShell from '../../../components/layout/PageShell';
-import Section from '../../../components/layout/Section';
-import { Badge } from '../../../components/ui/badge';
-import { Button } from '../../../components/ui/button';
-import { Card, CardContent } from '../../../components/ui/card';
+import PageShell from '@/components/layout/PageShell';
+import Section from '@/components/layout/Section';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import LiveCurriculum from '@/components/course/LiveCurriculum';
+import CourseActions from '@/components/course/CourseActions';
+import { formatDuration, formatMoney } from '@/lib/courses/format';
+import type { CatalogCourse, PaymentOption } from '@/types/courses';
 
-import useAuth from '@/lib/auth';
-import { updateUser } from '@/lib/users';
-import type { Course } from '../../../types';
-
-function durationLabel(time: Course['time']) {
-  const months = Math.floor(Number(time ?? 0) / 30);
-  if (!Number.isFinite(months) || months < 1) return 'Short course';
-  return `${months} ${months === 1 ? 'month' : 'months'}`;
+interface CourseContentProps {
+  course: CatalogCourse;
+  prerequisites: CatalogCourse[];
+  paymentOptions: PaymentOption[];
 }
 
-function EnrolButton({ course }: { course: Course }) {
-  const { user } = useAuth();
-
-  if (!user) {
-    return (
-      <Button asChild size="xl" variant="on-brand">
-        <Link href="/login">Sign in to enrol</Link>
-      </Button>
-    );
-  }
-
-  return (
-    <Button
-      size="xl"
-      variant="highlight"
-      onClick={() => updateUser(user.uid, { [`courses.${course.id}`]: '' })}
-    >
-      Enrol now
-    </Button>
-  );
-}
-
-export default function CourseContent({ course }: { course: Course }) {
-  const lessons = (course.lessons ?? []) as string[];
+export default function CourseContent({ course, prerequisites, paymentOptions }: CourseContentProps) {
+  const duration = formatDuration(course.totalDurationSec);
 
   return (
     <PageShell>
       <Section tone="brand" as="div">
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div className="flex flex-col items-start gap-5">
-            {course.level ? <Badge variant="on-brand">{course.level}</Badge> : null}
+            <Badge variant="on-brand">{course.level}</Badge>
 
             <h1 className="text-4xl font-semibold tracking-tight text-on-brand md:text-5xl">
               {course.title}
             </h1>
-
-            {course.description ? (
-              <p className="max-w-xl text-base text-on-brand-muted md:text-lg">
-                {course.description}
-              </p>
-            ) : null}
 
             <dl className="flex flex-wrap gap-6 text-on-brand-muted">
               <div>
                 <dt className="sr-only">Lessons</dt>
                 <dd className="flex items-center gap-2">
                   <Layers className="size-4" aria-hidden />
-                  {lessons.length} lessons
+                  {course.totalLessons} {course.totalLessons === 1 ? 'lesson' : 'lessons'}
                 </dd>
               </div>
+              {duration ? (
+                <div>
+                  <dt className="sr-only">Video time</dt>
+                  <dd className="flex items-center gap-2">
+                    <Clock className="size-4" aria-hidden />
+                    {duration} of content
+                  </dd>
+                </div>
+              ) : null}
               <div>
-                <dt className="sr-only">Duration</dt>
-                <dd className="flex items-center gap-2">
-                  <CalendarDays className="size-4" aria-hidden />
-                  {durationLabel(course.time)}
+                <dt className="sr-only">Price</dt>
+                <dd className="flex items-center gap-2 font-semibold text-on-brand">
+                  <Wallet className="size-4" aria-hidden />
+                  {formatMoney(course.price)}
                 </dd>
               </div>
             </dl>
-
-            <EnrolButton course={course} />
           </div>
 
           <div className="relative aspect-video overflow-hidden rounded-2xl shadow-pop">
@@ -95,23 +72,53 @@ export default function CourseContent({ course }: { course: Course }) {
         </div>
       </Section>
 
-      <Section width="narrow">
-        <h2 className="text-3xl font-semibold tracking-tight text-foreground">
-          Lessons you&apos;ll learn
-        </h2>
+      <Section>
+        <div className="grid gap-10 lg:grid-cols-3">
+          <div className="flex flex-col gap-10 lg:col-span-2">
+            {course.description ? (
+              <section>
+                <h2 className="text-3xl font-semibold tracking-tight text-foreground">
+                  About this course
+                </h2>
+                <p className="mt-4 whitespace-pre-line text-muted-foreground">{course.description}</p>
+              </section>
+            ) : null}
 
-        <Card className="mt-8">
-          <CardContent>
-            <ul className="flex flex-col gap-3">
-              {lessons.map((lesson) => (
-                <li key={lesson} className="flex items-start gap-3 text-card-foreground">
-                  <Check className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden />
-                  {lesson}
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
+            <section>
+              <h2 className="text-3xl font-semibold tracking-tight text-foreground">Curriculum</h2>
+              <div className="mt-6">
+                <LiveCurriculum course={course} />
+              </div>
+            </section>
+          </div>
+
+          <aside className="flex flex-col gap-6 lg:sticky lg:top-6 lg:self-start">
+            {/* CourseActions reads ?payment=; the page itself stays static. */}
+            <Suspense>
+              <CourseActions course={course} paymentOptions={paymentOptions} />
+            </Suspense>
+
+            {prerequisites.length > 0 ? (
+              <Card>
+                <CardContent>
+                  <h2 className="font-semibold text-card-foreground">Recommended first</h2>
+                  <ul className="mt-2 flex flex-col gap-1">
+                    {prerequisites.map((prerequisite) => (
+                      <li key={prerequisite.id}>
+                        <Link
+                          href={`/courses/${prerequisite.id}`}
+                          className="text-primary underline-offset-4 hover:underline"
+                        >
+                          {prerequisite.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ) : null}
+          </aside>
+        </div>
       </Section>
     </PageShell>
   );

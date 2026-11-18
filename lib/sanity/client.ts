@@ -1,7 +1,10 @@
 import { createClient } from '@sanity/client';
 import { createImageUrlBuilder } from '@sanity/image-url';
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+// Exported for lib/server/content.ts, which builds a second client for the
+// private course-content dataset with the same project and API version.
+export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+export const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01';
 
 // The site works without Sanity configured: when no projectId is set the
 // client is null and every read falls back to the bundled static data in
@@ -10,7 +13,7 @@ export const sanityClient = projectId
   ? createClient({
       projectId,
       dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-      apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
+      apiVersion,
       useCdn: true, // fine for published, cacheable content
     })
   : null;

@@ -1,4 +1,4 @@
-import type { Course } from '../../types';
+import type { RawCourse, RawLesson } from '../courses/catalog';
 
 // Static fallbacks for the singleton documents. These mirror the original
 // hardcoded copy so the site renders identically when Sanity is unconfigured,
@@ -28,194 +28,137 @@ export const siteSettingsFallback = {
   copyright: 'Charicha Institute © All Rights Reserved',
 };
 
-// Courses, used when Sanity has none. Defined before homePageFallback,
-// which takes its featured courses from this list.
-export const coursesFallback = [
-  {
-    id: "1",
-    level: "Beginner",
-    title: "Computer Basics",
-    thumbImg: "/george.jpg",
-    coverImg: "/george.jpg",
-    lessons: [
-      "Diam quis", 
-      "enim lobortis", 
-      "scelerisque", 
-      "fermentum", 
-      "dui faucibus", 
-      "Nulla facilisi",
-      "nullam vehicula"
-    ],
-    description: "Pellentesque id nibh tortor, id aliquet! Lacinia at quis risus sed vulputate odio ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat velit, scelerisque in dictum non, consectetur a.",
-    time: 56  // in days
-  },
+// Courses: the bundled catalog used when Sanity is not configured (see
+// SANITY.md), defined before homePageFallback, which features its first three. It
+// mirrors the courses in seed/seed.ndjson, in the shape the GROQ projection in
+// lib/sanity/queries.ts returns. Titles, lessons and prices are samples:
+// replace them in the Studio.
 
-  {
-    id: "2",
-    level: "Beginner",
-    title: "Advance Basics",
-    thumbImg: "/george.jpg",    
-    coverImg: "/george.jpg",
-    lessons: [
-      "fermentum", 
-      "scelerisque", 
-      "Diam quis",
-      "volutpat maecenas",
-      "enim lobortis", 
-      "dui faucibus", 
-      "Nulla facilisi",
-      "nullam vehicula",
-      "Pellentesque id",
-    ],
-    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
-    time: 68  // in days
-  },
+function slugify(text: string): string {
+  return text.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/[\s-]+/g, '-');
+}
 
-  {
-    id: "3",
-    level: "Beginner",
-    title: "Office Basics",
-    thumbImg: "/george.jpg",    
-    coverImg: "/george.jpg",
-    lessons: [
-      "fermentum", 
-      "scelerisque", 
-      "Diam quis",
-      "volutpat maecenas",
-      "enim lobortis", 
-      "dui faucibus", 
-      "Nulla facilisi",
-      "nullam vehicula",
-      "Pellentesque id",
+// Same outline as the seed: the first three lessons are 'Getting started',
+// the first lesson is a free preview, and the last one is an article.
+function course(input: {
+  id: string;
+  slug: string;
+  title: string;
+  level: string;
+  priceNpr: number;
+  description: string;
+  lessons: string[];
+}): RawCourse {
+  const lessons: RawLesson[] = input.lessons.map((title, index) => {
+    const type = index === input.lessons.length - 1 ? 'article' : 'video';
+    return {
+      id: slugify(title),
+      title,
+      type,
+      durationSec: (6 + ((index * 7) % 12)) * 60,
+      isPreview: index === 0,
+      video: type === 'video' ? { provider: 'placeholder' } : null,
+    };
+  });
+  return {
+    id: input.id,
+    slug: input.slug,
+    title: input.title,
+    level: input.level,
+    coverImg: '/george.jpg',
+    description: input.description,
+    price: input.priceNpr > 0 ? { amount: input.priceNpr * 100, currency: 'NPR' } : null,
+    listed: true,
+    prerequisiteIds: [],
+    sections: [
+      { key: 's1', title: 'Getting started', lessons: lessons.slice(0, 3) },
+      { key: 's2', title: 'Core lessons', lessons: lessons.slice(3) },
     ],
-    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
-    time: 68  // in days
-  },
+  };
+}
 
-  {
-    id: "4",
-    level: "Intermediate",
-    title: "Computer Operator",
-    thumbImg: "/george.jpg",    
-    coverImg: "/george.jpg",
-    lessons: [
-      "fermentum", 
-      "scelerisque", 
-      "Diam quis",
-      "volutpat maecenas",
-      "enim lobortis", 
-      "dui faucibus", 
-      "Nulla facilisi",
-      "nullam vehicula",
-      "Pellentesque id",
-    ],
-    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
-    time: 68  // in days
-  },   
-
-
-  {
-    id: "5",
-    level: "Intermediate",
-    title: "Lok Shewa Preparation",
-    thumbImg: "/george.jpg",    
-    coverImg: "/george.jpg",
-    lessons: [
-      "fermentum", 
-      "scelerisque", 
-      "Diam quis",
-      "volutpat maecenas",
-      "enim lobortis", 
-      "dui faucibus", 
-      "Nulla facilisi",
-      "nullam vehicula",
-      "Pellentesque id",
-    ],
-    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
-    time: 68  // in days
-  },
-
-  {
-    id: "6",
-    level: "Intermediate",
-    title: "Accounting Package",
-    thumbImg: "/george.jpg",    
-    coverImg: "/computer_course_cover_2.jpg",
-    lessons: [
-      "fermentum", 
-      "scelerisque", 
-      "Diam quis",
-      "volutpat maecenas",
-      "enim lobortis", 
-      "dui faucibus", 
-      "Nulla facilisi",
-      "nullam vehicula",
-      "Pellentesque id",
-    ],
-    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
-    time: 68  // in days
-  },
-
-  {
-    id: "7",
-    level: "Advance",
-    title: "Introduction to Programming",
-    coverImg: "/george.jpg",
-    lessons: [
-      "fermentum", 
-      "scelerisque", 
-      "Diam quis",
-      "volutpat maecenas",
-      "enim lobortis", 
-      "dui faucibus", 
-      "Nulla facilisi",
-      "nullam vehicula",
-      "Pellentesque id",
-    ],
-    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
-    time: 68  // in days
-  },
-
-  {
-    id: "8",
-    level: "Advance",
-    title: "Web Development",
-    coverImg: "/george.jpg",
-    lessons: [
-      "fermentum", 
-      "scelerisque", 
-      "Diam quis",
-      "volutpat maecenas",
-      "enim lobortis", 
-      "dui faucibus", 
-      "Nulla facilisi",
-      "nullam vehicula",
-      "Pellentesque id",
-    ],
-    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
-    time: 68  // in days
-  },
-
-  {
-    id: "9",
-    level: "Advance",
-    title: "Flutter Mobile Development",
-    coverImg: "/george.jpg",
-    lessons: [
-      "fermentum", 
-      "scelerisque", 
-      "Diam quis",
-      "volutpat maecenas",
-      "enim lobortis", 
-      "dui faucibus", 
-      "Nulla facilisi",
-      "nullam vehicula",
-      "Pellentesque id",
-    ],
-    description: "Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.",
-    time: 68  // in days
-  },   
-     
+export const coursesFallback: RawCourse[] = [
+  course({
+    id: '1',
+    slug: 'computer-basics',
+    title: 'Computer Basics',
+    level: 'Beginner',
+    priceNpr: 0,
+    description: 'Pellentesque id nibh tortor, id aliquet! Lacinia at quis risus sed vulputate odio ut enim blandit volutpat maecenas volutpat blandit aliquam etiam erat velit, scelerisque in dictum non, consectetur a.',
+    lessons: ['Diam quis', 'Enim lobortis', 'Scelerisque', 'Fermentum', 'Dui faucibus', 'Nulla facilisi', 'Nullam vehicula'],
+  }),
+  course({
+    id: '2',
+    slug: 'advance-basics',
+    title: 'Advance Basics',
+    level: 'Beginner',
+    priceNpr: 1500,
+    description: 'Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.',
+    lessons: ['Fermentum', 'Scelerisque', 'Diam quis', 'Volutpat maecenas', 'Enim lobortis', 'Dui faucibus', 'Nulla facilisi', 'Nullam vehicula', 'Pellentesque id'],
+  }),
+  course({
+    id: '3',
+    slug: 'office-basics',
+    title: 'Office Basics',
+    level: 'Beginner',
+    priceNpr: 1500,
+    description: 'Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.',
+    lessons: ['Fermentum', 'Scelerisque', 'Diam quis', 'Volutpat maecenas', 'Enim lobortis', 'Dui faucibus', 'Nulla facilisi', 'Nullam vehicula', 'Pellentesque id'],
+  }),
+  course({
+    id: '4',
+    slug: 'computer-operator',
+    title: 'Computer Operator',
+    level: 'Intermediate',
+    priceNpr: 2500,
+    description: 'Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.',
+    lessons: ['Fermentum', 'Scelerisque', 'Diam quis', 'Volutpat maecenas', 'Enim lobortis', 'Dui faucibus', 'Nulla facilisi', 'Nullam vehicula', 'Pellentesque id'],
+  }),
+  course({
+    id: '5',
+    slug: 'lok-shewa-preparation',
+    title: 'Lok Shewa Preparation',
+    level: 'Intermediate',
+    priceNpr: 3000,
+    description: 'Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.',
+    lessons: ['Fermentum', 'Scelerisque', 'Diam quis', 'Volutpat maecenas', 'Enim lobortis', 'Dui faucibus', 'Nulla facilisi', 'Nullam vehicula', 'Pellentesque id'],
+  }),
+  course({
+    id: '6',
+    slug: 'accounting-package',
+    title: 'Accounting Package',
+    level: 'Intermediate',
+    priceNpr: 3500,
+    description: 'Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.',
+    lessons: ['Fermentum', 'Scelerisque', 'Diam quis', 'Volutpat maecenas', 'Enim lobortis', 'Dui faucibus', 'Nulla facilisi', 'Nullam vehicula', 'Pellentesque id'],
+  }),
+  course({
+    id: '7',
+    slug: 'introduction-to-programming',
+    title: 'Introduction to Programming',
+    level: 'Advance',
+    priceNpr: 4000,
+    description: 'Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.',
+    lessons: ['Fermentum', 'Scelerisque', 'Diam quis', 'Volutpat maecenas', 'Enim lobortis', 'Dui faucibus', 'Nulla facilisi', 'Nullam vehicula', 'Pellentesque id'],
+  }),
+  course({
+    id: '8',
+    slug: 'web-development',
+    title: 'Web Development',
+    level: 'Advance',
+    priceNpr: 5000,
+    description: 'Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.',
+    lessons: ['Fermentum', 'Scelerisque', 'Diam quis', 'Volutpat maecenas', 'Enim lobortis', 'Dui faucibus', 'Nulla facilisi', 'Nullam vehicula', 'Pellentesque id'],
+  }),
+  course({
+    id: '9',
+    slug: 'flutter-mobile-development',
+    title: 'Flutter Mobile Development',
+    level: 'Advance',
+    priceNpr: 5000,
+    description: 'Bibendum enim, facilisis gravida neque convallis a cras? Commodo quis imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada proin libero nunc, consequat interdum varius sit amet, mattis vulputate.',
+    lessons: ['Fermentum', 'Scelerisque', 'Diam quis', 'Volutpat maecenas', 'Enim lobortis', 'Dui faucibus', 'Nulla facilisi', 'Nullam vehicula', 'Pellentesque id'],
+  }),
 ];
 
 export const homePageFallback = {
@@ -237,7 +180,7 @@ export const homePageFallback = {
   // The first three of the static course list, so the home page still shows a
   // courses section before an editor has picked any -- the same way every
   // other CMS-backed section falls back rather than disappearing.
-  featuredCourses: coursesFallback.slice(0, 3) as Course[],
+  featuredCourses: coursesFallback.slice(0, 3),
   stories: [
     {
       title: 'How it all started?',
@@ -275,7 +218,7 @@ export const navigationFallback = {
 export const contactPageFallback = {
   title: 'Contact Us',
   description:
-    "Thank you for visiting our website. If you have any questions or would like to schedule a tour of our facilities, please don't hesitate to reach out to us.",
+    "Thank you for visiting our website. If you have any questions about our courses, please don't hesitate to reach out to us.",
   contact: {
     phone: '+977 9817-388966',
     email: 'charichainstitute@gmail.com',

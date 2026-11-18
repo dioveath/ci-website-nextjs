@@ -2,11 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, type ReactNode } from 'react';
-import { QueryClientProvider } from '@tanstack/react-query';
 
 import LoadingScreen from '../LoadingScreen';
 import SideMenu, { type ConsolePage } from '../SideMenu';
-import queryClient from '@/lib/queryClient';
 import useAuth from '@/lib/auth';
 import useIsClient from '@/lib/hooks/useIsClient';
 
@@ -14,9 +12,10 @@ import useIsClient from '@/lib/hooks/useIsClient';
  * The signed-in console shell, shared by /dashboard and /admin.
  *
  * Both routes previously carried their own copy of this: the same auth gate,
- * the same QueryClientProvider, the same side menu wired to the same page
- * index state, differing only in which pages they listed and who was allowed
- * in. That duplication is the `redirectTo` prop and the `pages` prop now.
+ * the same side menu wired to the same page index state, differing only in
+ * which pages they listed and who was allowed in. That duplication is the
+ * `guard` prop and the `pages` prop now. (React Query is provided app-wide in
+ * app/providers.tsx.)
  */
 export default function ConsoleShell({
   pages,
@@ -42,14 +41,12 @@ export default function ConsoleShell({
   if (!ready || redirectTo) return <LoadingScreen />;
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen bg-muted">
-        <SideMenu pages={pages} currentPage={page} setPage={setPage} />
-        <div className="h-screen w-full overflow-y-auto px-4 py-6 md:px-8">
-          {pages[page]?.element}
-        </div>
+    <div className="flex min-h-screen bg-muted">
+      <SideMenu pages={pages} currentPage={page} setPage={setPage} />
+      <div className="h-screen w-full overflow-y-auto px-4 py-6 md:px-8">
+        {pages[page]?.element}
       </div>
-    </QueryClientProvider>
+    </div>
   );
 }
 

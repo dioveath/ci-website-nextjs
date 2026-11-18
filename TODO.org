@@ -1,0 +1,30 @@
+* Fixes
+** DONE firebaseConfig through .env.local file
+** DONE Google Logo in button
+** DONE Footer Links update
+** DONE Navbar Link Update
+
+* Tasks
+** DONE Courses Page UI
+** DONE Create a Final User Model for Charicha Institute
+** DONE Implement the final User Model
+** DONE Implement User Model to load with Profile Page
+** DONE Make course enrollable to user, i.e. courses ids to user data
+** DONE Create Course Page
+** TODO Create Artical Writer for Users      
+** DONE Load courses from Network
+
+* MVP
+** DONE Courses Page Overhaul
+** DONE Payment gateway (eSewa, Khalti)
+** TODO Cloudflare Stream for lesson videos (see COURSES.md)
+** TODO Go-live checklist in COURSES.md
+
+* Milestones
+** Profile Page
+** User Dashboard Page   
+** Write an Article Page
+** Article Paging   
+** Article Categories
+
+

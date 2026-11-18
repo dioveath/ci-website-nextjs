@@ -2,6 +2,7 @@ import { mergeDefined, sanityClient } from './client';
 import {
   coursesQuery,
   courseByIdQuery,
+  coursesByIdsQuery,
   courseIdsQuery,
   servicesQuery,
   homePageQuery,
@@ -11,7 +12,9 @@ import {
 } from './queries';
 
 // Static fallbacks: the site renders identically until Sanity is configured
-// and populated.
+// and populated (courses excepted; see below).
+import { normalizeCourse, normalizeCourses, type RawCourse } from '../courses/catalog';
+import type { CatalogCourse, CourseId } from '../../types/courses';
 import { coursesFallback, servicesFallback, homePageFallback, contactPageFallback } from './fallbacks';
 
 function messageOf(err: unknown): string {
@@ -32,27 +35,56 @@ async function fetchOrFallback<T>(
   }
 }
 
-export function getCourses() {
-  return fetchOrFallback(coursesQuery, {}, coursesFallback, 'getCourses');
-}
-
 export function getServices() {
   return fetchOrFallback(servicesQuery, {}, servicesFallback, 'getServices');
 }
 
-export function getCourseById(id: string | number) {
-  const fallback = coursesFallback.find((c) => String(c.id) === String(id)) || null;
-  return fetchOrFallback(courseByIdQuery, { id: String(id) }, fallback, 'getCourseById');
+/*
+ * Courses are sold, so they do not follow the "fall back on error" rule the
+ * marketing content uses: the bundled sample catalog is shown only when Sanity
+ * is not configured at all. Once it is, an outage must never put sample
+ * courses (with sample prices) in front of buyers.
+ */
+
+/** The public catalog for /courses: listed courses only. */
+export async function getCourses(): Promise<CatalogCourse[]> {
+  if (!sanityClient) return normalizeCourses(coursesFallback).filter((course) => course.listed);
+  try {
+    return normalizeCourses(await sanityClient.fetch<RawCourse[]>(coursesQuery));
+  } catch (err) {
+    console.warn('[sanity] getCourses failed:', messageOf(err));
+    return [];
+  }
 }
 
-export async function getCourseIds() {
-  if (!sanityClient) return coursesFallback.map((c) => String(c.id));
+/**
+ * One course, listed or not. Throws when Sanity is configured but unreachable,
+ * so an ISR revalidation keeps serving the last good page instead of a 404.
+ */
+export async function getCourseById(id: string | number): Promise<CatalogCourse | null> {
+  if (!sanityClient) {
+    return normalizeCourse(coursesFallback.find((course) => course.id === String(id)));
+  }
+  return normalizeCourse(await sanityClient.fetch<RawCourse | null>(courseByIdQuery, { id: String(id) }));
+}
+
+export async function getCoursesByIds(ids: CourseId[]): Promise<CatalogCourse[]> {
+  if (ids.length === 0) return [];
+  if (!sanityClient) {
+    return normalizeCourses(coursesFallback.filter((course) => course.id && ids.includes(course.id)));
+  }
+  return normalizeCourses(await sanityClient.fetch<RawCourse[]>(coursesByIdsQuery, { ids }));
+}
+
+export async function getCourseIds(): Promise<string[]> {
+  if (!sanityClient) return normalizeCourses(coursesFallback).map((course) => course.id);
   try {
-    const ids: unknown[] = await sanityClient.fetch(courseIdsQuery);
-    return ids && ids.length ? ids.map(String) : coursesFallback.map((c) => String(c.id));
+    const ids = await sanityClient.fetch<unknown[]>(courseIdsQuery);
+    return (ids ?? []).map(String);
   } catch (err) {
-    console.warn('[sanity] getCourseIds failed, using fallback:', messageOf(err));
-    return coursesFallback.map((c) => String(c.id));
+    // Pages are then rendered on first request instead of at build time.
+    console.warn('[sanity] getCourseIds failed:', messageOf(err));
+    return [];
   }
 }
 
@@ -72,8 +104,10 @@ async function fetchSingleton<T extends object>(
   }
 }
 
-export function getHomePage() {
-  return fetchSingleton(homePageQuery, homePageFallback, 'getHomePage');
+/** Home page singleton; featured courses come back normalised like every course. */
+export async function getHomePage() {
+  const home = await fetchSingleton(homePageQuery, homePageFallback, 'getHomePage');
+  return { ...home, featuredCourses: normalizeCourses(home.featuredCourses as RawCourse[]) };
 }
 
 export function getContactPage() {

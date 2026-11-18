@@ -6,6 +6,9 @@
 #
 # Site: http://localhost:3000   Emulator UI (browse/edit data): http://127.0.0.1:4000
 # Data persists between runs in emulators/data/ (gitignored); delete it to reset.
+# Firestore enforces the production rules (emulators/firestore.rules links to
+# ../firestore.rules). Make your test account an admin with:
+#   npm run admin:emulators -- set-admin you@example.com
 set -euo pipefail
 cd "$(dirname "$0")/.."
 

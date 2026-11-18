@@ -6,7 +6,7 @@ import CardGrid from '../../components/layout/CardGrid';
 import CourseCard from '../../components/course/CourseCard';
 import { SearchField } from '../../components/ui/search-field';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import type { Course } from '../../types';
+import type { CatalogCourse } from '@/types/courses';
 
 const LEVELS = ['All', 'Beginner', 'Intermediate', 'Advance'] as const;
 type Level = (typeof LEVELS)[number];
@@ -18,7 +18,7 @@ type Level = (typeof LEVELS)[number];
  * tab bar driving them with two pieces of index state. One predicate and the
  * Tabs primitive replace all of it, and the search box finally filters.
  */
-function matches(course: Course, level: Level, query: string) {
+function matches(course: CatalogCourse, level: Level, query: string) {
   if (level !== 'All' && course.level !== level) return false;
   if (!query) return true;
 
@@ -26,7 +26,7 @@ function matches(course: Course, level: Level, query: string) {
   return haystack.includes(query.trim().toLowerCase());
 }
 
-export default function CoursesContent({ courses }: { courses: Course[] }) {
+export default function CoursesContent({ courses }: { courses: CatalogCourse[] }) {
   const [query, setQuery] = useState('');
   const [level, setLevel] = useState<Level>('All');
 

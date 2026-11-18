@@ -9,7 +9,7 @@ import CoursesContent from './CoursesContent';
 export const metadata: Metadata = {
   title: 'Courses',
   description:
-    'Beginner to advanced computer courses at Charicha Institute, taught in person in Belbari, Morang.'
+    'Self-paced online computer courses from Charicha Institute, from beginner to advanced.'
 };
 
 export const revalidate = 60;

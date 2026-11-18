@@ -9,9 +9,9 @@ import { Badge } from '../../../components/ui/badge';
 import { Button } from '../../../components/ui/button';
 import { Card, CardContent } from '../../../components/ui/card';
 
-import { getCourses } from '@/lib/sanity/fetchers';
+import { listCertificatesForUser } from '@/lib/certificates';
 import { getUser } from '@/lib/users';
-import type { UserData } from '../../../types';
+import type { CertificateDTO, UserData } from '../../../types';
 
 export const metadata: Metadata = {
   title: 'Profile',
@@ -71,13 +71,12 @@ function StatCard({
   );
 }
 
-// courseTitles comes from getCourses(), so enrolled courses show their CMS
-// titles (falling back to the static list), looked up by id.
-function ProfileView({ userData, courseTitles }: { userData: UserData; courseTitles: Map<string, string> }) {
+// Completed courses come from certificates, which are public. What a student
+// is currently taking is private (enrollments are readable only by them).
+function ProfileView({ userData, certificates }: { userData: UserData; certificates: CertificateDTO[] }) {
   const joined = userData.joined_at ? new Date(userData.joined_at) : null;
-  // `roles` is a { roleName: boolean } map, not an array.
+  // `roles` is a read-only { roleName: boolean } copy of the user's claims.
   const activeRoles = Object.keys(userData.roles ?? {}).filter((role) => userData.roles[role]);
-  const enrolledCourseIds = Object.keys(userData.courses ?? {});
   const name = [userData.first_name, userData.last_name].filter(Boolean).join(' ');
 
   return (
@@ -124,19 +123,21 @@ function ProfileView({ userData, courseTitles }: { userData: UserData; courseTit
         </div>
 
         <h2 className="mt-12 text-2xl font-semibold tracking-tight text-foreground">
-          Courses enrolled
+          Courses completed
         </h2>
 
-        {enrolledCourseIds.length ? (
+        {certificates.length ? (
           <ul className="mt-6 flex flex-wrap gap-3">
-            {enrolledCourseIds.map((courseId) => (
-              <li key={courseId}>
-                <Badge variant="secondary">{courseTitles.get(String(courseId)) ?? `Course ${courseId}`}</Badge>
+            {certificates.map((certificate) => (
+              <li key={certificate.id}>
+                <Badge asChild variant="secondary">
+                  <Link href={`/certificates/${certificate.id}`}>{certificate.courseTitle}</Link>
+                </Badge>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="mt-4 text-muted-foreground">No courses enrolled yet.</p>
+          <p className="mt-4 text-muted-foreground">No completed courses yet.</p>
         )}
       </Section>
     </>
@@ -146,12 +147,12 @@ function ProfileView({ userData, courseTitles }: { userData: UserData; courseTit
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const [userData, courses] = await Promise.all([getUser(id).catch(() => null), getCourses()]);
-  const courseTitles = new Map(courses.map((c) => [String(c.id), c.title]));
+  const userData = await getUser(id).catch(() => null);
+  const certificates = userData ? await listCertificatesForUser(id).catch(() => []) : [];
 
   return (
     <PageShell>
-      {userData ? <ProfileView userData={userData} courseTitles={courseTitles} /> : <UserNotFound />}
+      {userData ? <ProfileView userData={userData} certificates={certificates} /> : <UserNotFound />}
     </PageShell>
   );
 }

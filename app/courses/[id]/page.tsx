@@ -1,29 +1,30 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { getCourseById, getCourseIds } from '../../../lib/sanity/fetchers';
+import { getCourseById, getCourseIds, getCoursesByIds } from '../../../lib/sanity/fetchers';
+import { paymentOptions } from '../../../lib/server/payments';
 import CourseContent from './CourseContent';
-import type { Course } from '../../../types';
 
 export const revalidate = 60;
 
+type Params = { params: Promise<{ id: string }> };
+
 export async function generateStaticParams() {
   const ids = await getCourseIds();
-  return ids.map((id) => ({ id: String(id) }));
+  return ids.map((id) => ({ id }));
 }
 
-export async function generateMetadata(
-  { params }: { params: Promise<{ id: string }> }
-): Promise<Metadata> {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { id } = await params;
-  const course = (await getCourseById(id)) as Course | null;
+  const course = await getCourseById(id);
   if (!course) return { title: 'Course not found' };
 
+  // The root layout's title template appends the site name.
   return {
     title: course.title,
     description:
       course.description ??
-      `${course.title} at Charicha Institute — ${course.level ?? 'all levels'}.`,
+      `${course.title} at Charicha Institute — ${course.level} level.`,
     openGraph: {
       type: 'article',
       title: course.title,
@@ -33,9 +34,10 @@ export async function generateMetadata(
   };
 }
 
-export default async function CoursePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function CoursePage({ params }: Params) {
   const { id } = await params;
   const course = await getCourseById(id);
   if (!course) notFound();
-  return <CourseContent course={course as Course} />;
+  const prerequisites = await getCoursesByIds(course.prerequisiteIds);
+  return <CourseContent course={course} prerequisites={prerequisites} paymentOptions={paymentOptions()} />;
 }

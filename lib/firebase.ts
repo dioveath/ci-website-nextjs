@@ -28,11 +28,23 @@ const firebaseStorage = getStorage(firebaseApp);
 // one of those must connect.
 const globalForEmulators = globalThis as typeof globalThis & { __ciFirebaseEmulators?: WeakSet<object> };
 const connected = (globalForEmulators.__ciFirebaseEmulators ??= new WeakSet());
+//
+// Addresses come from the variables `firebase emulators:exec` sets for the
+// Admin SDK (passed to the browser by next.config.js), so the site and its
+// server actions always talk to the same emulators, whatever ports they run on.
+function emulatorAddress(hostPort: string | undefined, fallbackPort: number): [string, number] {
+  const [host, port] = (hostPort || `127.0.0.1:${fallbackPort}`).split(':');
+  return [host, Number(port) || fallbackPort];
+}
+
 if (process.env.NEXT_PUBLIC_FIREBASE_EMULATORS === '1' && !connected.has(firebaseStore)) {
   connected.add(firebaseStore);
-  connectAuthEmulator(getAuth(firebaseApp), 'http://127.0.0.1:9099', { disableWarnings: true });
-  connectFirestoreEmulator(firebaseStore, '127.0.0.1', 8085);
-  connectStorageEmulator(firebaseStorage, '127.0.0.1', 9199);
+  const [authHost, authPort] = emulatorAddress(process.env.FIREBASE_AUTH_EMULATOR_HOST, 9099);
+  const [storeHost, storePort] = emulatorAddress(process.env.FIRESTORE_EMULATOR_HOST, 8085);
+  const [storageHost, storagePort] = emulatorAddress(process.env.FIREBASE_STORAGE_EMULATOR_HOST, 9199);
+  connectAuthEmulator(getAuth(firebaseApp), `http://${authHost}:${authPort}`, { disableWarnings: true });
+  connectFirestoreEmulator(firebaseStore, storeHost, storePort);
+  connectStorageEmulator(firebaseStorage, storageHost, storagePort);
 }
 
 /**
