@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useState, useContext, useEffect, type ReactNode } from "react";
+import { createContext, useState, useContext, useEffect, useCallback, type ReactNode } from "react";
 import { deleteUser, getAuth, onAuthStateChanged, type User } from "firebase/auth";
 
 import { firebaseApp } from "../firebase";
@@ -17,6 +17,12 @@ export interface AuthContextValue {
   error: string | null;
   fetching: boolean;
   loading: boolean;
+  /** From the `admin` custom claim on the ID token; UI only, the server re-checks. */
+  isAdmin: boolean;
+  /** A fresh ID token for server actions, or null when signed out. */
+  getIdToken: () => Promise<string | null>;
+  /** Re-read custom claims after a role change (forces a token refresh). */
+  refreshClaims: () => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -42,6 +48,7 @@ export function AuthProvider(props: { children?: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const handleError = (err: unknown) => {
     setError(messageOf(err));
@@ -63,20 +70,39 @@ export function AuthProvider(props: { children?: ReactNode }) {
     await AuthService.logout().catch(handleError);
     setUser(null);
     setUserData(null);
+    setIsAdmin(false);
     setFetching(false);
   };
+
+  // getIdToken() returns the cached token and only refreshes it when it is
+  // about to expire, so calling this before every server action is cheap.
+  const getIdToken = useCallback(async () => {
+    const current = auth.currentUser;
+    return current ? current.getIdToken() : null;
+  }, []);
+
+  const refreshClaims = useCallback(async () => {
+    const current = auth.currentUser;
+    if (!current) return;
+    const { claims } = await current.getIdTokenResult(true);
+    setIsAdmin(claims.admin === true);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       setFetching(true);
 
       if (!authUser) {
+        setIsAdmin(false);
         setFetching(false);
         setLoading(false);
         return;
       }
 
       setUser(authUser);
+      authUser.getIdTokenResult()
+        .then(({ claims }) => setIsAdmin(claims.admin === true))
+        .catch(() => setIsAdmin(false));
 
       let result = await UserService.getUser(authUser.uid);
       if (!result.userData) {
@@ -118,6 +144,9 @@ export function AuthProvider(props: { children?: ReactNode }) {
     error,
     fetching,
     loading,
+    isAdmin,
+    getIdToken,
+    refreshClaims,
     loginWithGoogle,
     logout
   };
