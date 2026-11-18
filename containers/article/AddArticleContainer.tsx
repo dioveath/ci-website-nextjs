@@ -13,7 +13,7 @@ import { ArticleService } from "../../lib/service/ArticleService";
 import { isEmptyDocument } from "../../lib/editor/serialize";
 import { UserService } from '../../lib/service/UserService';
 import MediaSelectModal from "../media/MediaSelectModal";
-import { IoIosArrowBack } from "react-icons/io";
+import { ChevronLeft } from "lucide-react";
 import type { Article, Media } from '../../types';
 import type { TiptapEditorHandle } from '../../components/TiptapEditor';
 
@@ -140,7 +140,7 @@ export default function AddArticleContainer({ article }: { article?: Article | n
         <p className="font-light text-white"> {new Date().toDateString()} </p>
       </div>
 
-      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+      <div className="max-w-lg rounded-r-full bg-primary text-primary-foreground py-2 px-4 my-4">
         <p className="text-white text-xl font-light">
           {isEdit ? "Edit" : "Add"} an Article
         </p>
@@ -153,7 +153,7 @@ export default function AddArticleContainer({ article }: { article?: Article | n
           setArticle(null);
         }}
       >
-        <IoIosArrowBack className="text-4xl" /> Back
+        <ChevronLeft className="size-6" /> Back
       </button>
 
       <input
@@ -164,7 +164,7 @@ export default function AddArticleContainer({ article }: { article?: Article | n
         name="title"
         type="text"
         placeholder="Article Title"
-        className="w-full py-3 mt-4 px-4 rounded-lg outline-hidden focus:shadow-outline shadow-sm"
+        className="w-full py-3 mt-4 px-4 rounded-lg outline-hidden shadow-sm"
       />
 
       {modalOpen && (
@@ -192,7 +192,7 @@ export default function AddArticleContainer({ article }: { article?: Article | n
 
         {!modalOpen && (
           <button
-            className="w-full bg-pinegreen py-3 text-white font-light rounded-full"
+            className="w-full bg-primary py-3 text-primary-foreground font-light rounded-full hover:bg-primary/90 transition-all"
             onClick={() => setModalOpen(true)}
           >
             Select Thumbnail
@@ -200,8 +200,8 @@ export default function AddArticleContainer({ article }: { article?: Article | n
         )}
       </div>
 
-      <div className="w-full h-full rounded-xl flex justify-center items-center bg-timbergreen">
-        <div className="w-full h-full overflow-scroll-y p-4 rounded-xl prose dark:prose-invert">
+      <div className="w-full h-full rounded-xl flex justify-center items-center bg-card">
+        <div className="w-full h-full overflow-y-auto p-4 rounded-xl prose dark:prose-invert">
           {TiptapEditor && (
             <TiptapEditor
               userId={user!.uid}
@@ -215,22 +215,22 @@ export default function AddArticleContainer({ article }: { article?: Article | n
 
       <div className="py-4 px-4">
         {mutation.isError && (
-          <p className="text-red-500 text-xs italic">
+          <p className="text-destructive text-xs italic">
             {mutation.error.message}
           </p>
         )}
         {mutation.isSuccess && (
-          <p className="text-eggblue text-xs italic">
+          <p className="text-primary text-xs italic">
             Successfully {isEdit ? "Edited" : "Added"}
           </p>
         )}
         {fieldError && (
-          <p className="text-red-500 text-xs italic"> {fieldError}</p>
+          <p className="text-destructive text-xs italic"> {fieldError}</p>
         )}
       </div>
 
       <button
-        className={`text-white bg-eggblue hover:bg-greenpea disabled:bg-riverbed  
+        className={`text-primary-foreground bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground  
                           w-full py-4 mt-5 rounded-full shadow-md transition-all 
                           ${mutation.isPending ? "animate-pulse" : ""}`}
         onClick={onAddClick}

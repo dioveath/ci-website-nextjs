@@ -9,10 +9,9 @@ import queryClient from "../../lib/queryclient";
 import { ArticleService } from "../../lib/service/ArticleService";
 import { pageContext } from "./index";
 import { extractSummary } from "../../lib/utils/summaryHelper";
-import { RiQuillPenFill } from "react-icons/ri";
-import PulseLoader from "react-spinners/PulseLoader";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
+import { Loader2, PenLine } from "lucide-react";
+
+import { Skeleton } from "../../components/ui/skeleton";
 import type { Article } from '../../types';
 
 type ArticlePageParam = { lastDoc: Article } | undefined;
@@ -77,7 +76,7 @@ export default function ArticleContainer() {
           <p className="font-light text-white"> {new Date().toDateString()} </p>
         </div>
 
-        <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+        <div className="max-w-lg rounded-r-full bg-primary text-primary-foreground py-2 px-4 my-4">
           <p className="text-white text-xl font-light"> Write an Article </p>
         </div>
 
@@ -88,22 +87,24 @@ export default function ArticleContainer() {
       {/* <div className="h-48 w-full"> </div> */}
 
       <button
-        className="w-full bg-eggblue text-white flex justify-center items-center gap-2 py-3 px-2 hover:bg-pinegreen rounded-full transition-all"
+        className="w-full bg-primary text-primary-foreground flex justify-center items-center gap-2 py-3 px-2 hover:bg-primary/90 rounded-full transition-all"
         onClick={() => {
           setPage(1);
         }}
       >
-        <RiQuillPenFill className="text-white hover:animate-ping text-xl" />
+        <PenLine className="size-5" />
         Write an Article
       </button>
 
-      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4 mt-10 flex gap-4 items-end">
+      <div className="max-w-lg rounded-r-full bg-primary text-primary-foreground py-2 px-4 my-4 mt-10 flex gap-4 items-end">
         <p className="text-white text-xl font-light"> Article Management </p>
-        {(isFetching || isRefetching) && <PulseLoader color="white" />}
+        {(isFetching || isRefetching) && (
+          <Loader2 className="size-5 animate-spin text-primary" aria-label="Loading" />
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
-        {isLoading && <Skeleton height={200} />}
+        {isLoading && <Skeleton className="h-50 w-full" />}
 
         {data && !isRefetching && data.pages[articlePage].length === 0 && (
           <p className="text-white"> No more articles... </p>
@@ -113,10 +114,10 @@ export default function ArticleContainer() {
           data.pages[articlePage].map((article: Article) => (
             <div
               key={article.id}
-              className="w-full overflow-clip bg-timbergreen text-white font-light p-4 gap-3 rounded-md flex flex-col justify-between"
+              className="w-full overflow-clip bg-card text-card-foreground font-light p-4 gap-3 rounded-md flex flex-col justify-between"
             >
               <div className="w-full flex flex-wrap gap-3">
-                <div className="flex justify-center items-center h-full max-w-[400px] bg-riverbed">
+                <div className="flex justify-center items-center h-full max-w-100 bg-muted">
                   <Image
                     src={article.thumbnail?.downloadURL ?? "/upload.webp"}
                     alt={article.title + " thumbnail"}
@@ -127,14 +128,14 @@ export default function ArticleContainer() {
                 </div>
                 <div className={"flex-1 flex flex-col justify-between"}>
                   <div>
-                    <p className="text-base lg:text-lg text-cheeseyellow font-medium">
+                    <p className="text-base lg:text-lg text-foreground font-medium">
                       {article.title}{" "}
                     </p>
                     <p> {extractSummary(article.body).substring(0, 250)}...</p>
-                    <p className="text-xs text-red-500">
+                    <p className="text-xs text-destructive">
                       {article.heartsBy.length || "0"} Hearts{" "}
                     </p>
-                    <p className="text-xs text-cheeseyellow">
+                    <p className="text-xs text-foreground">
                       {" "}
                       {new Date(
                         ((article.createdAt as { seconds?: number } | null)?.seconds ?? 0) * 1000
@@ -144,7 +145,7 @@ export default function ArticleContainer() {
                   <div className="flex justify-between gap-2 ">
                     <button
                       disabled={isFetching}
-                      className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${
+                      className={`w-full py-2 bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground rounded-full transition-all ${
                         isFetching ? "animate-pulse" : ""
                       }`}
                       onClick={() => {
@@ -156,7 +157,7 @@ export default function ArticleContainer() {
                     </button>
                     <button
                       disabled={isFetching}
-                      className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${
+                      className={`w-full py-2 bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground rounded-full transition-all ${
                         isFetching ? "animate-pulse" : ""
                       }`}
                       onClick={() => {
@@ -168,7 +169,7 @@ export default function ArticleContainer() {
                     </button>
                     <button
                       disabled={isFetching}
-                      className={`w-full py-2 bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${
+                      className={`w-full py-2 bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground rounded-full transition-all ${
                         isFetching ? "animate-pulse" : ""
                       }`}
                       onClick={() => {
@@ -186,7 +187,7 @@ export default function ArticleContainer() {
 
       <div className="w-full flex justify-end gap-2 mt-6">
         <button
-          className="bg-red-400 text-white py-3 px-10 rounded-full disabled:bg-riverbed"
+          className="bg-destructive text-destructive-foreground py-3 px-10 rounded-full disabled:bg-muted disabled:text-muted-foreground"
           disabled={articlePage === 0 ? true : false}
           onClick={onClickPrevPage}
         >
@@ -194,7 +195,7 @@ export default function ArticleContainer() {
         </button>
 
         <button
-          className="bg-blue-400 text-white py-3 px-10 rounded-full disabled:bg-riverbed"
+          className="bg-primary text-primary-foreground py-3 px-10 rounded-full disabled:bg-muted disabled:text-muted-foreground"
           disabled={data && data.pages[articlePage].length < 2 ? true : false}
           onClick={onClickNextPage}
         >

@@ -43,10 +43,13 @@ const config = [
   },
   ...next,
 
-  // The design system is enforced where the design system lives. `containers/`
-  // is the logged-in admin area; it joins in phase 4.
+  // The design system is enforced everywhere the design system is consumed.
   {
-    files: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
+    files: [
+      "app/**/*.{ts,tsx}",
+      "components/**/*.{ts,tsx}",
+      "containers/**/*.{ts,tsx}"
+    ],
     ...designSystem,
     rules: {
       // Colour may only come from a declared token. Catches `bg-gray-100`,
