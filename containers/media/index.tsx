@@ -69,15 +69,15 @@ export default function MediaContainer(){
         <p className='font-light text-white'> {new Date().toDateString()} </p>
       </div>
 
-      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+      <div className="max-w-lg rounded-r-full bg-primary text-primary-foreground py-2 px-4 my-4">
         <p className="text-white text-xl font-light"> Media Center </p>
       </div>      
 
       <div className='w-full flex flex-wrap gap-2 justify-center lg:justify-start'>
       { medias && medias.map((m) => {
-        return <div key={m.uid} className={`text-xs text-white font-light w-[250px] p-4 flex 
+        return <div key={m.uid} className={`text-xs text-white font-light w-62.5 p-4 flex 
                     flex-col items-center rounded-2xl overflow-clip  shadow-lg
-                    bg-timbergreen gap-2`}>
+                    bg-card gap-2`}>
                  <Image alt={m.name ?? ""} src={m.downloadURL} width={200} height={200} className="object-cover"/>
 
 		 <div className='w-full flex flex-col justify-start'>
@@ -86,23 +86,23 @@ export default function MediaContainer(){
       		   <p> Content Type: { m.contentType }</p>
                  </div>
       		 <a className='w-full' href={m.downloadURL}>
-                   <button className='w-full py-2 bg-pinegreen hover:bg-greenpea rounded-full transition-all'> Download </button>
+                   <button className='w-full py-2 bg-primary hover:bg-primary/90 rounded-full transition-all'> Download </button>
                  </a>
                    
-      		 <button className='w-full py-2 bg-pinegreen hover:bg-greenpea rounded-full transition-all' onClick={() => {onDelete(m); }}> Delete </button>
+      		 <button className='w-full py-2 bg-primary hover:bg-primary/90 rounded-full transition-all' onClick={() => {onDelete(m); }}> Delete </button>
                </div>;
       })}
       </div>
 
 
-      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+      <div className="max-w-lg rounded-r-full bg-primary text-primary-foreground py-2 px-4 my-4">
         <p className="text-white text-xl font-light"> Upload New File </p>
       </div>            
 
 
       <FileUploader setFile={setFile} file={file}/>
       <button onClick={onUpload}
-              className={`text-white bg-eggblue hover:bg-greenpea disabled:bg-riverbed  
+              className={`text-primary-foreground bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground  
                           w-full py-4 mt-5 rounded-full shadow-md transition-all 
                           ${addMutation.isPending ? 'animate-pulse' : ''}`}
               disabled={addMutation.isPending || !file}> Upload </button>

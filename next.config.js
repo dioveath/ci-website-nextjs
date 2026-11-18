@@ -27,7 +27,9 @@ const nextConfig = {
       { protocol: "https", hostname: "images.saymedia-content.com" },
       { protocol: "https", hostname: "firebasestorage.googleapis.com" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
-      { protocol: "https", hostname: "cdn.sanity.io" }
+      { protocol: "https", hostname: "cdn.sanity.io" },
+      // Video thumbnails for the click-to-load YouTube facade.
+      { protocol: "https", hostname: "i.ytimg.com" }
     ]
   },
   env: {

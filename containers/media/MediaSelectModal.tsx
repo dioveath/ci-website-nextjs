@@ -44,17 +44,17 @@ export default function MediaSelectModal(
   if(!isLoggedIn){ return <p> Redirect here! </p>; }    
 
   return (
-    <div className={'bg-timbergreen'}>
+    <div className={'bg-card'}>
       <div className='p-4 flex justify-between items-center'>
         <p className='text-white font-light'> Please select one of the media </p>
-        <button className='bg-red-400 text-white px-4 py-2 rounded-2xl' onClick={onClose}> Close </button>        
+        <button className='bg-destructive text-destructive-foreground px-4 py-2 rounded-2xl' onClick={onClose}> Close </button>        
       </div>
       <div className='flex flex-wrap gap-4 p-4'>
         { isLoading && <p> Loading... </p> }
         { isFetching && <p> Fetching... </p> }
         { medias && medias.map((m) => {
           return <div key={m.uid}
-                      className='text-xs text-white border-2 border-transparent hover:border-cheeseyellow transition-all'
+                      className='text-xs text-white border-2 border-transparent hover:border-ring transition-all'
                       onClick={() => {
                         setSelect && setSelect(m);
                         onClose();
@@ -68,10 +68,18 @@ export default function MediaSelectModal(
         { newFile && <Image src={URL.createObjectURL(newFile)} alt="upload image" width={200} height={200} className="object-contain"/>}
 	<input name="New File" type="file" accept='image/*' onChange={(e) => setNewFile(e.target.files?.[0] ?? null)}/>
         
-	<div className='w-full bg-riverbed rounded-full overflow-clip'>
-          <div className={`relative h-4 bg-mint transition-all`} style={{width: `${fileProgress}%`}}></div>
+	<div className='w-full bg-muted rounded-full overflow-clip'>
+          <div
+            role="progressbar"
+            aria-valuenow={fileProgress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Upload progress"
+            className="relative h-4 w-(--upload-progress) bg-primary transition-all"
+            style={{ '--upload-progress': `${fileProgress}%` } as React.CSSProperties}
+          />
         </div>
-	<button className='bg-eggblue py-2 text-white font-light rounded-full' onClick={() => {
+	<button className='bg-primary py-2 text-primary-foreground font-light rounded-full' onClick={() => {
           if(!newFile) {
             console.log('Select a file!');
             return;            

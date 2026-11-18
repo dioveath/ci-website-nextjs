@@ -8,7 +8,7 @@ import { ArticleService } from "../../lib/service/ArticleService";
 import queryClient from "../../lib/queryclient";
 import ArticleRenderer from "../../components/ArticleRenderer";
 
-import { IoIosArrowBack } from "react-icons/io";
+import { ChevronLeft } from "lucide-react";
 import type { Article } from '../../types';
 
 export default function ArticleManagementContainer() {
@@ -64,7 +64,7 @@ export default function ArticleManagementContainer() {
         <p className="font-light text-white"> {new Date().toDateString()} </p>
       </div>
 
-      <div className="max-w-lg rounded-r-full bg-eggblue py-2 px-4 my-4">
+      <div className="max-w-lg rounded-r-full bg-primary text-primary-foreground py-2 px-4 my-4">
         <p className="text-white text-xl font-light"> Article Management </p>
       </div>
 
@@ -84,7 +84,7 @@ export default function ArticleManagementContainer() {
                 setViewArticle(null);
               }}
             >
-              <IoIosArrowBack className="text-4xl" /> Back
+              <ChevronLeft className="size-6" /> Back
             </button>
             <ArticleRenderer data={viewArticle.body} />
           </div>
@@ -94,23 +94,23 @@ export default function ArticleManagementContainer() {
           <table className=''>
             <tr>
               {Columns.map((column) => (
-                <th key={column.accessor} className='text-left border-2 px-4 py-2 bg-riverbed'> {column.Header} </th>
+                <th key={column.accessor} className='text-left border-2 px-4 py-2 bg-muted'> {column.Header} </th>
               ))}
             </tr>
             {data &&
               data.map((article) => (
-                <tr key={article.id} className='bg-timbergreen'>
+                <tr key={article.id} className='bg-card'>
                   <td className='border-2 px-4'> {article.id} </td>
                   <td className="w-96 border-2 px-4"> {article.title} </td>
                   <td className='border-2 px-4'>
-		    <p className={`px-2 py-1 bg-blue-500 rounded-full text-center ${article.state == 'pending' ? 'bg-blue-500' : 'bg-green-500'}`}>
+		    <p className={`px-2 py-1 rounded-full text-center ${article.state == 'pending' ? 'bg-highlight text-highlight-foreground' : 'bg-primary text-primary-foreground'}`}>
                       {article.state.toUpperCase()}
                     </p>
                   </td>
 
                   <td className='flex h-full items-center py-2 border-2 px-4 gap-2'>
                     <button
-                      className={`w-full py-1 px-2 text-xs bg-eggblue hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${
+                      className={`w-full py-1 px-2 text-xs bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground rounded-full transition-all ${
                         isFetching ? "animate-pulse" : ""
                       }`}
                       onClick={() => {
@@ -123,7 +123,7 @@ export default function ArticleManagementContainer() {
                       { article.state == 'pending' ? 'Publish' : 'Unpublish'}
                     </button>
                     <button
-                      className={`w-full py-1 px-2 text-xs bg-pinegreen hover:bg-greenpea disabled:bg-riverbed rounded-full transition-all ${
+                      className={`w-full py-1 px-2 text-xs bg-primary hover:bg-primary/90 disabled:bg-muted disabled:text-muted-foreground rounded-full transition-all ${
                         isFetching ? "animate-pulse" : ""
                       }`}
                       onClick={() => {

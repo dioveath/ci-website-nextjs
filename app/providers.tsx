@@ -2,9 +2,14 @@
 
 import type { ReactNode } from 'react';
 import { AuthProvider } from '../lib/hooks/Auth';
+import ThemeProvider from '../components/theme/ThemeProvider';
 
-// The auth context is client state, so it cannot live in the server root
+// Auth and theme are both client state, so they cannot live in the server root
 // layout directly. This is the boundary between the two.
 export default function Providers({ children }: { children: ReactNode }) {
-  return <AuthProvider>{children}</AuthProvider>;
+  return (
+    <ThemeProvider>
+      <AuthProvider>{children}</AuthProvider>
+    </ThemeProvider>
+  );
 }

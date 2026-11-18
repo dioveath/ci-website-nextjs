@@ -1,66 +1,120 @@
 'use client';
 
-import Image from 'next/image';
-import styles from './footer.module.css';
-import FooterLinkItem from './FooterLinkItem';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Mail, MapPin, Phone } from 'lucide-react';
 
-import { BsPhoneFill } from 'react-icons/bs';
-import { MdEmail, MdLocationOn } from 'react-icons/md';
-
+import Logo from '../brand/Logo';
+import Container from '../layout/Container';
+import { Separator } from '../ui/separator';
+import { cn } from '../../lib/utils';
 import { useSiteSettings } from '../../lib/sanity/useSiteSettings';
 
-export default function Footer ({ path }: { path?: string }){
+function FooterLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? 'page' : undefined}
+      className={cn(
+        'text-sm transition-colors hover:text-foreground',
+        active ? 'text-foreground' : 'text-muted-foreground'
+      )}
+    >
+      {label}
+    </Link>
+  );
+}
+
+function LinkColumn({
+  title,
+  children
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      <h2 className="text-sm font-semibold tracking-wide text-foreground uppercase">
+        {title}
+      </h2>
+      {children}
+    </div>
+  );
+}
+
+export default function Footer() {
+  const pathname = usePathname() ?? '/';
   const settings = useSiteSettings();
-  const contact = settings.contact || {};
+  const contact = settings.contact ?? {};
 
-  return (<div className='bg-slategray'>
-            <footer className={''}>
-              <div className={'flex flex-wrap justify-between gap-2 px-8 md:px-10 xl:px-20 2xl:px-48 py-10'}>
+  const details = [
+    { Icon: Phone, value: contact.phone, href: contact.phone ? `tel:${contact.phone.replace(/\s/g, '')}` : undefined },
+    { Icon: Mail, value: contact.email, href: contact.email ? `mailto:${contact.email}` : undefined },
+    { Icon: MapPin, value: contact.address, href: undefined }
+  ].filter((d) => Boolean(d.value));
 
-                <div className={'max-w-sm'}>
-                  <Image src="/ci_logo_light_blue.png" alt="Charicha Institute Logo" width={150} height={50}/>
-                  <p className={'text-sm text-white font-light'}>{settings.footerDescription}</p>
-                </div>
-
-                <div className={'max-w-xs flex flex-col'}>
-                  <h3 className='text-white uppercase mb-2'> Menu </h3>
-                  <ul className={'flex flex-col gap-2'}>
-                    {(settings.footerLinks || []).map((link) => (
-                      <li key={link.href + link.label}>
-                        <FooterLinkItem label={link.label} to={link.href} path={path}/>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className={'max-w-xs flex flex-col'}>
-                  <h3 className='text-white uppercase mb-2'>Partner Links</h3>
-                  <ul className={'flex flex-col gap-2'}>
-                    {(settings.partners || []).map((partner) => (
-                      <li key={partner.href + partner.label}>
-                        <a className='text-white hover:text-aquamarine' href={partner.href}>{partner.label}</a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className={'flex flex-col gap-2'}>
-                  <h3 className='text-white uppercase'> Contact Us </h3>
-                  <div className={'flex items-center gap-2 text-white'}>
-                    <BsPhoneFill color="greenyellow"/> {contact.phone}
-                  </div>
-                  <div className={'flex items-center gap-2 text-white'}>
-                    <MdEmail color="#39A1FF"/> {contact.email}
-                  </div>
-                  <div className={'flex items-center gap-2 text-white'}>
-                    <MdLocationOn color="red"/> {contact.address}
-                  </div>
-                </div>
-              </div>
-
-            </footer>
-            <div className={styles.copyright}>
-              <p>{settings.copyright}</p>
-            </div>
+  return (
+    <footer className="border-t bg-muted text-foreground">
+      <Container className="py-14">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+          <div className="flex max-w-sm flex-col gap-4">
+            <Logo className="h-9" />
+            <p className="text-sm text-muted-foreground">{settings.footerDescription}</p>
           </div>
-         );
+
+          <LinkColumn title="Menu">
+            <ul className="flex flex-col gap-2">
+              {(settings.footerLinks ?? []).map((link) => (
+                <li key={link.href + link.label}>
+                  <FooterLink
+                    href={link.href}
+                    label={link.label}
+                    active={link.href === '/' ? pathname === '/' : pathname.startsWith(link.href)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </LinkColumn>
+
+          <LinkColumn title="Partners">
+            <ul className="flex flex-col gap-2">
+              {(settings.partners ?? []).map((partner) => (
+                <li key={partner.href + partner.label}>
+                  <a
+                    href={partner.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    {partner.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </LinkColumn>
+
+          <LinkColumn title="Contact">
+            <ul className="flex flex-col gap-3">
+              {details.map(({ Icon, value, href }) => (
+                <li key={value} className="flex items-start gap-2 text-sm text-muted-foreground">
+                  <Icon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
+                  {href ? (
+                    <a href={href} className="transition-colors hover:text-foreground">
+                      {value}
+                    </a>
+                  ) : (
+                    <span>{value}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </LinkColumn>
+        </div>
+
+        <Separator className="my-8" />
+
+        <p className="text-sm text-muted-foreground">{settings.copyright}</p>
+      </Container>
+    </footer>
+  );
 }

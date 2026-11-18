@@ -1,56 +1,57 @@
-'use client';
-
+import Image from 'next/image';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
 import type { PortableTextBlock } from '@portabletext/types';
+
 import { urlFor } from '../../lib/sanity/image';
 
-// Renders the Portable Text body of a Sanity blog post. Mirrors the dark theme
-// used by the Firebase article renderer. Embedded images go through urlFor().
+/*
+ * Renders the Portable Text body of a Sanity post.
+ *
+ * Typography comes from @tailwindcss/typography, the same as the Firebase
+ * article renderer, so both sources read identically and both follow the
+ * theme. Previously every heading here was hardcoded amber and the body white,
+ * which only worked because the page behind it was always dark.
+ */
 const components: PortableTextComponents = {
   types: {
     image: ({ value }) => {
       const src = urlFor(value);
       if (!src) return null;
+
       return (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={src}
           alt={value?.alt || ''}
-          style={{ maxWidth: '100%', borderRadius: '12px', margin: '1rem 0' }}
+          width={1200}
+          height={675}
+          sizes="(max-width: 768px) 100vw, 768px"
+          className="h-auto w-full rounded-xl"
         />
       );
-    },
-  },
-  block: {
-    h1: ({ children }) => <h1 className="text-3xl font-bold my-4 text-cheeseyellow">{children}</h1>,
-    h2: ({ children }) => <h2 className="text-2xl font-bold my-3 text-cheeseyellow">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-xl font-semibold my-2 text-cheeseyellow">{children}</h3>,
-    blockquote: ({ children }) => (
-      <blockquote className="border-l-4 border-cheeseyellow pl-4 my-4 italic text-white/80">
-        {children}
-      </blockquote>
-    ),
-    normal: ({ children }) => <p className="my-3 leading-relaxed">{children}</p>,
-  },
-  list: {
-    bullet: ({ children }) => <ul className="list-disc ml-6 my-3">{children}</ul>,
-    number: ({ children }) => <ol className="list-decimal ml-6 my-3">{children}</ol>,
+    }
   },
   marks: {
-    link: ({ children, value }) => (
-      <a
-        href={value?.href}
-        rel="noopener noreferrer"
-        target="_blank"
-        className="text-aquamarine underline"
-      >
-        {children}
-      </a>
-    ),
-  },
+    link: ({ children, value }) => {
+      // Only outbound links get the new-tab treatment and rel hardening.
+      const external = /^https?:\/\//.test(value?.href ?? '');
+      return (
+        <a
+          href={value?.href}
+          {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {children}
+        </a>
+      );
+    }
+  }
 };
 
 export default function PortableBody({ value }: { value?: PortableTextBlock[] | null }) {
   if (!value) return null;
-  return <PortableText value={value} components={components} />;
+
+  return (
+    <div className="prose max-w-none dark:prose-invert">
+      <PortableText value={value} components={components} />
+    </div>
+  );
 }

@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import ArticleRenderer from '../../components/ArticleRenderer';
 
 import { pageContext } from './index';
-import { IoIosArrowBack } from 'react-icons/io';
+import { ChevronLeft } from 'lucide-react';
 import type { Article } from '../../types';
 
 export default function ViewArticleContainer({ article }: { article: Article }){
@@ -16,7 +16,7 @@ export default function ViewArticleContainer({ article }: { article: Article }){
         setPage(0);
         setArticle(null);
       }}>
-        <IoIosArrowBack className='text-4xl'/> Back
+        <ChevronLeft className='size-6'/> Back
       </button>     
       <ArticleRenderer data={article.body}/>
     </div>

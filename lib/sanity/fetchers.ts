@@ -1,4 +1,5 @@
 import { sanityClient } from './client';
+import { mergeDefined } from './merge';
 import {
   coursesQuery,
   courseByIdQuery,
@@ -67,25 +68,16 @@ export async function getCourseIds() {
   }
 }
 
-// Singletons: shallow-merge the fallback under the fetched doc so a partially
-// filled document never drops a field the UI expects. A GROQ projection returns
-// missing attributes as explicit `null`, so we skip null/undefined values and
-// let the fallback fill those gaps (otherwise an unset field would blank the UI).
-function mergeDefined<T extends object>(fallback: T, data: Record<string, unknown>): T {
-  const merged: Record<string, unknown> = { ...(fallback as Record<string, unknown>) };
-  for (const [key, value] of Object.entries(data)) {
-    if (value !== null && value !== undefined) merged[key] = value;
-  }
-  return merged as T;
-}
-
+// Singletons: a partially filled document never drops a field the UI expects,
+// because mergeDefined lets the fallback fill whatever the CMS left unset.
+// The client hooks in useSanitySingleton.ts share that helper.
 async function fetchSingleton<T extends object>(
   query: string, fallback: T, label: string
 ): Promise<T> {
   if (!sanityClient) return fallback;
   try {
     const data = await sanityClient.fetch(query);
-    return data ? mergeDefined(fallback, data as Record<string, unknown>) : fallback;
+    return mergeDefined(fallback, data as Record<string, unknown> | null);
   } catch (err) {
      
     console.warn(`[sanity] ${label} failed, using fallback:`, messageOf(err));

@@ -15,6 +15,7 @@ import story from './objects/story';
 import appPromo from './objects/appPromo';
 import contactInfo from './objects/contactInfo';
 import navLink from './objects/navLink';
+import stat from './objects/stat';
 
 export const schemaTypes = [
   // documents
@@ -32,4 +33,5 @@ export const schemaTypes = [
   appPromo,
   contactInfo,
   navLink,
+  stat,
 ];

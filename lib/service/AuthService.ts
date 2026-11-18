@@ -1,12 +1,20 @@
-import { firebaseApp } from "../firebase";
+import { firebaseAuth } from "../firebase";
 import {
-  getAuth,
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
 
-const auth = getAuth(firebaseApp);
+/** Every entry point needs a configured Auth; this is where that is checked. */
+function requireAuth() {
+  const auth = firebaseAuth();
+  if (!auth) {
+    throw new Error(
+      'Firebase is not configured. Set the FIREBASE_* environment variables to enable sign-in.'
+    );
+  }
+  return auth;
+}
 
 const AuthService = {
   loginWithGoogle: async () => {
@@ -16,7 +24,7 @@ const AuthService = {
       prompt: "select_account",
     });
 
-    const result = await signInWithPopup(auth, provider);
+    const result = await signInWithPopup(requireAuth(), provider);
     const user = result.user;
 
     return {
@@ -25,7 +33,7 @@ const AuthService = {
   },
 
   logout: async () => {
-    await signOut(auth);
+    await signOut(requireAuth());
   },
 };
 
