@@ -1,52 +1,15 @@
 'use client';
 
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import useAuth from '@/lib/auth';
-import useIsClient from "../../lib/hooks/useIsClient";
+import DashboardShell, { GoTo, Logout, type DashboardPage } from '../../components/DashboardShell';
+import MediaContainer from '../../containers/media';
+import ArticleContainer from '../../containers/article';
 
-import queryClient from '@/lib/queryClient';
-import { QueryClientProvider } from "@tanstack/react-query";
-
-import { useMediaQuery } from "react-responsive";
-import { SCREENS } from "../../lib/utils/Responsive";
-import styles from "../../styles/dashboard/index.module.css";
-import "react-loading-skeleton/dist/skeleton.css";
-import LoadingScreen from "../../components/LoadingScreen/index";
-import SideMenu from "../../components/SideMenu/index";
-
-import MediaContainer from "../../containers/media";
-import ArticleContainer from "../../containers/article";
-
-import { IoIosSettings, IoIosConstruct } from "react-icons/io";
-import { TfiStatsUp } from "react-icons/tfi";
-import { GiBookshelf } from "react-icons/gi";
-import { RiArticleLine, RiLogoutCircleRLine } from "react-icons/ri";
-import { VscFileMedia } from "react-icons/vsc";
-import { MdAdminPanelSettings } from "react-icons/md";
-
-const Logout = () => {
-  const { logout } = useAuth();
-  useEffect(() => {
-    logout();
-  }, [logout]);
-  return <LoadingScreen />;
-};
-
-const ToAdmin = () => {
-  const router = useRouter();
-  useEffect(() => {
-    router.push("/admin");
-  }, [router]);
-
-  return <LoadingScreen />;
-};
-
-const AdminDashboard = {
-  label: "Admin Dashboard",
-  icon: <MdAdminPanelSettings />,
-  element: <ToAdmin />,
-};
+import { IoIosSettings, IoIosConstruct } from 'react-icons/io';
+import { TfiStatsUp } from 'react-icons/tfi';
+import { GiBookshelf } from 'react-icons/gi';
+import { RiArticleLine, RiLogoutCircleRLine } from 'react-icons/ri';
+import { VscFileMedia } from 'react-icons/vsc';
+import { MdAdminPanelSettings } from 'react-icons/md';
 
 const UnderConstruction = ({ pageName }: { pageName: string }) => {
   return <div className='flex flex-col w-full justify-center items-center'>
@@ -57,78 +20,16 @@ const UnderConstruction = ({ pageName }: { pageName: string }) => {
          </div>;
 };
 
+const PAGES: DashboardPage[] = [
+  { label: 'Performance', icon: <TfiStatsUp/>, element: <UnderConstruction pageName={'Performance'}/> },
+  { label: 'Courses', icon: <GiBookshelf/>, element: <UnderConstruction pageName={'Courses'}/> },
+  { label: 'Articles', icon: <RiArticleLine/>, element: <ArticleContainer/> },
+  { label: 'Resources', icon: <VscFileMedia/>, element: <MediaContainer/> },
+  { label: 'Settings', icon: <IoIosSettings/>, element: <UnderConstruction pageName={'Settings'}/> },
+  { label: 'Logout', icon: <RiLogoutCircleRLine/>, element: <Logout/> },
+  { label: 'Admin Dashboard', icon: <MdAdminPanelSettings/>, element: <GoTo href='/admin'/>, managerOnly: true },
+];
+
 export default function DashboardContent() {
-  const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
-  const { userData, isLoggedIn, loading } = useAuth();
-  const [page, setPage] = useState(0);
-  const [sideOpen, setSideOpen] = useState(isDesktop);
-  const isClient = useIsClient();
-  const router = useRouter();
-
-  const ready = isClient && !loading;
-  const redirectTo = ready && !isLoggedIn ? "/" : null;
-
-  // Navigation is a side effect, so it runs after render rather than during it.
-  useEffect(() => {
-    if (redirectTo) router.push(redirectTo);
-  }, [redirectTo, router]);
-
-  if (!ready || redirectTo) return <LoadingScreen />;
-
-  const PAGES = [
-    {
-      label: "Performance",
-      icon: <TfiStatsUp />,
-      element: <UnderConstruction pageName={'Performance'}/>
-    },
-    {
-      label: "Courses",
-      icon: <GiBookshelf />,
-      element: <UnderConstruction pageName={'Courses'}/>
-    },
-    {
-      label: "Articles",
-      icon: <RiArticleLine />,
-      element: <ArticleContainer />,
-    },
-    {
-      label: "Resources",
-      icon: <VscFileMedia />,
-      element: <MediaContainer />,
-    },
-    {
-      label: "Settings",
-      icon: <IoIosSettings />,
-      element: <UnderConstruction pageName={'Settings'}/>
-    },
-    {
-      label: "Logout",
-      icon: <RiLogoutCircleRLine />,
-      element: <Logout />,
-    },
-  ];
-
-  if(userData?.roles?.manager) PAGES.push(AdminDashboard);
-
-  return (
-    <div className={styles.container}>
-
-      <QueryClientProvider client={queryClient}>
-        <main className="bg-slategray">
-          <div className="flex">
-            <SideMenu
-              pages={PAGES}
-              currentPage={page}
-              setPage={setPage}
-              isOpen={sideOpen}
-              setSideOpen={setSideOpen}
-            />
-            <div className="w-full h-screen overflow-y-scroll pb-96 px-0 md:px-4">
-              {PAGES[page].element}
-            </div>
-          </div>
-        </main>
-      </QueryClientProvider>
-    </div>
-  );
+  return <DashboardShell pages={PAGES}/>;
 }

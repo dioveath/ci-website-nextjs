@@ -18,40 +18,12 @@ import ParticlesBackground from '../../components/ParticlesBackground';
 import type { Course } from '../../types';
 
 
-const AllCourses = ({ courses }: { courses: Course[] }) => {
-  return (
-    <div className={styles.levelCoursesContainer}>
-      { courses.map((course: Course) => {
-        return <CourseCard key={"all" + course.id} course={course}/>;
-      })}
-    </div>
-  );
-};
+const LEVELS = [null, 'Beginner', 'Intermediate', 'Advance'] as const;
 
-const BeginnerCourses = ({ courses }: { courses: Course[] }) => {
+const CourseGrid = ({ courses, level }: { courses: Course[]; level: string | null }) => {
   return (
     <div className={styles.levelCoursesContainer}>
-      { courses.filter((course: Course) => course.level === "Beginner").map((course: Course) => {
-        return <CourseCard key={course.id} course={course}/>;
-      })}
-    </div>
-  );
-};
-
-const IntermediateCourses = ({ courses }: { courses: Course[] }) => {
-  return (
-    <div className={styles.levelCoursesContainer}>
-      { courses.filter((course: Course) => course.level === "Intermediate").map((course: Course) => {
-        return <CourseCard key={course.id} course={course}/>;
-      })}
-    </div>
-  );
-};
-
-const AdvanceCourses = ({ courses }: { courses: Course[] }) => {
-  return (
-    <div className={styles.levelCoursesContainer}>
-      { courses.filter((course: Course) => course.level === "Advance").map((course: Course) => {
+      { courses.filter((course) => !level || course.level === level).map((course) => {
         return <CourseCard key={course.id} course={course}/>;
       })}
     </div>
@@ -86,37 +58,14 @@ export default function CoursesContent({ courses = coursesFallback }: { courses?
             <FiSearch className='text-2xl text-gray-100 hover:text-aquamarine cursor-pointer'/>
           </div>
           <ul className={styles.tabItems}>
-            <li className={currentTabIndex == 0 ? styles.tabItemActive : styles.tabItem}
-                onClick={
-                  () => {
+            {LEVELS.map((level, index) => (
+              <li key={level ?? 'all'}
+                  className={currentTabIndex == index ? styles.tabItemActive : styles.tabItem}
+                  onClick={() => {
                     setPreviousIndex(currentTabIndex);
-                    setCurrentTabIndex(0);
-                  }
-                }> All </li>
-            <li className={currentTabIndex == 1 ? styles.tabItemActive : styles.tabItem}
-                onClick={
-                  () => {
-                    setPreviousIndex(currentTabIndex);                    
-                    setCurrentTabIndex(1);
-                  }
-                }
-            > Beginner </li>
-            <li className={currentTabIndex == 2 ? styles.tabItemActive : styles.tabItem}
-                onClick={
-                  () => {
-                    setPreviousIndex(currentTabIndex);                                        
-                    setCurrentTabIndex(2);
-                  }
-                }
-            > Intermediate </li>
-            <li className={currentTabIndex == 3 ? styles.tabItemActive : styles.tabItem}
-                onClick={
-                  () => {
-                    setPreviousIndex(currentTabIndex);                                                            
-                    setCurrentTabIndex(3);
-                  }
-                }
-            > Advance </li>            
+                    setCurrentTabIndex(index);
+                  }}> {level ?? 'All'} </li>
+            ))}
           </ul>
           <div className={styles.extras}>
 
@@ -128,18 +77,10 @@ export default function CoursesContent({ courses = coursesFallback }: { courses?
               }
               itemList={
                 [
-                  {
-                    name: "A-z",
-                    onClick: () => { console.log("A-z"); }
-                  },
-                  {
-                    name: "Lessons",
-                    onClick: () => { console.log("Lessons"); }
-                  },
-                  {
-                    name: "Time",
-                    onClick: () => { console.log("Time"); }
-                  }
+                  // Sorting is not implemented yet.
+                  { name: "A-z", onClick: () => {} },
+                  { name: "Lessons", onClick: () => {} },
+                  { name: "Time", onClick: () => {} }
                 ]
               }
             />
@@ -150,28 +91,13 @@ export default function CoursesContent({ courses = coursesFallback }: { courses?
         <Marginer vertical="40px"/>
 
         <div className={styles.tabContentsContainer}>
-          <div className={
-            `${styles.tabContent} ${currentTabIndex == 0 && (previousIndex > currentTabIndex ? styles.tabActiveLeftToRight : styles.tabActiveRightToLeft)}`
-          }>
-            <AllCourses courses={courses}/>
-          </div>
-
-          <div className={
-            `${styles.tabContent} ${currentTabIndex == 1 && (previousIndex > currentTabIndex ? styles.tabActiveLeftToRight : styles.tabActiveRightToLeft)}`
-          }>
-            <BeginnerCourses courses={courses}/>
-          </div>
-
-          <div className={
-            `${styles.tabContent} ${currentTabIndex == 2 && (previousIndex > currentTabIndex ? styles.tabActiveLeftToRight : styles.tabActiveRightToLeft)}`
-          }>
-            <IntermediateCourses courses={courses}/>
-          </div>
-          <div className={
-            `${styles.tabContent} ${currentTabIndex == 3 && (previousIndex > currentTabIndex ? styles.tabActiveLeftToRight : styles.tabActiveRightToLeft)}`
-          }>
-            <AdvanceCourses courses={courses}/>
-          </div>
+          {LEVELS.map((level, index) => (
+            <div key={level ?? 'all'} className={
+              `${styles.tabContent} ${currentTabIndex == index && (previousIndex > currentTabIndex ? styles.tabActiveLeftToRight : styles.tabActiveRightToLeft)}`
+            }>
+              <CourseGrid courses={courses} level={level}/>
+            </div>
+          ))}
         </div>
 
       </main>

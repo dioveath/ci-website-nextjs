@@ -20,10 +20,6 @@ interface SideMenuProps {
   pages: SideMenuPage[];
   setPage: (index: number) => void;
   currentPage: number;
-  /* Passed by /admin and /dashboard but currently unread: the open state lives
-     in this component. Declared so the call sites type-check as written. */
-  isOpen?: boolean;
-  setSideOpen?: (open: boolean) => void;
 }
 
 export default function SideMenu({ pages, setPage, currentPage }: SideMenuProps){
