@@ -64,12 +64,13 @@ export default function Hero({
       {stats.length ? (
         <dl className="mt-16 grid grid-cols-2 gap-6 border-t border-on-brand/20 pt-10 md:grid-cols-4">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col gap-1">
-              <dt className="sr-only">{stat.label}</dt>
+            // flex-col-reverse: the term has to precede the definition in the
+            // DOM, while the figure reads better above its label.
+            <div key={stat.label} className="flex flex-col-reverse gap-1">
+              <dt className="text-sm text-on-brand-muted">{stat.label}</dt>
               <dd className="text-3xl font-semibold text-on-brand md:text-4xl">
                 {stat.value}
               </dd>
-              <p className="text-sm text-on-brand-muted">{stat.label}</p>
             </div>
           ))}
         </dl>

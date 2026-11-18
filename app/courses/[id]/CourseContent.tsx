@@ -63,15 +63,19 @@ export default function CourseContent({ course }: { course: Course }) {
             ) : null}
 
             <dl className="flex flex-wrap gap-6 text-on-brand-muted">
-              <div className="flex items-center gap-2">
-                <Layers className="size-4" aria-hidden />
+              <div>
                 <dt className="sr-only">Lessons</dt>
-                <dd>{lessons.length} lessons</dd>
+                <dd className="flex items-center gap-2">
+                  <Layers className="size-4" aria-hidden />
+                  {lessons.length} lessons
+                </dd>
               </div>
-              <div className="flex items-center gap-2">
-                <CalendarDays className="size-4" aria-hidden />
+              <div>
                 <dt className="sr-only">Duration</dt>
-                <dd>{durationLabel(course.time)}</dd>
+                <dd className="flex items-center gap-2">
+                  <CalendarDays className="size-4" aria-hidden />
+                  {durationLabel(course.time)}
+                </dd>
               </div>
             </dl>
 

@@ -16,7 +16,7 @@ export default function TestimonialCard({
   return (
     <Card className="h-full">
       <CardContent className="h-full">
-        <div className="flex h-full flex-col gap-5">
+        <figure className="flex h-full flex-col gap-5">
         <blockquote className="flex-1 text-base text-card-foreground">
           &ldquo;{content}&rdquo;
         </blockquote>
@@ -33,7 +33,7 @@ export default function TestimonialCard({
             {role ? <span className="text-xs text-muted-foreground">{role}</span> : null}
           </span>
         </figcaption>
-        </div>
+        </figure>
       </CardContent>
     </Card>
   );
