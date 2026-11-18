@@ -5,7 +5,7 @@ export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> }
 ): Promise<Metadata> {
   const { id } = await params;
-  const article = await ArticleService.getArticle(id);
+  const article = await getArticle(id);
   const cmsPost = article ? null : await getBlogPostBySlug(id);
   const post = article ?? cmsPost;
 
@@ -53,12 +53,12 @@ import styles from './blogpage.module.css';
 import ArticleRenderer from '../../../components/ArticleRenderer';
 import PortableBody from '../../../components/blog/PortableBody';
 
-import { UserService } from '../../../lib/service/UserService';
-import { ArticleService } from '../../../lib/service/ArticleService';
 import { getBlogPostBySlug } from '../../../lib/sanity/fetchers';
 import { articleSummary } from '../../../lib/editor/serialize';
 import Footer from '../../../components/footer/Footer';
 import type { BlogListItem, UserData } from '../../../types';
+import { getUser } from '@/lib/users';
+import { getArticle } from '@/lib/articles';
 
 // Firebase user article: author comes from the Firebase user record.
 function FirebaseBlogPage({ blog: blogData, user: userData }: { blog: BlogListItem; user?: (Partial<UserData> & { joinedAt?: string | null }) | null }){
@@ -185,12 +185,11 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ id:
   const { id } = await params;
 
   // 1) Firebase user article, matched by document id.
-  const fbBlog = await ArticleService.getArticle(id);
+  const fbBlog = await getArticle(id);
   if (fbBlog) {
     // Older articles can lack writtenBy; doc() throws on an undefined path
     // segment, so skip the author lookup rather than crash the page.
-    const userRes = fbBlog.writtenBy ? await UserService.getUser(fbBlog.writtenBy) : null;
-    const user = userRes?.userData || null;
+    const user = fbBlog.writtenBy ? await getUser(fbBlog.writtenBy) : null;
 
     const { createdAt, ...serializableBlog } = fbBlog;
     const createdAtString = (createdAt as { toDate?: () => Date })?.toDate

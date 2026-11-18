@@ -2,8 +2,8 @@
 
 import { useQuery } from '@tanstack/react-query';
 
-import useAuth from '../../lib/hooks/Auth';
-import { UserService } from '../../lib/service/UserService';
+import useAuth from '@/lib/auth';
+import { listUsers } from '@/lib/users';
 
 export default function UserManagementContainer(){
   const { isLoggedIn } = useAuth();
@@ -11,7 +11,7 @@ export default function UserManagementContainer(){
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ['users'],
     queryFn: async() => {
-      const data = await UserService.listUsers();
+      const data = await listUsers();
       console.log(data);
       return data;
     },

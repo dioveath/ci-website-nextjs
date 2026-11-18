@@ -8,7 +8,7 @@ import { RxCross1 } from 'react-icons/rx';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-import useAuth from '../../lib/hooks/Auth';
+import useAuth from '@/lib/auth';
 
 export interface SideMenuPage {
   label: string;

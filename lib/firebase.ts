@@ -1,10 +1,19 @@
 import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./firebaseConfig";
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getStorage, connectStorageEmulator } from 'firebase/storage';
 
-const firebaseApp = initializeApp(firebaseConfig);
+// Injected at build time by the `env` block in next.config.js.
+const firebaseApp = initializeApp({
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
+});
+const firebaseAuth = getAuth(firebaseApp);
 const firebaseStore = getFirestore(firebaseApp);
 const firebaseStorage = getStorage(firebaseApp);
 
@@ -22,9 +31,9 @@ const globalForEmulators = globalThis as typeof globalThis & { __ciFirebaseEmula
 const connected = (globalForEmulators.__ciFirebaseEmulators ??= new WeakSet());
 if (process.env.FIREBASE_EMULATORS === '1' && !connected.has(firebaseStore)) {
   connected.add(firebaseStore);
-  connectAuthEmulator(getAuth(firebaseApp), 'http://127.0.0.1:9099', { disableWarnings: true });
+  connectAuthEmulator(firebaseAuth, 'http://127.0.0.1:9099', { disableWarnings: true });
   connectFirestoreEmulator(firebaseStore, '127.0.0.1', 8085);
   connectStorageEmulator(firebaseStorage, '127.0.0.1', 9199);
 }
 
-export { firebaseApp, firebaseStore, firebaseStorage };
+export { firebaseAuth, firebaseStore, firebaseStorage };

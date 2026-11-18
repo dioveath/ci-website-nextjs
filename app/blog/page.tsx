@@ -15,10 +15,10 @@ import styles from './blog.module.css';
 import BlogCard from '../../components/blog/BlogCard';
 
 import Footer from '../../components/footer/Footer';
-import { ArticleService } from '../../lib/service/ArticleService';
 import { getBlogPosts } from '../../lib/sanity/fetchers';
 import ParticlesBackground from '../../components/ParticlesBackground';
 import type { BlogListItem } from '../../types';
+import { listPublishedArticles } from '@/lib/articles';
 
 
 export default async function BlogPage(){
@@ -27,7 +27,7 @@ export default async function BlogPage(){
   // newest-first. Each source is normalised with a `source` discriminator and a
   // `sortTime` (ms epoch) so BlogCard can render the right shape.
   const [fbRes, cmsRes] = await Promise.all([
-    ArticleService.listPublishedArticles().catch(() => []),
+    listPublishedArticles().catch(() => []),
     getBlogPosts(),
   ]);
 

@@ -3,61 +3,21 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import { useMutation, useQuery } from "@tanstack/react-query";
-import queryClient from '../../lib/queryclient';
-
-import useAuth from '../../lib/hooks/Auth';
-import { UserService } from '../../lib/service/UserService';
-
 import FileUploader from '../../components/FileUploader';
 import type { Media } from '../../types';
+import useMedia from './useMedia';
 
 export default function MediaContainer(){
-  const { isLoggedIn, userData } = useAuth();
   const [file, setFile] = useState<File | null>(null);
-
-  const clearForm = () => setFile(null);
-
-  const { data: medias, isFetching, isLoading } = useQuery({
-    queryKey: ['medias'],
-    queryFn: async () => {
-      const data = await UserService.getUser(userData!.id);
-      return data.userData?.medias ?? [];
-    },
-    enabled: isLoggedIn,
-  });
-
-  const addMutation = useMutation({
-    mutationFn: (newMedia: File) => {
-      return UserService.addMedia(userData!.id, newMedia);
-    }, onSuccess: (_data) => {
-      queryClient.invalidateQueries({ queryKey: ['medias']});
-      clearForm();
-    }
-  });
-
-  const removeMutation = useMutation({
-    mutationFn: (media: Media) => {
-      return UserService.removeMedia(userData!.id, media);
-    },
-    onSuccess: (_data) => {
-      queryClient.invalidateQueries({queryKey: ['medias']});
-    }
-  });
+  const { medias, isFetching, isLoading, upload, remove } = useMedia();
 
   const onUpload = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    if(!file) {
-      console.log('Hey select some file!');
-      return;
-    }
-    addMutation.mutate(file);
+    if (!file) return;
+    upload.mutate({ file }, { onSuccess: () => setFile(null) });
   };
 
-  const onDelete = (m: Media) => {
-    removeMutation.mutate(m);
-  };
+  const onDelete = (m: Media) => remove.mutate(m);
 
   return (
     <div className=''>
@@ -104,8 +64,8 @@ export default function MediaContainer(){
       <button onClick={onUpload}
               className={`text-white bg-eggblue hover:bg-greenpea disabled:bg-riverbed  
                           w-full py-4 mt-5 rounded-full shadow-md transition-all 
-                          ${addMutation.isPending ? 'animate-pulse' : ''}`}
-              disabled={addMutation.isPending || !file}> Upload </button>
+                          ${upload.isPending ? 'animate-pulse' : ''}`}
+              disabled={upload.isPending || !file}> Upload </button>
     </div>
   );
   

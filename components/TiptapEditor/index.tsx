@@ -4,7 +4,6 @@ import { useCallback, useEffect, useImperativeHandle, type ReactNode, type RefOb
 import { useEditor, EditorContent, type Editor } from '@tiptap/react';
 
 import { editorExtensions } from '../../lib/editor/extensions';
-import { UserService } from '../../lib/service/UserService';
 import type { ArticleBody, Media, TiptapDoc } from '../../types';
 
 import {
@@ -13,6 +12,7 @@ import {
   RiCodeBoxLine, RiSeparator, RiLink, RiImageAddLine, RiTable2, RiArrowGoBackLine,
   RiArrowGoForwardLine
 } from 'react-icons/ri';
+import { addMedia } from '@/lib/users';
 
 interface ToolbarButtonProps {
   onClick: () => void;
@@ -116,7 +116,7 @@ export default function TiptapEditor({ data, images, innerRef, userId }: TiptapE
   const uploadImage = useCallback(async (file?: File) => {
     if (!file || !editor) return;
     try {
-      const media = await UserService.addMedia(userId, file);
+      const media = await addMedia(userId, file);
       images.push(media);
       editor.chain().focus().setImage({ src: media.downloadURL, alt: file.name }).run();
     } catch (err) {

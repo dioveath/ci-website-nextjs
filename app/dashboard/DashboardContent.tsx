@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import useAuth from "../../lib/hooks/Auth";
+import useAuth from '@/lib/auth';
 import useIsClient from "../../lib/hooks/useIsClient";
 
-import queryClient from "../../lib/queryclient";
+import queryClient from '@/lib/queryClient';
 import { QueryClientProvider } from "@tanstack/react-query";
 
 import { useMediaQuery } from "react-responsive";

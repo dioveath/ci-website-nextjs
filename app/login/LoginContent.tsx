@@ -9,7 +9,7 @@ import Marginer from '../../components/utils/Marginer';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
 import LoadingScreen from '../../components/LoadingScreen';
 
-import useAuth from '../../lib/hooks/Auth';
+import useAuth from '@/lib/auth';
 import { ImGoogle2 } from 'react-icons/im';
 
 import ParticlesBackground from '../../components/ParticlesBackground';

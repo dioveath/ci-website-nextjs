@@ -21,8 +21,8 @@ import Footer from "../../../components/footer/Footer";
 
 import { coursesList } from "../../../components/course/coursesList";
 
-import { UserService } from '../../../lib/service/UserService';
 import type { UserData } from '../../../types';
+import { getUser } from '@/lib/users';
 
 function UserNotFound() {
   return (
@@ -217,8 +217,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
   // render errors caught anyway, and React lint rightly flags that.
   let userData: UserData | null = null;
   try {
-    const user = await UserService.getUser(id);
-    userData = user.userData;
+    userData = await getUser(id);
   } catch {
     userData = null;
   }

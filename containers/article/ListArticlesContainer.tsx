@@ -4,9 +4,8 @@ import Image from "next/image";
 import { useContext, useState } from "react";
 import { useMutation, useInfiniteQuery } from "@tanstack/react-query";
 
-import useAuth from "../../lib/hooks/Auth";
-import queryClient from "../../lib/queryclient";
-import { ArticleService } from "../../lib/service/ArticleService";
+import useAuth from '@/lib/auth';
+import queryClient from '@/lib/queryClient';
 import { pageContext } from "./index";
 import { articleSummary } from "../../lib/editor/serialize";
 import { RiQuillPenFill } from "react-icons/ri";
@@ -14,6 +13,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import type { Article } from '../../types';
+import { deleteArticle, listArticlesByAuthor } from '@/lib/articles';
 
 type ArticlePageParam = { lastDoc: Article } | undefined;
 
@@ -26,13 +26,7 @@ export default function ArticleContainer() {
     useInfiniteQuery({
       queryKey: ["articles"],
       queryFn: async ({ pageParam }) => {
-        const articles = await ArticleService.paginateUserArticles(
-          user?.uid,
-          10,
-          undefined,
-          pageParam?.lastDoc
-        );
-        return articles;
+        return listArticlesByAuthor(user?.uid, pageParam?.lastDoc);
       },
       enabled: isLoggedIn,
       refetchOnMount: true,
@@ -43,7 +37,7 @@ export default function ArticleContainer() {
 
   const deleteMutation = useMutation({
     mutationFn: (articleId: string) => {
-      return ArticleService.deleteArticle(articleId);
+      return deleteArticle(articleId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["articles"] });

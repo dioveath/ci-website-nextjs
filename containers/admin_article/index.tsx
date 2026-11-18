@@ -3,13 +3,13 @@
 import { useMemo, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
-import useAuth from "../../lib/hooks/Auth";
-import { ArticleService } from "../../lib/service/ArticleService";
-import queryClient from "../../lib/queryclient";
+import useAuth from '@/lib/auth';
+import queryClient from '@/lib/queryClient';
 import ArticleRenderer from "../../components/ArticleRenderer";
 
 import { IoIosArrowBack } from "react-icons/io";
 import type { Article } from '../../types';
+import { listAllArticles, updateArticle } from '@/lib/articles';
 
 export default function ArticleManagementContainer() {
   const { isLoggedIn } = useAuth();
@@ -18,7 +18,7 @@ export default function ArticleManagementContainer() {
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["admin_articles"],
     queryFn: async () => {
-      const data = await ArticleService.listArticles();
+      const data = await listAllArticles();
       console.log(data);
       return data;
     },
@@ -26,8 +26,8 @@ export default function ArticleManagementContainer() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (updateArticle: Partial<Article> & { id: string }) => {
-      return ArticleService.updateArticle(updateArticle.id, updateArticle);
+    mutationFn: (changes: Partial<Article> & { id: string }) => {
+      return updateArticle(changes.id, changes);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin_articles"] });

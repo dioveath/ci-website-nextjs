@@ -3,42 +3,19 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import useAuth from '../../lib/hooks/Auth';
-import { useMutation, useQuery } from "@tanstack/react-query";
-import queryClient from '../../lib/queryclient';
-
-import { UserService } from '../../lib/service/UserService';
+import useAuth from '@/lib/auth';
 import LoadingScreen from '../../components/LoadingScreen';
 import type { Media } from '../../types';
+import useMedia from './useMedia';
 
 
 export default function MediaSelectModal(
   { setSelect, onClose }: { setSelect: (m: Media) => void; onClose: () => void }
 ) {
-  const { isLoggedIn, userData, loading } = useAuth();
+  const { isLoggedIn, loading } = useAuth();
   const [newFile, setNewFile] = useState<File | null>(null);
   const [fileProgress, setFileProgress] = useState(0);
-
-  const clearForm = () => { setNewFile(null); setFileProgress(0); };
-  const handleProgress = (percent: number) => setFileProgress(percent);
-
-  const { data: medias, isFetching, isLoading } = useQuery({
-    queryKey: ['medias'],
-     queryFn: async () => {
-      const data = await UserService.getUser(userData!.id);
-      return data.userData?.medias ?? [];
-    },
-    enabled: isLoggedIn,
-  });
-
-  const addMutation = useMutation({
-    mutationFn: (newMedia: File) => {
-      return UserService.addMedia(userData!.id, newMedia, handleProgress);
-    }, onSuccess: (_data) => {
-      queryClient.invalidateQueries({ queryKey: ['medias']});
-      clearForm();
-    }
-  });
+  const { medias, isFetching, isLoading, upload } = useMedia();
 
   if(loading) return <LoadingScreen/>;
   if(!isLoggedIn){ return <p> Redirect here! </p>; }    
@@ -72,11 +49,10 @@ export default function MediaSelectModal(
           <div className={`relative h-4 bg-mint transition-all`} style={{width: `${fileProgress}%`}}></div>
         </div>
 	<button className='bg-eggblue py-2 text-white font-light rounded-full' onClick={() => {
-          if(!newFile) {
-            console.log('Select a file!');
-            return;            
-          }
-          addMutation.mutate(newFile);
+          if (!newFile) return;
+          upload.mutate({ file: newFile, onProgress: setFileProgress }, {
+            onSuccess: () => { setNewFile(null); setFileProgress(0); }
+          });
         }}> Upload </button>
       </div>      
 
