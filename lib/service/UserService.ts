@@ -1,5 +1,5 @@
 import { firebaseStore } from "../firebase";
-import { doc, getDoc, getDocs, updateDoc, collection, query, limit, orderBy, arrayUnion, arrayRemove, writeBatch } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove, writeBatch } from "firebase/firestore";
 import { StorageService } from './StorageService';
 import type { Media, NewUserInput, UserContact, UserData, UserProfileUpdate } from '../../types';
 
@@ -102,14 +102,6 @@ const UserService = {
     await updateDoc(userRef, {
       medias: arrayRemove(file)
     });
-  },
-
-  // Admins only (firestore.rules). Profiles have `joined_at`, not `createdAt`:
-  // ordering by the latter silently returned no users.
-  listUsers: async(): Promise<UserData[]> => {
-    const q = query(collection(firebaseStore, USER_COLLECTION), orderBy('joined_at', 'desc'), limit(100));
-    const querySnapshot = await getDocs(q);
-    return querySnapshot.docs.map((snapshot) => snapshot.data() as UserData);
   }
 
 };

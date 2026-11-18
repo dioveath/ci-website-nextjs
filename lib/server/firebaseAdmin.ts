@@ -4,7 +4,7 @@ import { applicationDefault, cert, getApps, initializeApp, type App, type Creden
 import { getAuth, type Auth } from 'firebase-admin/auth';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 
-import { ActionFailure } from './actions';
+import { ActionFailure } from './errors';
 
 /*
  * Firebase Admin SDK: the server's trusted access to Auth and Firestore. It

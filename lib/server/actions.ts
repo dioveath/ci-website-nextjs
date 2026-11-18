@@ -2,25 +2,10 @@ import 'server-only';
 
 import { unstable_rethrow } from 'next/navigation';
 
-import type { ActionError, ActionResult } from '../../types/courses';
+import { ActionFailure } from './errors';
+import type { ActionResult } from '../../types/courses';
 
-/**
- * Thrown inside server-side course code to end an action with a specific,
- * user-presentable error. runAction turns it into an ActionResult.
- */
-export class ActionFailure extends Error {
-  readonly code: ActionError;
-
-  constructor(code: ActionError, message: string) {
-    super(message);
-    this.name = 'ActionFailure';
-    this.code = code;
-  }
-}
-
-export function fail(code: ActionError, message: string): never {
-  throw new ActionFailure(code, message);
-}
+export { ActionFailure, fail } from './errors';
 
 /**
  * Wraps the body of every server action. Expected failures come back as

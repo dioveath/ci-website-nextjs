@@ -87,7 +87,7 @@ const PAGES = [
 
 export default function AdminContent() {
   const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
-  const { userData, isLoggedIn, loading } = useAuth();
+  const { isLoggedIn, isAdmin, loading } = useAuth();
   const [page, setPage] = useState(0);
   const [sideOpen, setSideOpen] = useState(isDesktop);
   const isClient = useIsClient();
@@ -96,7 +96,7 @@ export default function AdminContent() {
   const ready = isClient && !loading;
   const redirectTo = !ready ? null
     : !isLoggedIn ? '/'
-    : !userData?.roles?.manager ? '/dashboard'
+    : !isAdmin ? '/dashboard'
     : null;
 
   // Navigation is a side effect, so it runs after render rather than during it.

@@ -3,7 +3,7 @@ import 'server-only';
 import type { DecodedIdToken } from 'firebase-admin/auth';
 
 import { adminAuth } from './firebaseAdmin';
-import { ActionFailure, fail } from './actions';
+import { ActionFailure, fail } from './errors';
 import type { Uid } from '../../types/courses';
 
 /*

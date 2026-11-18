@@ -100,9 +100,14 @@ export function AuthProvider(props: { children?: ReactNode }) {
       }
 
       setUser(authUser);
-      authUser.getIdTokenResult()
-        .then(({ claims }) => setIsAdmin(claims.admin === true))
-        .catch(() => setIsAdmin(false));
+      // Resolved before `loading` turns false, so admin gates never redirect
+      // an admin away while the claims are still being read.
+      try {
+        const { claims } = await authUser.getIdTokenResult();
+        setIsAdmin(claims.admin === true);
+      } catch {
+        setIsAdmin(false);
+      }
 
       let result = await UserService.getUser(authUser.uid);
       if (!result.userData) {

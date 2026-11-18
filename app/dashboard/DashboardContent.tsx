@@ -59,7 +59,7 @@ const UnderConstruction = ({ pageName }: { pageName: string }) => {
 
 export default function DashboardContent() {
   const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
-  const { userData, isLoggedIn, loading } = useAuth();
+  const { isLoggedIn, isAdmin, loading } = useAuth();
   const [page, setPage] = useState(0);
   const [sideOpen, setSideOpen] = useState(isDesktop);
   const isClient = useIsClient();
@@ -108,7 +108,7 @@ export default function DashboardContent() {
     },
   ];
 
-  if(userData?.roles?.manager) PAGES.push(AdminDashboard);
+  if (isAdmin) PAGES.push(AdminDashboard);
 
   return (
     <div className={styles.container}>
