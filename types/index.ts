@@ -2,21 +2,25 @@ import type { Timestamp } from 'firebase/firestore';
 
 /* ------------------------------------------------------------------ users -- */
 
-/** A document in the `ci_users` Firestore collection. */
+/**
+ * A document in the `ci_users` Firestore collection: the PUBLIC profile. Anyone
+ * can fetch it by uid (profile pages, blog authors), so it holds nothing
+ * private. Contact details live in `ci_users/{uid}/private/contact`.
+ */
 export interface UserData {
   id: string;
   first_name: string;
   last_name: string;
   profile_URL: string;
   cover_URL: string;
-  address: string;
-  phone_number: string;
-  email: string;
-  phone_verified: boolean;
-  email_verified: boolean;
   exp_points: number;
   hearts: number;
-  roles: Record<string, boolean>;
+  /**
+   * Read-only copy of the user's custom claims, written by the server so
+   * profiles can show badges. Access decisions use the token, never this.
+   * Older documents may still carry `guest` / `manager`.
+   */
+  roles: Partial<Record<string, boolean>>;
   profile_visits: number;
   /** @deprecated Pre-digital enroll button marker. Removed by `npm run admin -- migrate-users`. */
   courses?: Record<string, string>;
@@ -24,6 +28,20 @@ export interface UserData {
   joined_at: number;
   on_board: boolean;
 }
+
+/** `ci_users/{uid}/private/contact`: readable by the user and admins only. */
+export interface UserContact {
+  email: string | null;
+  phone_number: string;
+  address: string;
+}
+
+/** The profile fields a user may change. Must match firestore.rules. */
+export const USER_EDITABLE_FIELDS = [
+  'first_name', 'last_name', 'profile_URL', 'cover_URL', 'medias', 'on_board',
+] as const satisfies readonly (keyof UserData)[];
+
+export type UserProfileUpdate = Partial<Pick<UserData, (typeof USER_EDITABLE_FIELDS)[number]>>;
 
 /** What the auth layer hands to UserService.addNewUser. */
 export interface NewUserInput {

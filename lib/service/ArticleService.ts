@@ -15,10 +15,16 @@ const ArticleService = {
     if(!articleId) return null;
 
     const docRef = doc(firebaseStore, ARTICLE_COLLECTION, articleId);
-    const docSnap = await getDoc(docRef);
-
-    if(!docSnap.exists()) return null;
-    return docSnap.data() as Article;
+    try {
+      const docSnap = await getDoc(docRef);
+      if(!docSnap.exists()) return null;
+      return docSnap.data() as Article;
+    } catch (e) {
+      // Drafts are readable only by their author and admins (firestore.rules):
+      // to everyone else an unpublished article simply does not exist.
+      if ((e as { code?: string })?.code === 'permission-denied') return null;
+      throw e;
+    }
   },
 
   listUserArticles: async (userId?: string): Promise<Article[]> => {

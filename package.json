@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --conditions=react-server --test 'tests/unit/**/*.test.ts'"
+    "test": "tsx --conditions=react-server --test 'tests/unit/**/*.test.ts'",
+    "test:rules": "firebase emulators:exec --config emulators/firebase.test.json --project demo-charicha-test --only firestore \"tsx --test 'tests/rules/**/*.test.ts'\""
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",

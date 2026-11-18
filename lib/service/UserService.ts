@@ -1,7 +1,7 @@
 import { firebaseStore } from "../firebase";
-import { doc, setDoc, getDoc, getDocs, updateDoc, collection, query, limit, arrayUnion, arrayRemove, orderBy } from "firebase/firestore";
+import { doc, getDoc, getDocs, updateDoc, collection, query, limit, orderBy, arrayUnion, arrayRemove, writeBatch } from "firebase/firestore";
 import { StorageService } from './StorageService';
-import type { Media, NewUserInput, UserData } from '../../types';
+import type { Media, NewUserInput, UserContact, UserData, UserProfileUpdate } from '../../types';
 
 const USER_COLLECTION = "ci_users";
 const DEFAULT_AVATAR_LINK =
@@ -23,49 +23,47 @@ const UserService = {
   },
 
   /*
-   * @param {string} uid
-   * @param {UserData} userData
-   * @returns {Promise<Boolean>}
+   * Creates the public profile and the private contact document together.
+   * Every privileged field starts at the value firestore.rules requires.
    */
   addNewUser: async (userData: NewUserInput): Promise<boolean> => {
     const { id, firstName, lastName, photoURL, email, phoneNumber } = userData;
     if (!id) throw new Error("id is required!");
 
-    const newUserData = {
-      id: id,
+    const profile: UserData = {
+      id,
       first_name: firstName ?? "",
       last_name: lastName ?? "",
       profile_URL: photoURL ?? DEFAULT_AVATAR_LINK,
       cover_URL: "",
-      address: "",
-      phone_number: phoneNumber ?? "0000000000",
-      email: email,
-      phone_verified: false,
-      email_verified: false,
       exp_points: 0,
       hearts: 0,
-      roles: {
-        guest: true,
-      },
+      roles: {},
       profile_visits: 0,
-      courses: {},
       medias: [],
       joined_at: Date.now(),
       on_board: false
     };
+    const contact: UserContact = {
+      email: email ?? null,
+      phone_number: phoneNumber ?? "",
+      address: ""
+    };
 
-    await setDoc(doc(firebaseStore, "ci_users", userData.id), newUserData);
+    const batch = writeBatch(firebaseStore);
+    batch.set(doc(firebaseStore, USER_COLLECTION, id), profile);
+    batch.set(doc(firebaseStore, USER_COLLECTION, id, "private", "contact"), contact);
+    await batch.commit();
     return true;
   },
 
   /*
-   * @param {string} uid
-   * @param {UserData} userData
-   * @returns {Promise<Boolean>}
+   * Only the fields in USER_EDITABLE_FIELDS; anything else is rejected by
+   * firestore.rules, and by the compiler here.
    */
   updateUser: async (
     userId: string,
-    userData: Partial<UserData>,
+    userData: UserProfileUpdate,
     errorCallback?: (e: unknown) => void
   ): Promise<boolean> => {
     try {
@@ -106,18 +104,12 @@ const UserService = {
     });
   },
 
+  // Admins only (firestore.rules). Profiles have `joined_at`, not `createdAt`:
+  // ordering by the latter silently returned no users.
   listUsers: async(): Promise<UserData[]> => {
-    const docsRef = collection(firebaseStore, USER_COLLECTION);
-    const q = query(docsRef, orderBy('createdAt', 'desc'), limit(100));
-
+    const q = query(collection(firebaseStore, USER_COLLECTION), orderBy('joined_at', 'desc'), limit(100));
     const querySnapshot = await getDocs(q);
-    const users: UserData[] = [];
-
-    querySnapshot.forEach((doc) => {
-      users.push(doc.data() as UserData);
-    });
-
-    return users;
+    return querySnapshot.docs.map((snapshot) => snapshot.data() as UserData);
   }
 
 };
