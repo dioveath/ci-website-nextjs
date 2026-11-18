@@ -13,7 +13,7 @@ import styles from "../../../styles/courses/courses_page.module.css";
 import type { Course } from '../../../types';
 
 export default function CourseContent({ course }: { course: Course }) {
-  const { user, userData, registerWithEmailAndPassword } = useAuth();
+  const { user, userData } = useAuth();
 
   const CourseCoverImage = (props: { course: Course }) => {};
 
