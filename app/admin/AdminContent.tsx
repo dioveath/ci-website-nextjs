@@ -17,6 +17,7 @@ import SideMenu from '../../components/SideMenu/index';
 
 import ArticleManagementContainer from '../../containers/admin_article';
 import UserManagementContainer from '../../containers/admin_user';
+import CourseManagementContainer from '../../containers/admin_courses';
 
 import { IoIosSettings } from 'react-icons/io';
 import { MdOutlineDashboard } from 'react-icons/md';
@@ -51,7 +52,7 @@ const PAGES = [
   {
     label: 'Manage Courses',
     icon: <GiBookshelf/>,
-    element: <p> COURSES Working </p>
+    element: <CourseManagementContainer/>
   },
   {
     label: 'Manage Articles',

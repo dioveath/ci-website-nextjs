@@ -1,7 +1,7 @@
 import 'server-only';
 
 import { sanityClient } from '../sanity/client';
-import { courseByIdQuery, coursesByIdsQuery } from '../sanity/queries';
+import { allCoursesQuery, courseByIdQuery, coursesByIdsQuery } from '../sanity/queries';
 import { normalizeCourse, normalizeCourses, type RawCourse } from '../courses/catalog';
 import { isCourseId } from '../courses/ids';
 import { coursesList } from '../../components/course/coursesList';
@@ -50,4 +50,16 @@ export async function coursesById(ids: CourseId[]): Promise<Map<CourseId, Catalo
     fail('unavailable', 'Courses are temporarily unavailable. Please try again shortly.');
   }
   return new Map(courses.map((course) => [course.id, course]));
+}
+
+/** Every course, including unlisted ones. */
+export async function allCourses(): Promise<CatalogCourse[]> {
+  try {
+    return liveClient
+      ? normalizeCourses(await liveClient.fetch<RawCourse[]>(allCoursesQuery))
+      : normalizeCourses(coursesList);
+  } catch (error) {
+    console.error('[catalog] listing courses failed:', error);
+    fail('unavailable', 'Courses are temporarily unavailable. Please try again shortly.');
+  }
 }

@@ -46,6 +46,11 @@ export const coursesByIdsQuery = groq`
   *[_type == "course" && courseId in $ids] ${courseProjection}
 `;
 
+// Every course, listed or not (admin panel).
+export const allCoursesQuery = groq`
+  *[_type == "course" && defined(courseId)] | order(order asc) ${courseProjection}
+`;
+
 export const courseIdsQuery = groq`*[_type == "course" && defined(courseId)].courseId`;
 
 // Private "course content" dataset: the paid body of one lesson.
