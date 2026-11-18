@@ -8,7 +8,7 @@ import useAuth from "../../lib/hooks/Auth";
 import queryClient from "../../lib/queryclient";
 import { ArticleService } from "../../lib/service/ArticleService";
 import { pageContext } from "./index";
-import { extractSummary } from "../../lib/utils/summaryHelper";
+import { articleSummary } from "../../lib/editor/serialize";
 import { RiQuillPenFill } from "react-icons/ri";
 import PulseLoader from "react-spinners/PulseLoader";
 import Skeleton from "react-loading-skeleton";
@@ -130,7 +130,7 @@ export default function ArticleContainer() {
                     <p className="text-base lg:text-lg text-cheeseyellow font-medium">
                       {article.title}{" "}
                     </p>
-                    <p> {extractSummary(article.body).substring(0, 250)}...</p>
+                    <p> {articleSummary(article.body).substring(0, 250)}...</p>
                     <p className="text-xs text-red-500">
                       {article.heartsBy.length || "0"} Hearts{" "}
                     </p>

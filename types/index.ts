@@ -59,7 +59,7 @@ export interface Article {
   id: string;
   title: string;
   writtenBy: string;
-  /** JSON string holding either a TiptapDoc or a legacy EditorJsDocument. */
+  /** JSON string holding a TiptapDoc. */
   body: string;
   createdAt: Timestamp | Date | string | null;
   heartsBy: Record<string, boolean>;
@@ -90,19 +90,7 @@ export interface TiptapDoc extends TiptapNode {
   type: 'doc';
 }
 
-/** Legacy EditorJS output, still present on articles written before the swap. */
-export interface EditorJsBlock {
-  type: string;
-  data: Record<string, any>;
-}
-
-export interface EditorJsDocument {
-  time?: number;
-  blocks: EditorJsBlock[];
-  version?: string;
-}
-
-export type ArticleBody = TiptapDoc | TiptapNode | EditorJsDocument | null;
+export type ArticleBody = TiptapDoc | TiptapNode | null;
 
 /* ---------------------------------------------------------------- courses -- */
 

@@ -9,7 +9,7 @@ import { BsFillCircleFill } from 'react-icons/bs';
 
 import Marginer from '../../components/utils/Marginer';
 
-import { extractSummary } from '../../lib/utils/summaryHelper';
+import { articleSummary } from '../../lib/editor/serialize';
 import type { BlogListItem, UserData } from '../../types';
 
 // Sanity editorial posts: author is inline and the body/summary come ready from
@@ -60,7 +60,7 @@ function SanityBlogCard({ blog }: { blog: BlogListItem }) {
 
 // Firebase user articles: author lives in Firebase, fetched client-side by uid.
 function FirebaseBlogCard({ blog }: { blog: BlogListItem }) {
-  const summary = `${extractSummary(blog.body ?? null).substring(0, 250)}...`;
+  const summary = `${articleSummary(blog.body ?? null).substring(0, 250)}...`;
 
   const [userData, setUserData] = useState<Partial<UserData>>({ first_name: "null", last_name: "null" });
   const [isLoading, setLoading] = useState(true);

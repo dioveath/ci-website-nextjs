@@ -16,7 +16,7 @@ export async function generateMetadata(
   // that fails to parse must not take the whole page down with it.
   let summary: string = cmsPost?.excerpt ?? '';
   if (article) {
-    try { summary = extractSummary(article.body).trim(); } catch { summary = ''; }
+    try { summary = articleSummary(article.body).trim(); } catch { summary = ''; }
   }
   const description = summary && summary !== '...(empty)'
     ? (summary.length > 200 ? summary.slice(0, 197).trimEnd() + '...' : summary)
@@ -56,7 +56,7 @@ import PortableBody from '../../../components/blog/PortableBody';
 import { UserService } from '../../../lib/service/UserService';
 import { ArticleService } from '../../../lib/service/ArticleService';
 import { getBlogPostBySlug } from '../../../lib/sanity/fetchers';
-import { extractSummary } from '../../../lib/utils/summaryHelper';
+import { articleSummary } from '../../../lib/editor/serialize';
 import Footer from '../../../components/footer/Footer';
 import type { BlogListItem, UserData } from '../../../types';
 
