@@ -38,7 +38,7 @@ export default function ContactContent({ page = contactPageFallback }: { page?: 
             <input name="" type="email" className={styles["form-input"]} placeholder="Email"/>
             <input name="" type="number"  className={styles["form-input"]} placeholder="Phone Number"/>
 
-            <textarea cols={30} id="" name="" rows={10} className={styles["text-area"]} placeholder="Your message here..."> </textarea>
+            <textarea cols={30} id="" name="" rows={10} className={styles["text-area"]} placeholder="Your message here..."/>
             <PrimaryButton text="Submit" onClick={()=> {
               console.log("something");
             }}/>

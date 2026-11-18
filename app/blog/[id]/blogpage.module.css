@@ -76,7 +76,7 @@
     word-spacing: 1px;
     padding: 0px;
     padding-bottom: 10px;
-    font-family: "Montserrat";
+    font-family: var(--font-montserrat-loaded), "Montserrat", sans-serif;
     font-weight: 300;
     text-align: justify;
 }

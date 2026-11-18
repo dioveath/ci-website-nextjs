@@ -57,7 +57,7 @@
 }
 
 .form-input::placeholder {
-    font-family: "Montserrat";
+    font-family: var(--font-montserrat-loaded), "Montserrat", sans-serif;
 }
 
 .form-input:focus {
