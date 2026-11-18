@@ -23,7 +23,7 @@
     "@tiptap/starter-kit": "^3.34.0",
     "@tsparticles/engine": "^4.6.0",
     "@tsparticles/react": "^4.6.0",
-    "firebase": "^12.19.0",
+    "firebase": "^13.4.0",
     "groq": "^6.23.0",
     "next": "^16.4.6",
     "pure-react-carousel": "^1.35.0",
@@ -48,7 +48,7 @@
     "typescript": "^6.0.3"
   },
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=24.12.0"
   },
   "overrides": {
     "@grpc/grpc-js": "~1.13.7",
@@ -56,5 +56,10 @@
     "@typescript-eslint/typescript-estree": {
       "minimatch": "^11.0.8"
     }
+  },
+  "allowScripts": {
+    "@firebase/util": false,
+    "@tsparticles/engine": false,
+    "protobufjs": false
   }
 }

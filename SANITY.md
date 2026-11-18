@@ -120,7 +120,7 @@ NEXT_PUBLIC_SANITY_DATASET=production
 # optional: NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
 ```
 
-Then in the project root: `npm run dev` (Node >=20.9). The wired pages now read
+Then in the project root: `nvm use && npm run dev` (Node >=24.12, pinned in `.nvmrc`). The wired pages now read
 from Sanity. Edit a course in the Studio → it shows on `/courses` (ISR
 revalidates every 60s).
 
