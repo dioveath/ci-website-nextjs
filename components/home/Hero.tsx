@@ -1,27 +1,79 @@
-'use client';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
-import Image from "next/image";
-import { BsChevronDoubleDown } from 'react-icons/bs';
+import Section from '../layout/Section';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 import { homePageFallback } from '../../lib/sanity/fallbacks';
 
-export default function Hero({ hero = homePageFallback.hero }) {
+type Hero = typeof homePageFallback.hero;
+type Stat = (typeof homePageFallback.stats)[number];
 
+export default function Hero({
+  hero = homePageFallback.hero,
+  stats = homePageFallback.stats
+}: {
+  hero?: Hero;
+  stats?: Stat[];
+}) {
   return (
-    <div className='w-full max-h-max px-8 md:px-10 xl:px-20 2xl:px-48 mb-20'>
-      <div className={'w-full flex flex-wrap-reverse gap-2 justify-center'}>
-        <div className={'w-full lg:max-w-lg flex flex-col gap-4 justify-center'}>
-	  <p className='text-white font-medium text-[38px] md:text-[52px] xl:text-[64px] leading-12 xl:leading-18'> {hero.title} </p>
-	  <p className='text-white text-sm md:text-base xl:text-lg font-light'> {hero.subtitle} </p>
-	  <button className="max-w-sm py-4 text-white text-[32px] bg-brightaqua rounded-full hover:bg-slategray drop-shadow-md duration-500"> {hero.ctaLabel} </button>
+    <Section tone="brand" space="lg" as="div">
+      <div className="grid items-center gap-12 lg:grid-cols-2">
+        <div className="flex flex-col items-start gap-6">
+          <Badge variant="on-brand">Belbari, Morang &middot; since 2015</Badge>
+
+          <h1 className="text-4xl font-semibold tracking-tight text-on-brand md:text-5xl xl:text-6xl">
+            {hero.title}
+          </h1>
+
+          <p className="max-w-xl text-base text-on-brand-muted md:text-lg">
+            {hero.subtitle}
+          </p>
+
+          <div className="flex flex-wrap gap-3">
+            {/*
+              The call to action is a link, not a bare <button>. It rendered as
+              an inert button for the life of the old page while the CMS field
+              that says where it goes sat unused.
+            */}
+            <Button asChild size="xl">
+              <Link href={hero.ctaLink || '/login'}>
+                {hero.ctaLabel}
+                <ArrowRight />
+              </Link>
+            </Button>
+            <Button asChild size="xl" variant="on-brand">
+              <Link href="/courses">Browse courses</Link>
+            </Button>
+          </div>
         </div>
-        <div className={'md:w-[50%] h-full flex flex-col relative md:-top-10'}>
-          <Image className="shadow-md" alt='charicha pc hero image' src='/ci_pc.svg' width={'700'} height={'500'}/>
+
+        <div className="relative">
+          <Image
+            src="/ci_pc.svg"
+            alt="A desktop computer in the Charicha Institute lab"
+            width={700}
+            height={500}
+            priority
+            className="h-auto w-full"
+          />
         </div>
       </div>
 
-      <div className="w-full flex justify-center mt-10">
-        <BsChevronDoubleDown className="text-white text-[50px] animate-bounce"/>
-      </div>
-    </div>
+      {stats.length ? (
+        <dl className="mt-16 grid grid-cols-2 gap-6 border-t border-on-brand/20 pt-10 md:grid-cols-4">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex flex-col gap-1">
+              <dt className="sr-only">{stat.label}</dt>
+              <dd className="text-3xl font-semibold text-on-brand md:text-4xl">
+                {stat.value}
+              </dd>
+              <p className="text-sm text-on-brand-muted">{stat.label}</p>
+            </div>
+          ))}
+        </dl>
+      ) : null}
+    </Section>
   );
 }

@@ -30,7 +30,17 @@ const designSystem = {
 };
 
 const config = [
-  { ignores: [".next/**", "out/**", "node_modules/**", "studio/**", "scripts/**"] },
+  {
+    ignores: [
+      ".next/**",
+      "out/**",
+      "node_modules/**",
+      "studio/**",
+      "scripts/**",
+      // Agent and tooling configuration, not application source.
+      ".claude/**"
+    ]
+  },
   ...next,
 
   // The design system is enforced where the design system lives. `containers/`
@@ -53,15 +63,38 @@ const config = [
       // A `className` Tailwind can statically read, so the above can be checked.
       "shadcn/require-static-classes": "error",
       // Primitives own their styling; callers pass props, not overrides.
-      "shadcn/no-restyle": "error"
+      // Layout is the documented exception -- where a component sits is the
+      // caller's business, how it looks is the component's. So `h-full` and
+      // `mt-6` pass, while `border-t`, `text-sm` and `hover:shadow-card` have
+      // to become a variant in components/ui.
+      "shadcn/no-restyle": ["error", { allow: ["layout"] }]
     }
   },
 
-  // The shadcn primitives are the one place that is allowed to define styling
-  // for a component, which is what `no-restyle` otherwise forbids.
+  // A third-party brand mark is reproduced in its owner's colours or not at
+  // all, so these files are exempt from the token rule by definition.
+  {
+    files: ["components/brand/**/*.{ts,tsx}"],
+    rules: { "shadcn/no-raw-colors": "off" }
+  },
+
+  // components/ui is the design system's implementation, not its consumer.
+  // These are the files that are *allowed* to reach past the token scale:
+  // `no-restyle` has nothing to protect here, and the primitives legitimately
+  // use arbitrary values for mechanics the scale does not cover -- ring widths,
+  // `color-mix` hover states, `h-[calc(100%-1px)]`. Enforcing the scale here
+  // would mean rewriting upstream components on every `shadcn add`.
+  //
+  // `no-raw-colors` deliberately stays on: a literal colour in a primitive is
+  // exactly the leak this whole exercise is meant to prevent.
   {
     files: ["components/ui/**/*.{ts,tsx}"],
-    rules: { "shadcn/no-restyle": "off" }
+    rules: {
+      "shadcn/no-restyle": "off",
+      "shadcn/no-arbitrary-values": "off",
+      // `toaster` is a class the Sonner library owns, not one Tailwind generates.
+      "shadcn/no-unknown-classes": ["error", { allow: ["not-prose", "toaster"] }]
+    }
   }
 ];
 

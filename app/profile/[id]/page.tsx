@@ -1,213 +1,145 @@
 import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Charicha Institute',
-  description: 'Charicha Institute Profile'
-};
-
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
+import { Clock, Eye, Heart } from 'lucide-react';
 
-import { FaFacebook, FaInstagram } from "react-icons/fa";
-import { AiFillHeart } from "react-icons/ai";
-import { ImProfile } from "react-icons/im";
-import { BsRecordCircleFill } from "react-icons/bs";
+import PageShell from '../../../components/layout/PageShell';
+import Section from '../../../components/layout/Section';
+import { Badge } from '../../../components/ui/badge';
+import { Button } from '../../../components/ui/button';
+import { Card, CardContent } from '../../../components/ui/card';
 
-import { MdOutlineAccessTimeFilled } from "react-icons/md";
-import Navbar from "../../../components/Navbar";
-import styles from "../../../styles/profile/profile.module.css";
-import Marginer from "../../../components/utils/Marginer";
-import Footer from "../../../components/footer/Footer";
-
-import { coursesList } from "../../../components/course/coursesList";
-
+import { coursesList } from '../../../components/course/coursesList';
 import { UserService } from '../../../lib/service/UserService';
 import type { UserData } from '../../../types';
 
-function UserNotFound() {
-  return (
-    <div className='min-h-[85vh] h-full w-full flex justify-center items-center'>
-      <div>
-        <p className='text-[40px] text-white'> ERROR 404 : USER NOT FOUND </p>
-        <Link href='/' className='text-white font-light hover:text-aquamarine'> Go to Home </Link>
-      </div>
-    </div>
-  );
-}
-
-// Server-rendered, so there is no loading state: by the time this renders the
-// user has either been fetched or not found.
-function ProfileView({ userData }: { userData: UserData }) {
-  const userJoinedDate = new Date(userData.joined_at ?? 0);
-  // roles is a { roleName: boolean } map, not an array.
-  const activeRoles = Object.keys(userData.roles ?? {}).filter((role) => userData.roles[role]);
-  const enrolledCourseIds = Object.keys(userData.courses ?? {});
-
-  const coverImage = (
-    <Image
-      alt="cover image"
-      src="/landing_image.jpg"
-      className={`${styles.coverImg} w-full h-auto`}
-      width={1200}
-      height={200}
-    />
-  );
-
-  const profileImage =
-    userData.profile_URL == "" ? (
-      <div className={styles.profileTextImg}>
-        <p> {userData.first_name?.[0]} </p>{" "}
-      </div>
-    ) : (
-      <Image
-        alt=""
-        src={userData.profile_URL ?? "/profile.jpg"}
-        className={styles.profileImg}
-        width={200}
-        height={200}
-      />
-    );
-
-  const userInfo = (
-    <div className={styles.userTextInfoContainer}>
-      <p className={styles.titleText}>
-        {userData.first_name + " " + userData.last_name}
-      </p>
-      <p className={styles.subTitleText}> {(userData as { rank?: string }).rank} </p>
-      <p className={styles.subTitleText}>
-        Since
-        {userJoinedDate.toDateString()}
-      </p>
-    </div>
-  );
-
-  const roles = activeRoles.length ? (
-    activeRoles.map((role) => (
-      <div key={role} className={styles.roleCard}>
-        {role}
-      </div>
-    ))
-  ) : (
-    <p>No Roles</p>
-  );
-
-  const statsInfo = (
-    <div className={styles.statsContainer}>
-      <div className={styles.levelXpContainer}>
-        <p className={styles.titleText} style={{ color: "greenyellow" }}>
-          {" "}
-          Gold{" "}
-        </p>
-        <p className={styles.subTitleText}> 314 XP </p>
-      </div>
-      <Marginer vertical="4px" />
-      <div className={styles.levelBarContainer}>
-        <div className={styles.levelHolder}></div>
-        <div className={styles.completedLevel}></div>
-      </div>
-      <p className={styles.subTitleText}> To Platinum - 586 XP </p>
-      <Marginer vertical="4px" />
-      <div className={styles.heartsContainer}>
-        <AiFillHeart color="red" />
-        <Marginer horizontal="5px" />
-        <p className={styles.subTitleText}>
-          {" "}
-          {userData.hearts} Hearts{" "}
-        </p>{" "}
-      </div>
-      <Marginer vertical="10px" />
-      <div className={styles.rolesContainer}>{roles}</div>
-    </div>
-  );
-
-  const coursesEnrolled = (
-    <div>
-      {enrolledCourseIds.map((courseId) => (
-        <div
-          key={courseId}
-          className={styles.roleCard}
-          style={{ marginBottom: "10px" }}
-        >
-          <p
-            className={styles.subTitleText}
-            style={{
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <BsRecordCircleFill />
-            <Marginer />
-            {coursesList[Number(courseId)]?.title}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-
-  const secondaryStatsInfo = (
-    <div className={styles.statsContainer}>
-      <div className={styles.rowCenterContainer}>
-        <ImProfile size={20} />
-        <Marginer />
-        <p className={styles.subTitleText}> 100 Profile Visits </p>
-      </div>
-      <Marginer />
-      <div className={styles.rowCenterContainer}>
-        <MdOutlineAccessTimeFilled size={20} />
-        <Marginer />
-        <p className={styles.subTitleText}> 1d 23h Time Spent </p>
-      </div>
-      <Marginer />
-      <div>
-        <p className={styles.titleText}> Courses Enrolled </p>
-        <Marginer />
-        {coursesEnrolled}
-      </div>
-    </div>
-  );
-
-  const bioInfo = (
-    <div className={styles.statsContainer}>
-      <h2 className={styles.titleText}> Bio </h2>
-      <p className={styles.subTitleText}>
-        Typical pop culture geek. Coffee lover. Music enthusiast. Social media
-        junkie. Extreme food advocate. Tv practitioner.
-      </p>
-    </div>
-  );
-
-  return (
-    <>
-      {coverImage}
-      <div className={styles.profileContainer}>
-        <div className={styles.basicInfoContainer}>
-          {profileImage}
-          <Marginer horizontal="10px" />
-          {userInfo}
-        </div>
-        <div className={styles.socialMediaLinks}>
-          <p className={styles.subTitleText}> Social Media </p>
-          <Marginer horizontal="10px" />
-          <FaFacebook size="24px" color="blue" />
-          <Marginer horizontal="10px" />
-          <FaInstagram size="24px" color="red" />
-        </div>
-      </div>
-
-      <div className={styles.wrapContainer}>
-        {statsInfo}
-        {secondaryStatsInfo}
-        {bioInfo}
-      </div>
-    </>
-  );
-}
+export const metadata: Metadata = {
+  title: 'Profile',
+  description: 'A Charicha Institute student profile.'
+};
 
 // getStaticPaths returned no paths with fallback:"blocking"; the App Router
 // equivalent is an empty generateStaticParams with dynamicParams left on.
 export async function generateStaticParams() {
   return [];
+}
+
+function UserNotFound() {
+  return (
+    <Section space="lg">
+      <div className="flex flex-col items-center gap-5 text-center">
+        <p className="text-sm font-semibold tracking-widest text-primary uppercase">
+          Error 404
+        </p>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+          We couldn&apos;t find that student
+        </h1>
+        <p className="max-w-md text-muted-foreground">
+          The profile may have been removed, or the link may be out of date.
+        </p>
+        <Button asChild size="xl">
+          <Link href="/">Back to home</Link>
+        </Button>
+      </div>
+    </Section>
+  );
+}
+
+function StatCard({
+  Icon,
+  value,
+  label
+}: {
+  Icon: typeof Heart;
+  value: string | number;
+  label: string;
+}) {
+  return (
+    <Card>
+      <CardContent>
+        <div className="flex items-center gap-3">
+          <Icon className="size-5 shrink-0 text-primary" aria-hidden />
+          <span className="flex flex-col">
+            <span className="text-lg font-semibold text-card-foreground">{value}</span>
+            <span className="text-sm text-muted-foreground">{label}</span>
+          </span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function ProfileView({ userData }: { userData: UserData }) {
+  const joined = userData.joined_at ? new Date(userData.joined_at) : null;
+  // `roles` is a { roleName: boolean } map, not an array.
+  const activeRoles = Object.keys(userData.roles ?? {}).filter((role) => userData.roles[role]);
+  const enrolledCourseIds = Object.keys(userData.courses ?? {});
+  const name = [userData.first_name, userData.last_name].filter(Boolean).join(' ');
+
+  return (
+    <>
+      <Section tone="brand" space="sm" as="div">
+        <div className="flex flex-wrap items-center gap-6">
+          <Image
+            src={userData.profile_URL || '/profile.jpg'}
+            alt=""
+            width={112}
+            height={112}
+            className="size-28 rounded-full border-4 border-on-brand/30 object-cover"
+          />
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-semibold tracking-tight text-on-brand md:text-4xl">
+              {name || 'Charicha student'}
+            </h1>
+            {joined ? (
+              <p className="text-on-brand-muted">
+                Member since{' '}
+                <time dateTime={joined.toISOString()}>
+                  {joined.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
+                </time>
+              </p>
+            ) : null}
+            {activeRoles.length ? (
+              <ul className="mt-1 flex flex-wrap gap-2">
+                {activeRoles.map((role) => (
+                  <li key={role}>
+                    <Badge variant="on-brand">{role}</Badge>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        </div>
+      </Section>
+
+      <Section>
+        <div className="grid gap-6 lg:grid-cols-3">
+          <StatCard Icon={Heart} value={userData.hearts ?? 0} label="Hearts" />
+          <StatCard Icon={Eye} value={userData.profile_visits ?? 0} label="Profile visits" />
+          <StatCard Icon={Clock} value={userData.exp_points ?? 0} label="Experience points" />
+        </div>
+
+        <h2 className="mt-12 text-2xl font-semibold tracking-tight text-foreground">
+          Courses enrolled
+        </h2>
+
+        {enrolledCourseIds.length ? (
+          <ul className="mt-6 flex flex-wrap gap-3">
+            {enrolledCourseIds.map((courseId) => {
+              const course = coursesList.find((c) => String(c.id) === String(courseId));
+              return (
+                <li key={courseId}>
+                  <Badge variant="secondary">{course?.title ?? `Course ${courseId}`}</Badge>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="mt-4 text-muted-foreground">No courses enrolled yet.</p>
+        )}
+      </Section>
+    </>
+  );
 }
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
@@ -224,12 +156,8 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
   }
 
   return (
-    <div>
-      <main className={'bg-linear-[-45deg] from-eggblue to-slategray'}>
-        <Navbar />
-        {userData ? <ProfileView userData={userData} /> : <UserNotFound />}
-      </main>
-      <Footer />
-    </div>
+    <PageShell>
+      {userData ? <ProfileView userData={userData} /> : <UserNotFound />}
+    </PageShell>
   );
 }

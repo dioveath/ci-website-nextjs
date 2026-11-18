@@ -55,24 +55,32 @@ function contrast(a, b) {
  * this gate dependency-free.
  */
 function readTokenBlock(css, selector) {
-  const start = css.indexOf(selector);
-  if (start === -1) throw new Error(`no \`${selector}\` block in styles/globals.css`);
+  // Comments first: the prose in this stylesheet mentions `.dark` and `:root`
+  // by name, and a plain indexOf would match the sentence, not the rule.
+  const source = css.replace(/\/\*[\s\S]*?\*\//g, '');
 
-  const open = css.indexOf('{', start);
+  // Anchor on a rule: start of file, or just after the previous `}` / `;`.
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const rule = new RegExp(`(?:^|[};])\\s*${escaped}\\s*\\{`, 'm');
+  const match = rule.exec(source);
+  if (!match) throw new Error(`no \`${selector}\` rule in styles/globals.css`);
+
+  const open = match.index + match[0].length - 1;
   let depth = 0;
   let end = -1;
-  for (let i = open; i < css.length; i++) {
-    if (css[i] === '{') depth++;
-    else if (css[i] === '}' && --depth === 0) {
+  for (let i = open; i < source.length; i++) {
+    if (source[i] === '{') depth++;
+    else if (source[i] === '}' && --depth === 0) {
       end = i;
       break;
     }
   }
-  if (end === -1) throw new Error(`unterminated \`${selector}\` block`);
+  if (end === -1) throw new Error(`unterminated \`${selector}\` rule`);
 
   const tokens = {};
-  const body = css.slice(open + 1, end).replace(/\/\*[\s\S]*?\*\//g, '');
-  for (const [, name, value] of body.matchAll(/--([\w-]+)\s*:\s*([^;]+);/g)) {
+  for (const [, name, value] of source
+    .slice(open + 1, end)
+    .matchAll(/--([\w-]+)\s*:\s*([^;]+);/g)) {
     tokens[name] = value.trim();
   }
   return tokens;

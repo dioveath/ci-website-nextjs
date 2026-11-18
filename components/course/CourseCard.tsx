@@ -1,35 +1,66 @@
-'use client';
-
 import Image from 'next/image';
-import styles from './coursecard.module.css';
-import Marginer from '../../components/utils/Marginer';
-import { FaLayerGroup } from 'react-icons/fa';
-import { AiOutlineCalendar } from 'react-icons/ai';
-
 import Link from 'next/link';
+import { CalendarDays, Layers } from 'lucide-react';
+
+import { Badge } from '../ui/badge';
+import { Card, CardContent, CardFooter } from '../ui/card';
 import type { Course } from '../../types';
 
-export default function CourseCard(props: { course: Course }) {
+/** Days -> whole months, which is how the course length is advertised. */
+function durationLabel(time: Course['time']) {
+  const months = Math.floor(Number(time ?? 0) / 30);
+  if (!Number.isFinite(months) || months < 1) return 'Short course';
+  return `${months} ${months === 1 ? 'month' : 'months'}`;
+}
+
+export default function CourseCard({
+  course,
+  headingLevel = 3
+}: {
+  course: Course;
+  headingLevel?: 2 | 3;
+}) {
+  const Heading = `h${headingLevel}` as 'h2' | 'h3';
+  const lessons = course.lessons?.length ?? 0;
+
   return (
-    <Link href={"/courses/" + props.course.id}>
-
-      <div className={styles.courseCard} onClick={() => { }}>
-	<div className={styles.courseImg}>
-          <Image alt="" src={props.course.coverImg} width={350} height={240} className="w-full h-auto object-cover"/>
+    <Card interactive className="h-full">
+      <Link href={`/courses/${course.id}`} className="flex h-full flex-col">
+        <div className="relative aspect-video w-full overflow-hidden">
+          <Image
+            src={course.coverImg}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 hover:scale-105"
+          />
         </div>
-        <div className={styles.courseDetails}>
-          <p className={styles.captionText}>  {props.course.level} </p>
-          <Marginer vertical="5px"/>
-          <p className={styles.titleText}> {props.course.title} </p>
-          <Marginer vertical="50px"/>
-          <div className={styles.courseTimings}>
-            <div className={styles.lessons}> <FaLayerGroup/> <Marginer/> {props.course.lessons?.length ?? 0} Lessons </div>
-            <div className={styles.lessons}> <AiOutlineCalendar/> <Marginer/> {Math.floor(Number(props.course.time) / 30)} Months </div>
+
+        <CardContent className="flex-1">
+          <div className="flex flex-col items-start gap-2">
+            {course.level ? <Badge variant="highlight">{course.level}</Badge> : null}
+            <Heading className="text-lg font-semibold text-card-foreground">
+              {course.title}
+            </Heading>
+            {course.description ? (
+              <p className="line-clamp-2 text-sm text-muted-foreground">
+                {course.description}
+              </p>
+            ) : null}
           </div>
-        </div>
-      </div> 
-      
-    </Link>
-  );
+        </CardContent>
 
+        <CardFooter variant="meta">
+          <span className="flex items-center gap-1.5">
+            <Layers className="size-4" aria-hidden />
+            {lessons} {lessons === 1 ? 'lesson' : 'lessons'}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <CalendarDays className="size-4" aria-hidden />
+            {durationLabel(course.time)}
+          </span>
+        </CardFooter>
+      </Link>
+    </Card>
+  );
 }

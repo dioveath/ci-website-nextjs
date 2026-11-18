@@ -1,3 +1,5 @@
+import type { Course } from '../../types';
+
 // Static fallbacks for the singleton documents. These mirror the original
 // hardcoded copy so the site renders identically when Sanity is unconfigured,
 // empty, or unreachable.
@@ -35,6 +37,16 @@ export const homePageFallback = {
     ctaLink: '/login',
   },
   featureVideoUrl: 'https://www.youtube.com/watch?v=lvWUO2YTe-M',
+  // Shown in the hero's trust band. Edited in the Studio under Home Page.
+  stats: [
+    { value: '10+', label: 'Years teaching' },
+    { value: '1,500+', label: 'Students trained' },
+    { value: '20+', label: 'Courses offered' },
+    { value: '6', label: 'Days a week open' },
+  ],
+  // Empty by default: the home page falls back to the static course list, the
+  // same way every other CMS-backed section falls back.
+  featuredCourses: [] as Course[],
   stories: [
     {
       title: 'How it all started?',

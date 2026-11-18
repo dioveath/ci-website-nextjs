@@ -33,7 +33,9 @@ function ToolbarButton({ onClick, active, disabled, title, children }: ToolbarBu
       disabled={disabled}
       onClick={onClick}
       className={`p-2 rounded transition-colors disabled:opacity-40 ${
-        active ? 'bg-brightaqua text-white' : 'text-white hover:bg-slategray'
+        active
+          ? 'bg-primary text-primary-foreground'
+          : 'text-foreground hover:bg-accent hover:text-accent-foreground'
       }`}
     >
       {children}
@@ -53,7 +55,7 @@ function Toolbar({ editor, onPickImage }: { editor: Editor | null; onPickImage: 
   };
 
   return (
-    <div className="flex flex-wrap gap-1 border-b border-slategray pb-2 mb-3 not-prose">
+    <div className="flex flex-wrap gap-1 border-b border-border pb-2 mb-3 not-prose">
       <ToolbarButton title="Bold" active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()}><RiBold/></ToolbarButton>
       <ToolbarButton title="Italic" active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()}><RiItalic/></ToolbarButton>
       <ToolbarButton title="Underline" active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()}><RiUnderline/></ToolbarButton>

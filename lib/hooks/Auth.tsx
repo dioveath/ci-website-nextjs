@@ -1,14 +1,12 @@
 'use client';
 
 import { createContext, useState, useContext, useEffect, type ReactNode } from "react";
-import { deleteUser, getAuth, onAuthStateChanged, type User } from "firebase/auth";
+import { deleteUser, onAuthStateChanged, type User } from "firebase/auth";
 
-import { firebaseApp } from "../firebase";
+import { firebaseAuth } from "../firebase";
 import { AuthService } from "../service/AuthService";
 import { UserService } from "../service/UserService";
 import type { UserData } from "../../types";
-
-const auth = getAuth(firebaseApp);
 
 export interface AuthContextValue {
   user: User | null;
@@ -37,9 +35,14 @@ function messageOf(err: unknown): string {
 }
 
 export function AuthProvider(props: { children?: ReactNode }) {
-  const [user, setUser] = useState<User | null>(auth.currentUser);
+  // Resolved in the browser only: reading `currentUser` at module scope ran
+  // getAuth() during prerender, where there are no credentials.
+  const [user, setUser] = useState<User | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Only "loading" if there is actually an auth state to wait for. Firebase
+  // config is inlined at build time (next.config.js `env`), so this resolves
+  // the same on the server and in the browser.
+  const [loading, setLoading] = useState(() => firebaseAuth() !== null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -67,6 +70,14 @@ export function AuthProvider(props: { children?: ReactNode }) {
   };
 
   useEffect(() => {
+    const auth = firebaseAuth();
+
+    // No Firebase configuration: the marketing pages still render and the
+    // visitor is simply treated as signed out rather than seeing a crash.
+    // `loading` already started false in that case, so there is nothing to
+    // settle here.
+    if (!auth) return undefined;
+
     const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
       setFetching(true);
 

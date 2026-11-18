@@ -5,9 +5,9 @@ import { Raleway, Montserrat } from 'next/font/google';
 import '../styles/globals.css';
 import Providers from './providers';
 
-// Self-hosted at build time (no request to Google from the visitor's browser).
-// Exposed as CSS variables, used by globals.css (body) and the CSS modules
-// that set Montserrat.
+// Self-hosted at build time, so the visitor's browser makes no request to
+// Google. Exposed as CSS variables that styles/globals.css maps onto the
+// --font-sans / --font-heading tokens.
 const raleway = Raleway({
   subsets: ['latin'],
   style: ['normal', 'italic'],
@@ -32,7 +32,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${raleway.variable} ${montserrat.variable}`}>
+    // suppressHydrationWarning: next-themes writes the theme class onto <html>
+    // from a blocking inline script before React hydrates, so the server's
+    // markup and the browser's deliberately differ on this one element.
+    <html
+      lang="en"
+      className={`${raleway.variable} ${montserrat.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <Providers>{children}</Providers>
       </body>

@@ -1,22 +1,40 @@
-'use client';
-
-import styles from '../../styles/components/testimonial/TestimonialCard.module.css';
 import Image from 'next/image';
 
-export default function TestimonialCard(props: { content: string; reviewer: string }){
+import { Card, CardContent } from '../ui/card';
+
+export default function TestimonialCard({
+  content,
+  reviewer,
+  role,
+  avatar = '/profile.jpg'
+}: {
+  content: string;
+  reviewer: string;
+  role?: string;
+  avatar?: string;
+}) {
   return (
-    <div className={styles.container}>
-      <div className={styles["review-container"]}>
-        <p className={styles.review}>
-          { '\"' + props.content + '\"' }
-        </p>
-        <p className={styles.reviewer}>
-          { "- " + props.reviewer }
-        </p>        
-      </div>
-      <div className={styles.profile}>
-        <Image alt='testimonial profile' src="/profile.jpg" width={300} height={300} className={styles["profile-image"]}/>
-      </div>
-    </div>
+    <Card className="h-full">
+      <CardContent className="h-full">
+        <div className="flex h-full flex-col gap-5">
+        <blockquote className="flex-1 text-base text-card-foreground">
+          &ldquo;{content}&rdquo;
+        </blockquote>
+        <figcaption className="flex items-center gap-3">
+          <Image
+            src={avatar}
+            alt=""
+            width={40}
+            height={40}
+            className="size-10 rounded-full object-cover"
+          />
+          <span className="flex flex-col">
+            <span className="text-sm font-semibold text-card-foreground">{reviewer}</span>
+            {role ? <span className="text-xs text-muted-foreground">{role}</span> : null}
+          </span>
+        </figcaption>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

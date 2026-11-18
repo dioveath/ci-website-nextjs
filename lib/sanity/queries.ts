@@ -55,7 +55,31 @@ export const homePageQuery = groq`
     hero,
     featureVideoUrl,
     stories,
-    appPromo
+    stats,
+    appPromo,
+    // Editor-picked featured courses, projected to the same shape as
+    // coursesQuery so <CourseCard> needs no second variant. Falls back to the
+    // first three courses by order when the editor has chosen none.
+    "featuredCourses": coalesce(
+      featuredCourses[]->{
+        "id": courseId,
+        level,
+        title,
+        "coverImg": coalesce(coverImage.asset->url, "/george.jpg"),
+        lessons,
+        description,
+        "time": durationDays
+      },
+      *[_type == "course"] | order(order asc) [0...3] {
+        "id": courseId,
+        level,
+        title,
+        "coverImg": coalesce(coverImage.asset->url, "/george.jpg"),
+        lessons,
+        description,
+        "time": durationDays
+      }
+    )
   }
 `;
 

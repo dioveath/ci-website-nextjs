@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import { useRef } from 'react';
-import { RxCross1 } from 'react-icons/rx';
-import { BsPlusLg } from 'react-icons/bs';
+import { Plus, X } from 'lucide-react';
+
+import { Button } from '../ui/button';
 
 export default function FileUploader(
   { file, setFile }: { file: File | null; setFile: (f: File | null) => void }
@@ -14,18 +15,38 @@ export default function FileUploader(
 
   return (
     <>
-      { file &&
-        <div className='w-full bg-timbergreen flex flex-col justify-center items-center rounded-3xl overflow-clip'>
-	  <div className='w-full flex justify-end items-center bg-riverbed py-3 px-5'>
-            <RxCross1 onClick={() => setFile(null)} className='text-white text-3xl hover:rotate-45 cursor-pointer transition-all'/>            
+      {file && (
+        <div className='w-full overflow-clip rounded-2xl border bg-muted'>
+          <div className='flex w-full items-center justify-end border-b bg-card px-3 py-2'>
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={() => setFile(null)}
+              aria-label='Remove selected file'
+            >
+              <X />
+            </Button>
           </div>
-          <Image alt="upload file" src={URL.createObjectURL(file)} width={300} height={300} className='border-2 object-contain'/>
-        </div> }
-      { !file && <button onClick={handleClick} className='w-full h-52 bg-timbergreen flex flex-col justify-center items-center rounded-3xl overflow-clip'>
-		   <div className='w-[96%] h-full flex m-4 justify-center items-center border-2 border-dashed rounded-3xl'>
-                     <BsPlusLg className='text-4xl text-white'/>
-                   </div>
-                 </button> }
+          <Image
+            alt=''
+            src={URL.createObjectURL(file)}
+            width={300}
+            height={300}
+            className='mx-auto h-auto w-full object-contain'
+          />
+        </div>
+      )}
+
+      {!file && (
+        <button
+          type='button'
+          onClick={handleClick}
+          className='flex h-52 w-full items-center justify-center rounded-2xl border-2 border-dashed border-input bg-muted text-muted-foreground transition-colors hover:border-ring hover:text-foreground'
+        >
+          <Plus className='size-8' aria-hidden />
+          <span className='sr-only'>Choose a file to upload</span>
+        </button>
+      )}
       <input className='hidden' ref={hiddenInputRef} name="fileInput" type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)}/>
     </>
   );

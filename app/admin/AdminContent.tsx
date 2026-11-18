@@ -1,130 +1,60 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import useAuth from "../../lib/hooks/Auth";
-import useIsClient from '../../lib/hooks/useIsClient';
+import { useEffect } from 'react';
+import {
+  BookOpen,
+  Files,
+  LayoutDashboard,
+  LogOut,
+  Newspaper,
+  Settings,
+  UserCog,
+  Users
+} from 'lucide-react';
 
-import queryClient from '../../lib/queryclient';
-import { QueryClientProvider } from '@tanstack/react-query';
-
-import { useMediaQuery } from 'react-responsive';
-import { SCREENS } from '../../lib/utils/Responsive';
-import styles from "../../styles/dashboard/index.module.css";
-import 'react-loading-skeleton/dist/skeleton.css';
-import LoadingScreen from '../../components/LoadingScreen/index';
-import SideMenu from '../../components/SideMenu/index';
+import ConsoleShell, { UnderConstruction } from '../../components/layout/ConsoleShell';
+import LoadingScreen from '../../components/LoadingScreen';
+import type { ConsolePage } from '../../components/SideMenu';
 
 import ArticleManagementContainer from '../../containers/admin_article';
 import UserManagementContainer from '../../containers/admin_user';
+import useAuth from '../../lib/hooks/Auth';
 
-import { IoIosSettings } from 'react-icons/io';
-import { MdOutlineDashboard } from 'react-icons/md';
-import { GiBookshelf } from 'react-icons/gi';
-import { RiArticleLine, RiLogoutCircleRLine } from 'react-icons/ri';
-import { BsFiles } from 'react-icons/bs';
-import { FaUsersCog } from 'react-icons/fa';
-
-
-const Logout = () => {
+function Logout() {
   const { logout } = useAuth();
   useEffect(() => {
     logout();
   }, [logout]);
-  return <LoadingScreen/>;
-};
+  return <LoadingScreen label="Signing you out" />;
+}
 
-const ToUser = () => {
+function ToDashboard() {
   const router = useRouter();
   useEffect(() => {
     router.push('/dashboard');
   }, [router]);
-  return <LoadingScreen/>;
-};
+  return <LoadingScreen label="Opening your dashboard" />;
+}
 
-const PAGES = [
-  {
-    label: 'Dashboard',
-    icon: <MdOutlineDashboard/>,
-    element: <p> Dashboard Working </p>
-  },
-  {
-    label: 'Manage Courses',
-    icon: <GiBookshelf/>,
-    element: <p> COURSES Working </p>
-  },
-  {
-    label: 'Manage Articles',
-    icon: <RiArticleLine/>,
-    element: <ArticleManagementContainer/>
-  },
-  {
-    label: 'Manage Resources',
-    icon: <BsFiles/>,
-    element: <p> Resource Working </p>
-  },
-  {
-    label: 'Manage Users',
-    icon: <FaUsersCog/>,
-    element: <UserManagementContainer/>
-  },
-  {
-    label: 'Settings',
-    icon: <IoIosSettings/>,
-    element: <p> Working </p>
-  },
-  {
-    label: 'User Dashboard',
-    icon: <IoIosSettings/>,
-    element: <ToUser/>
-  },    
-  {
-    label: 'Logout',
-    icon: <RiLogoutCircleRLine/>,
-    element: <Logout/>
-  }  
+const PAGES: ConsolePage[] = [
+  { label: 'Dashboard', icon: <LayoutDashboard className="size-4" />, element: <UnderConstruction pageName="Dashboard" /> },
+  { label: 'Manage courses', icon: <BookOpen className="size-4" />, element: <UnderConstruction pageName="Manage courses" /> },
+  { label: 'Manage articles', icon: <Newspaper className="size-4" />, element: <ArticleManagementContainer /> },
+  { label: 'Manage resources', icon: <Files className="size-4" />, element: <UnderConstruction pageName="Manage resources" /> },
+  { label: 'Manage users', icon: <Users className="size-4" />, element: <UserManagementContainer /> },
+  { label: 'Settings', icon: <Settings className="size-4" />, element: <UnderConstruction pageName="Settings" /> },
+  { label: 'User dashboard', icon: <UserCog className="size-4" />, element: <ToDashboard /> },
+  { label: 'Logout', icon: <LogOut className="size-4" />, element: <Logout /> }
 ];
 
 export default function AdminContent() {
-  const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
-  const { userData, isLoggedIn, loading } = useAuth();
-  const [page, setPage] = useState(0);
-  const [sideOpen, setSideOpen] = useState(isDesktop);
-  const isClient = useIsClient();
-  const router = useRouter();
-
-  const ready = isClient && !loading;
-  const redirectTo = !ready ? null
-    : !isLoggedIn ? '/'
-    : !userData?.roles?.manager ? '/dashboard'
-    : null;
-
-  // Navigation is a side effect, so it runs after render rather than during it.
-  useEffect(() => {
-    if (redirectTo) router.push(redirectTo);
-  }, [redirectTo, router]);
-
-  if (!ready || redirectTo) return <LoadingScreen/>;
-
-
+  // Signed in but not a manager: send them to their own dashboard. The
+  // signed-out case is handled by ConsoleShell for every console route.
   return (
-    <div className={styles.container}>
-
-      <QueryClientProvider client={queryClient}>
-      <main className='bg-slategray'>
-	<div className="flex">
-          <SideMenu pages={PAGES}
-                    currentPage={page}
-                    setPage={setPage}
-                    isOpen={sideOpen}
-                    setSideOpen={setSideOpen}/>
-	  <div className='w-full h-screen overflow-y-scroll pb-96 px-0 md:px-4'>
-            { PAGES[page].element }
-          </div>
-        </div>
-      </main>
-      </QueryClientProvider>      
-
-    </div>
+    <ConsoleShell
+      pages={PAGES}
+      guard={(auth) => (auth.userData?.roles?.manager ? null : '/dashboard')}
+    />
   );
-};
+}
