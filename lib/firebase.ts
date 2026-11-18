@@ -13,7 +13,6 @@ const firebaseApp = initializeApp({
   appId: process.env.FIREBASE_APP_ID,
   measurementId: process.env.FIREBASE_MEASUREMENT_ID
 });
-const firebaseAuth = getAuth(firebaseApp);
 const firebaseStore = getFirestore(firebaseApp);
 const firebaseStorage = getStorage(firebaseApp);
 
@@ -31,9 +30,12 @@ const globalForEmulators = globalThis as typeof globalThis & { __ciFirebaseEmula
 const connected = (globalForEmulators.__ciFirebaseEmulators ??= new WeakSet());
 if (process.env.FIREBASE_EMULATORS === '1' && !connected.has(firebaseStore)) {
   connected.add(firebaseStore);
-  connectAuthEmulator(firebaseAuth, 'http://127.0.0.1:9099', { disableWarnings: true });
+  connectAuthEmulator(getAuth(firebaseApp), 'http://127.0.0.1:9099', { disableWarnings: true });
   connectFirestoreEmulator(firebaseStore, '127.0.0.1', 8085);
   connectStorageEmulator(firebaseStorage, '127.0.0.1', 9199);
 }
 
-export { firebaseAuth, firebaseStore, firebaseStorage };
+// Auth is initialised by lib/auth.tsx, in the browser only: getAuth() at
+// module load would also run on the server, where it rejects a build without
+// real credentials (auth/invalid-api-key).
+export { firebaseApp, firebaseStore, firebaseStorage };

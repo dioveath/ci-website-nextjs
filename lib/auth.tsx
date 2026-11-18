@@ -6,11 +6,13 @@
  */
 
 import { createContext, useState, useContext, useEffect, type ReactNode } from "react";
-import { deleteUser, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut, type User } from "firebase/auth";
+import { deleteUser, getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut, type User } from "firebase/auth";
 
-import { firebaseAuth as auth } from "./firebase";
+import { firebaseApp } from "./firebase";
 import { createUser, getUser } from "./users";
 import type { UserData } from "../types";
+
+const auth = getAuth(firebaseApp);
 
 export interface AuthContextValue {
   user: User | null;
