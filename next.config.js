@@ -5,6 +5,12 @@ const nextConfig = {
   // directory tree, and without this Turbopack warns about inferring the root
   // from it instead of from this repo.
   turbopack: { root: __dirname },
+  // Sign-up is Google-only now, and the first Google sign-in creates the
+  // account, so /register no longer exists. Keep old links working, including
+  // CMS content (the home page hero's ctaLink) that may still point at it.
+  async redirects() {
+    return [{ source: '/register', destination: '/login', permanent: true }];
+  },
   images: {
     // `images.domains` was removed in Next 16 in favour of remotePatterns.
     remotePatterns: [

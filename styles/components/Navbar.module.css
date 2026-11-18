@@ -77,20 +77,6 @@
   box-shadow: 1px 1px 2px 0.2px #eeeeee;
 }
 
-.registerButton {
-  border: 2px solid var(--primary-color);
-  padding: 5px 20px;
-  border-radius: 4px;
-  text-align: center;
-  vertical-align: center;
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.registerButton:hover {
-  box-shadow: 1px 1px 2px 0.2px #eeeeee;
-}
-
 .userProfilePhoto {
   border-radius: 50%;
   width: 24px;

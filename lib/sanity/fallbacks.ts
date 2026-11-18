@@ -32,7 +32,7 @@ export const homePageFallback = {
     subtitle:
       'Welcome to Charicha Institute, a premier computer training institute offering expert-led courses for all levels. Our team of qualified instructors and state-of-the-art facilities are dedicated to helping you succeed in the tech industry. Explore our course catalog and sign up for a class today.',
     ctaLabel: 'Join Us',
-    ctaLink: '/register',
+    ctaLink: '/login',
   },
   featureVideoUrl: 'https://www.youtube.com/watch?v=lvWUO2YTe-M',
   stories: [

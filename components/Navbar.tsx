@@ -138,15 +138,6 @@ const NavList = ({
         >
           Login
         </Link>
-
-        <Link
-          href="/register"
-          className={
-            "px-8 py-2 h-10 w-32 flex justify-center items-center bg-slategray hover:bg-brightaqua text-white rounded-3xl transition-all drop-shadow-md"
-          }
-        >
-          Register
-        </Link>
       </div>
     ) : (
       <div>

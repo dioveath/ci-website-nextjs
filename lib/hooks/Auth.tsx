@@ -18,10 +18,6 @@ export interface AuthContextValue {
   fetching: boolean;
   loading: boolean;
   loginWithGoogle: () => Promise<void>;
-  loginWithEmailAndPassword: (email: string, password: string) => Promise<void>;
-  registerWithEmailAndPassword: (
-    email: string, password: string, firstName: string, lastName: string
-  ) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -59,21 +55,6 @@ export function AuthProvider(props: { children?: ReactNode }) {
     clearError();
     setFetching(true);
     await AuthService.loginWithGoogle().catch(handleError).finally(finalize);
-  };
-
-  const loginWithEmailAndPassword = async (email: string, password: string) => {
-    clearError();
-    setFetching(true);
-    await AuthService.loginWithEmailAndPassword(email, password).catch(handleError).finally(finalize);
-  };
-
-  const registerWithEmailAndPassword = async (
-    email: string, password: string, firstName: string, lastName: string
-  ) => {
-    clearError();
-    setFetching(true);
-    await AuthService.registerWithEmailAndPassword(email, password, firstName, lastName)
-      .catch(handleError).finally(finalize);
   };
 
   const logout = async () => {
@@ -138,8 +119,6 @@ export function AuthProvider(props: { children?: ReactNode }) {
     fetching,
     loading,
     loginWithGoogle,
-    loginWithEmailAndPassword,
-    registerWithEmailAndPassword,
     logout
   };
 

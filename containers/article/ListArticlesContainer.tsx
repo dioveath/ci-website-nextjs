@@ -65,7 +65,7 @@ export default function ArticleContainer() {
 
   const onClickPrevPage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (!data && articlePage <= 0) return;
+    if (!data || articlePage <= 0) return;
     setArticlePage(articlePage - 1);
   };
 

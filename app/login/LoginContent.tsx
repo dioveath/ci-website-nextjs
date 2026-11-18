@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useEffect } from 'react';
 
 import styles from '../../styles/login/login.module.css';
 import Marginer from '../../components/utils/Marginer';
@@ -10,92 +10,50 @@ import PrimaryButton from '../../components/buttons/PrimaryButton';
 import LoadingScreen from '../../components/LoadingScreen';
 
 import useAuth from '../../lib/hooks/Auth';
-import { validateEmail, validatePassword } from '../../lib/utils/validator';
-import PuffLoader from 'react-spinners/PuffLoader';
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { ImGoogle2 } from 'react-icons/im';
 
 import ParticlesBackground from '../../components/ParticlesBackground';
 
+// Google is the only sign-in method. There is no separate sign-up: the first
+// Google sign-in creates the user's profile (see AuthProvider in lib/hooks/Auth).
 export default function LoginContent() {
-  const [fieldError, setFieldError] = useState<string | null>(null);
-  const email = useRef<HTMLInputElement>(null);
-  const password = useRef<HTMLInputElement>(null);
-
-  const {  error, fetching, loading, isLoggedIn, loginWithGoogle, loginWithEmailAndPassword } = useAuth();
-  const [passwordShow, setPasswordShow] = useState(false);
-
+  const { error, fetching, loading, isLoggedIn, loginWithGoogle } = useAuth();
   const router = useRouter();
 
-  if(loading){
-    return <LoadingScreen/>;
-  }
+  const signedIn = !loading && !fetching && isLoggedIn;
 
-  if(!fetching && !loading && isLoggedIn) {
-    router.push("/dashboard");
-    return <LoadingScreen/>;
-  }
+  // Navigation is a side effect, so it runs after render rather than during it.
+  useEffect(() => {
+    if (signedIn) router.push('/dashboard');
+  }, [signedIn, router]);
 
-  const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFieldError(null);
-    if(!validateEmail((email.current?.value ?? ''))) {
-      setFieldError("Please enter a valid email!");
-      return;
-    }
-    if(!validatePassword((password.current?.value ?? ''))) {
-      setFieldError("Password is not valid!");
-      return;
-    }
+  if (loading || signedIn) return <LoadingScreen/>;
 
-    loginWithEmailAndPassword((email.current?.value ?? ''), (password.current?.value ?? ''));
-  };
-  
   return (
     <div className={styles.container}>
       <ParticlesBackground/>
       <main className={'flex w-full min-h-screen h-full justify-center items-center bg-linear-[-45deg] from-eggblue to-slategray'}>
-          <form className={styles.loginContainer} onSubmit={onSubmitHandler}>
-            <div className={'min-w-md w-full h-full flex justify-center items-center'}>
-              <Image className="shadow-md" alt='charicha pc hero image' src='/ci_pc.svg' width={'500'} height={'300'}/>
-            </div>            
-            {/* <img alt="" src="ci_pc.png" className={styles.image}/> */}
-            <Marginer vertical="20px"/>
-            <p className={'text-sm text-white font-light'}> Login with credentials </p>
-            <Marginer vertical="6px"/>          
-            <input name="email" type="email" placeholder="Email" ref={email} className={styles.inputText}/>
-            <Marginer vertical="14px"/>                    
-            <div className={styles.field}>
-              <div className={styles.eyeIcon} onClick={() => { setPasswordShow(!passwordShow); }}> { passwordShow ? <AiFillEyeInvisible/> : <AiFillEye/>}</div>
-              <input name="password" type={ passwordShow ? "text" : "password"} placeholder="Password" ref={password} className={styles.inputText}/>
-            </div>
-	    <div className='max-h-12 h-full my-2'>
-            {(fieldError || error) &&
+        <div className={styles.loginContainer}>
+          <div className={'min-w-md w-full h-full flex justify-center items-center'}>
+            <Image className="shadow-md" alt='charicha pc hero image' src='/ci_pc.svg' width={'500'} height={'300'}/>
+          </div>
+          <Marginer vertical="20px"/>
+          <p className={'text-sm text-white font-light text-center'}>
+            Sign in with your Google account. New here? Signing in creates your account.
+          </p>
+          <div className='max-h-12 h-full my-2'>
+            {error &&
              <div className='h-full flex items-center p-4 bg-red-300 rounded-md'>
-               <p className='text-red-600 text-xs animate-wiggle'> { fieldError || error }</p>              
+               <p className='text-red-600 text-xs animate-wiggle'> { error }</p>
              </div>}
+          </div>
+          <PrimaryButton disabled={fetching} onClick={() => loginWithGoogle()} text={
+            <div className='flex justify-center items-center'>
+              <ImGoogle2 size={26}/> <Marginer/>CONTINUE WITH GOOGLE
             </div>
-            <PrimaryButton type="submit" text="LOGIN" disabled={fetching}/>
-            <Marginer vertical="6px"/>          
-            <PrimaryButton disabled={fetching} onClick={() => loginWithGoogle() } text={ <div style={{
-              "display": "flex",
-              "justifyContent": "center",
-              "alignItems": "center"
-            }}> <ImGoogle2 size={26}/> <Marginer/>LOGIN WITH GOOGLE </div>}/>
-            <Marginer vertical="14px"/>
-            <p className={'text-aquamarine font-light cursor-pointer'}> Forget Your Password? </p>
-            <Marginer vertical="18px"/>
-            <div className='flex gap-2'>
-              <p className={'text-white font-light'}> Don&apos;t have an Account? </p>
-              <p className={'text-aquamarine font-light cursor-pointer'} onClick={() => {
-                router.push('/register');
-              }}> Register </p>
-            </div>
-          </form> 
+          }/>
+        </div>
       </main>
-
     </div>
-    
   );
-
 }
