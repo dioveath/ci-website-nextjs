@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Charicha Institute',
-  description: 'Charicha Institute - Login'
+  title: 'Sign in',
+  description: 'Sign in to Charicha Institute with your Google account.',
+  // Signed-in or per-visitor: nothing here belongs in an index.
+  robots: { index: false, follow: false }
 };
 
 import LoginContent from './LoginContent';

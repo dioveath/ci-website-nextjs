@@ -1,11 +1,14 @@
-'use client';
+import { Loader2 } from 'lucide-react';
 
-import PuffLoader from 'react-spinners/PuffLoader';
-
-export default function LoadingScreen() {
+export default function LoadingScreen({ label = 'Loading' }: { label?: string }) {
   return (
-    <div className='flex w-full min-h-screen h-full justify-center items-center bg-linear-[-45deg] from-eggblue to-slategray'>
-      <PuffLoader color='#0FD3BB'/>
+    <div
+      role="status"
+      aria-live="polite"
+      className="flex min-h-screen w-full flex-col items-center justify-center gap-4 bg-background"
+    >
+      <Loader2 className="size-10 animate-spin text-primary" aria-hidden />
+      <p className="text-sm text-muted-foreground">{label}</p>
     </div>
   );
 }

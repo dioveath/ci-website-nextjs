@@ -19,7 +19,8 @@ Sanity — both are merged on `/blog`, newest first. See "Hybrid blog" below.
 | Piece | Where | Notes |
 |---|---|---|
 | **Sanity Studio** (editing UI) | [`studio/`](studio/) | Separate project on Sanity 6 / React 19, needs Node >=22.12. Not embedded in the Next site (both are React 19 now, so embedding is possible, but it is deliberately kept separate). Deploy free to `*.sanity.studio`. |
-| **Schemas** | [`studio/schemaTypes/`](studio/schemaTypes/) | `course`, `service`, `post` (documents) + `homePage`, `siteSettings`, `contactPage`, `navigation` (singletons). |
+| **Schemas** | [`studio/schemaTypes/`](studio/schemaTypes/) | `course` (with `courseSection` / `courseLesson`), `service`, `post` (documents) + `homePage`, `siteSettings`, `contactPage`, `navigation` (singletons). `lessonContent` belongs to the private "Course content" workspace. |
+| **Workspaces** | [`studio/sanity.config.js`](studio/sanity.config.js) | **Website** (public dataset) and **Course content** (private dataset `course-content`, paid lesson bodies). See "Course content" below. |
 | **Seed data** | [`seed/seed.ndjson`](seed/seed.ndjson) | The current hardcoded content, ready to import. |
 | **Read client** | [`lib/sanity/`](lib/sanity/) | `@sanity/client` + GROQ. Called from the Next app's server components (App Router). |
 
@@ -30,12 +31,12 @@ Wired pages / components:
 - [`app/page.tsx`](app/page.tsx) — `getHomePage()` → hero / stories / app promo / feature video
 - [`app/contact/page.tsx`](app/contact/page.tsx) — `getContactPage()` → title / description / contact / map
 - [`components/footer/Footer.tsx`](components/footer/Footer.tsx) — global, driven by
-  [`useSiteSettings()`](lib/sanity/useSiteSettings.ts). It is rendered on every
+  [`useSiteSettings()`](lib/sanity/hooks.ts). It is rendered on every
   page as a client component, so it renders the static fallback on the
   server / first client render (no hydration mismatch) and swaps in CMS data
   after mount.
 - [`components/Navbar.tsx`](components/Navbar.tsx) — global header nav, driven by
-  [`useNavigation()`](lib/sanity/useNavigation.ts) (`navigation.headerLinks`).
+  [`useNavigation()`](lib/sanity/hooks.ts) (`navigation.headerLinks`).
   Same render strategy as the footer: static fallback first, CMS data after mount.
 - [`app/blog/page.tsx`](app/blog/page.tsx) — **hybrid** (see below).
 
@@ -54,19 +55,18 @@ How it fits together:
 - [`getBlogPosts()`](lib/sanity/fetchers.ts) returns `[]` when Sanity is
   unconfigured, so with no CMS the blog simply shows the Firebase articles —
   nothing breaks (consistent with the rest of the integration).
-- [`app/blog/page.tsx`](app/blog/page.tsx) (rendered per request) normalises
-  both sources with a `source` discriminator + `sortTime`, then sorts by date.
-- [`components/blog/BlogCard.tsx`](components/blog/BlogCard.tsx) branches on
-  `blog.source` (Firebase keeps its client-side author fetch; Sanity uses the
-  inline author).
-- [`app/blog/[id]/page.tsx`](app/blog/[id]/page.tsx) resolves a slug by trying Firebase
-  (`ArticleService.getArticle`) first, then Sanity (`getBlogPostBySlug`); 404 if neither matches.
+- [`lib/blog.ts`](lib/blog.ts) is the only code that knows there are two
+  sources. `listPosts()` normalises both into one `BlogPost` shape (authors
+  resolved on the server) and sorts by date; `getPost(id)` tries a Firebase
+  article id first, then a Sanity slug, and returns null if neither matches.
+- [`app/blog/page.tsx`](app/blog/page.tsx) and [`app/blog/[id]/page.tsx`](app/blog/[id]/page.tsx)
+  render what those return; [`BlogCard`](components/blog/BlogCard.tsx) renders either source.
   Sanity bodies render via [`PortableBody`](components/blog/PortableBody.tsx)
   (`@portabletext/react`), Firebase bodies via [`ArticleRenderer`](components/ArticleRenderer/index.tsx).
 
 Posts are ordered by `publishedAt` — set it when publishing. The body uses
 Portable Text (`block` + inline `image`); embedded images resolve through
-[`urlFor()`](lib/sanity/image.ts).
+[`urlFor()`](lib/sanity/client.ts).
 
 All copy fallbacks live in [`lib/sanity/fallbacks.ts`](lib/sanity/fallbacks.ts).
 
@@ -98,9 +98,19 @@ npm run import-seed
 # (equivalent to: npx sanity dataset import ../seed/seed.ndjson production)
 ```
 
-This loads the 9 courses, 6 services, the 4 singleton documents, and one sample blog post.
-Cover images aren't in the seed — re-upload them per course in the Studio
-(the site falls back to `/george.jpg` until you do).
+This loads the 9 courses (sample sections, lessons and prices), 6 services, the
+4 singleton documents, and one sample blog post. Cover images aren't in the seed:
+re-upload them per course in the Studio (the site falls back to `/george.jpg`
+until you do).
+
+**Already have courses from before the switch to digital courses?** Convert
+them (flat lesson list -> sections with stable lesson ids; `durationDays`
+removed) instead of re-importing:
+
+```bash
+npm run migrate:digital-courses                 # dry run
+npm run migrate:digital-courses -- --no-dry-run
+```
 
 ### 3. Run the Studio
 
@@ -131,19 +141,52 @@ fallback data and nothing breaks.
 
 ## How the fallback works
 
-[`lib/sanity/client.ts`](lib/sanity/client.ts) exports `isSanityConfigured`
-(true only when `NEXT_PUBLIC_SANITY_PROJECT_ID` is set). Each fetcher in
+[`lib/sanity/client.ts`](lib/sanity/client.ts) exports a null `sanityClient`
+unless `NEXT_PUBLIC_SANITY_PROJECT_ID` is set. Each fetcher in
 [`lib/sanity/fetchers.ts`](lib/sanity/fetchers.ts) returns the bundled static
 array when Sanity is unconfigured, empty, or errors — so a misconfigured or
 down CMS can never blank out the site.
 
-GROQ projections in [`lib/sanity/queries.ts`](lib/sanity/queries.ts) are shaped
-to match the legacy objects exactly (`{id, level, title, coverImg, lessons,
-description, time}`), so no display components needed changes.
+**Courses are the exception.** They are sold, so the bundled sample catalog
+(`coursesFallback` in [`lib/sanity/fallbacks.ts`](lib/sanity/fallbacks.ts)) is used
+only when Sanity is **not configured**. Once it is, an empty or failing Sanity
+shows no courses rather than sample courses with sample prices.
 
-## Courses ↔ Firebase enrollment
+Course GROQ projections in [`lib/sanity/queries.ts`](lib/sanity/queries.ts)
+return the shape in `lib/courses/catalog.ts` (`RawCourse`); every result goes
+through `normalizeCourse`, so a half-filled course in the Studio cannot break a
+page.
 
-Course **content** lives in Sanity, but student **enrollment** stays in Firebase
-(`user.courses` keyed by course id). Each Sanity course carries a stable
-`courseId` (`"1"`–`"9"`) used in `/courses/<id>` URLs and enrollment records —
-**don't change it** once students are enrolled, or their enrollments won't match.
+---
+
+## Course content (private dataset)
+
+Course outlines (titles, prices, free previews) are public, but what students
+pay for is not. Lesson bodies (article text and video notes) live in a
+**private** dataset that only the website's server reads, after checking the
+student's access.
+
+One-time setup:
+
+```bash
+# from studio/
+npx sanity dataset create course-content --visibility private
+npm run import-content-seed        # optional: sample bodies for course 1
+```
+
+Then create an API token with **Viewer** access (sanity.io/manage -> API ->
+Tokens) and set it on the website as `SANITY_READ_TOKEN` (server only; see
+`.env.example`). Without it, lessons still open and play their video, minus the
+written content.
+
+In the Studio, open the **Course content** workspace and create one "Lesson
+content" document per lesson, with the course's **Course ID** and the lesson's
+**Lesson ID** copied from the Website workspace.
+
+## Courses, purchases and progress
+
+Course **content** lives in Sanity; purchases, access and progress live in
+Firestore (`orders`, `enrollments`, `certificates`). See
+[COURSES.md](COURSES.md). Each course's **Course ID** and each lesson's
+**Lesson ID** key those records: **don't change them** once a course has been
+sold.

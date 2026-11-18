@@ -1,0 +1,11 @@
+rules_version = '2';
+// LOCAL EMULATOR ONLY -- wide open so uploads work without a real project.
+// Never deploy. (Firestore, unlike Storage, uses the real production rules:
+// emulators/firestore.rules is a symlink to ../firestore.rules.)
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if true;
+    }
+  }
+}

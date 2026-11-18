@@ -1,53 +1,33 @@
-'use client';
-
-import ReactPlayer from 'react-player';
+import Section from '../layout/Section';
+import VideoEmbed from '../media/VideoEmbed';
 import { homePageFallback } from '../../lib/sanity/fallbacks';
 
-function StoryVideo({ url }: { url: string }) {
-  return (
-    <div className='rounded-2xl overflow-clip shadow-lg w-full max-w-2xl h-60 sm:h-96 mx-6'>
-      <ReactPlayer width={'100%'} height={'100%'} className='w-full h-full' src={url}/>
-    </div>
-  );
-}
+type Story = (typeof homePageFallback.stories)[number];
 
-function StoryText({ title, body }: { title: string; body: string }) {
-  return (
-    <div>
-      <p className='text-lg lg:text-2xl text-white uppercase mx-6'> {title} </p>
-      <p className='max-w-md text-sm lg:text-base text-white font-light mx-6'>{body}</p>
-    </div>
-  );
-}
+export default function Stories({ stories = homePageFallback.stories }: { stories?: Story[] }) {
+  if (!stories.length) return null;
 
-export default function Stories({ stories = homePageFallback.stories }){
   return (
     <>
       {stories.map((story, index) => {
-        const key = story.title + index;
-        // Alternate layout: even rows show video-left, odd rows show video-right.
-        const reversed = index % 2 === 1;
+        // Alternate the video side, and alternate the surface with it so the
+        // rhythm is visible rather than one long undifferentiated column.
+        const flipped = index % 2 === 1;
+
         return (
-          <div
-            key={key}
-            className={
-              (reversed
-                ? 'flex flex-wrap-reverse'
-                : 'flex flex-wrap') + ' justify-center gap-8 bg-slategray py-8'
-            }
-          >
-            {reversed ? (
-              <>
-                <StoryText title={story.title} body={story.body}/>
-                <StoryVideo url={story.videoUrl}/>
-              </>
-            ) : (
-              <>
-                <StoryVideo url={story.videoUrl}/>
-                <StoryText title={story.title} body={story.body}/>
-              </>
-            )}
-          </div>
+          <Section key={story.title} tone={flipped ? 'muted' : 'default'}>
+            <div className="grid items-center gap-10 lg:grid-cols-2">
+              <div className={flipped ? 'lg:order-2' : undefined}>
+                <VideoEmbed url={story.videoUrl} title={story.title} />
+              </div>
+              <div className="flex flex-col gap-4">
+                <h2 className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+                  {story.title}
+                </h2>
+                <p className="text-base text-muted-foreground">{story.body}</p>
+              </div>
+            </div>
+          </Section>
         );
       })}
     </>

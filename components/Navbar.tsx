@@ -1,181 +1,202 @@
 'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useState } from 'react';
+import { LayoutDashboard, LogOut, Menu, User as UserIcon } from 'lucide-react';
 
-import styles from "../styles/components/Navbar.module.css";
-import Marginer from "../components/utils/Marginer";
-import { useMediaQuery } from "react-responsive";
-import { SCREENS } from "../lib/utils/Responsive";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { BsPersonFill } from "react-icons/bs";
-import { RxCross2 } from 'react-icons/rx';
+import Logo from './brand/Logo';
+import ThemeToggle from './theme/ThemeToggle';
+import { Button } from './ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from './ui/dropdown-menu';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger
+} from './ui/sheet';
+import { cn } from '@/lib/utils';
 
-import { DropdownMenu } from "../components/DropdownMenu/index";
+import useAuth from '@/lib/auth';
+import { useNavigation } from '@/lib/sanity/hooks';
 
-import NavItem from "./Navbar/NavItem";
-import useAuth from "../lib/hooks/Auth";
-import { useNavigation } from "../lib/sanity/useNavigation";
-
-import type { User } from 'firebase/auth';
-import type { UserData } from '../types';
-import type { DropdownItem } from './DropdownMenu';
-
-export interface NavLink { href: string; label: string }
-
-interface NavListProps {
-  showMenu: boolean;
-  isMobile: boolean;
-  user: User | null;
-  userData: UserData | null;
-  setShowMenu: (v: boolean) => void;
-  dropdownList?: DropdownItem[];
-  path?: string;
-  headerLinks?: NavLink[];
+export interface NavLink {
+  href: string;
+  label: string;
 }
 
-export default function Navbar({ path }: { path?: string }) {
-  // next/navigation has no singleton Router export, so this is now a hook.
-  const router = useRouter();
-  const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
-  const [showMenu, setShowMenu] = useState(false);
-  const { user, userData, logout } = useAuth();
-  const { headerLinks } = useNavigation();
+/** Marks the current section, including nested routes such as /blog/<id>. */
+function isActive(pathname: string, href: string) {
+  return href === '/' ? pathname === '/' : pathname.startsWith(href);
+}
 
-  const dropdownList = [
-    {
-      name: "Profile",
-      onClick: () => {
-        router.push("/profile/" + user?.uid);
-      },
-    },
-    {
-      name: "Dashboard",
-      onClick: () => {
-        router.push("/dashboard");
-      },
-    },
-    {
-      name: "Logout",
-      onClick: () => {
-        logout();
-      },
-    },
-  ];
-
+function NavLinks({
+  links,
+  pathname,
+  onNavigate,
+  orientation = 'horizontal'
+}: {
+  links: NavLink[];
+  pathname: string;
+  onNavigate?: () => void;
+  orientation?: 'horizontal' | 'vertical';
+}) {
   return (
-    <nav
-      className={
-        `w-full flex justify-between py-4 px-8 md:px-10 xl:px-20 2xl:px-48 font-normal`
-      }
-    >
-      <Link href="/">
-        <Image
-          src="/ci_logo_light_blue.png"
-          alt="Charicha Institute Logo"
-          width={140}
-          height={50}
-        />
-      </Link>
-
-      {!isDesktop && !showMenu && (
-        <NavHamburger setShowMenu={setShowMenu} showMenu={showMenu} />
+    <ul
+      className={cn(
+        'flex gap-1',
+        orientation === 'vertical' ? 'flex-col' : 'items-center'
       )}
-
-      <NavList
-        showMenu={showMenu}
-        isMobile={!isDesktop}
-        user={user}
-        userData={userData}
-        setShowMenu={setShowMenu}
-        dropdownList={dropdownList}
-        path={path}
-        headerLinks={headerLinks}
-      />
-    </nav>
+    >
+      {links.map((link) => {
+        const active = isActive(pathname, link.href);
+        return (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              onClick={onNavigate}
+              aria-current={active ? 'page' : undefined}
+              className={cn(
+                'block rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                'hover:bg-accent hover:text-accent-foreground',
+                active ? 'text-primary' : 'text-muted-foreground',
+                orientation === 'vertical' && 'text-base'
+              )}
+            >
+              {link.label}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
-const NavList = ({
-  showMenu,
-  isMobile,
-  user,
-  userData,
-  setShowMenu,
-  dropdownList,
-  path,
-  headerLinks,
-}: NavListProps) => {
+function AccountMenu() {
+  const { user, userData, logout } = useAuth();
+
+  if (!user) {
+    return (
+      <Button asChild size="lg">
+        <Link href="/login">Sign in</Link>
+      </Button>
+    );
+  }
+
+  const name =
+    [userData?.first_name, userData?.last_name].filter(Boolean).join(' ') ||
+    user.displayName ||
+    'Account';
+
   return (
-  <ul
-    className={`${styles.navlist} ${(showMenu ? styles.navActive : styles.navInActive)}`}
-  >
-    {isMobile && showMenu &&
-     (<div className='w-full h-4 flex justify-end cursor-pointer'>
-         <RxCross2
-           className='text-2xl text-white hover:text-red'
-           onClick={() => {
-             setShowMenu(!showMenu);
-           }}
-      />         
-       </div>)}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon-lg" aria-label="Account menu">
+          <Avatar className="size-8">
+            {userData?.profile_URL ? (
+              <AvatarImage src={userData.profile_URL} alt="" />
+            ) : null}
+            <AvatarFallback>
+              <UserIcon className="size-4" />
+            </AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-52">
+        <DropdownMenuItem asChild>
+          <Link href={`/profile/${user.uid}`}>
+            <UserIcon />
+            {name}
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/dashboard">
+            <LayoutDashboard />
+            Dashboard
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => logout()}>
+          <LogOut />
+          Sign out
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
-    {(headerLinks || []).map((link: NavLink) => (
-      <NavItem key={link.href + link.label} path={path} to={link.href} label={link.label} />
-    ))}
+export default function Navbar() {
+  const pathname = usePathname() ?? '/';
+  const { headerLinks } = useNavigation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-    <Marginer horizontal="20px" />
+  const links: NavLink[] = headerLinks ?? [];
 
-    {user === null ? (
-      <div className={`flex gap-4`}>
-        <Link
-          href="/login"
-          className={
-            "px-8 py-2 h-10 w-32 flex justify-center items-center bg-brightaqua hover:bg-slategray text-white rounded-3xl transition-all drop-shadow-md"
-          }
-        >
-          Login
+  return (
+    <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur-sm">
+      <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-6 md:px-8">
+        <Link href="/" aria-label="Charicha Institute, home" className="shrink-0">
+          <Logo className="h-8 md:h-9" />
         </Link>
-      </div>
-    ) : (
-      <div>
-        <DropdownMenu
-          title={
-            <div className='rounded-full overflow-clip'>
-              {userData?.profile_URL && (
-                <Image
-                  alt={user.displayName ?? "Profile picture"}
-                  src={userData.profile_URL}
-                  className={styles.userProfilePhoto}
-                  width={40}
-                  height={40}
-                  quality={100}
-                />
-              )}
-              {!userData?.profile_URL && <BsPersonFill className='text-white text-2xl'/>}
-            </div>
-          }
-          itemList={dropdownList}
-        />
-      </div>
-    )}
-  </ul>
-);
-};
 
-const NavHamburger = ({ setShowMenu, showMenu }: { setShowMenu: (v: boolean) => void; showMenu: boolean }) => (
-  <div
-    style={{
-      marginRight: "20px",
-      cursor: "pointer",
-    }}
-    onClick={() => {
-      console.log(showMenu);
-      if (!showMenu) setShowMenu(true);
-    }}
-  >
-    <GiHamburgerMenu className="text-[32px] text-white" />
-  </div>
-);
+        <nav aria-label="Main" className="hidden lg:block">
+          <NavLinks links={links} pathname={pathname} />
+        </nav>
+
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <div className="hidden lg:block">
+            <AccountMenu />
+          </div>
+
+          {/*
+            Keyed on the path so a route change remounts the sheet closed.
+            Resetting it from an effect instead would set state during render
+            and cascade an extra render on every navigation.
+          */}
+          <Sheet key={pathname} open={menuOpen} onOpenChange={setMenuOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-lg"
+                className="lg:hidden"
+                aria-label="Open menu"
+              >
+                <Menu className="size-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-72">
+              <SheetHeader>
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+              <nav aria-label="Main" className="px-4">
+                <NavLinks
+                  links={links}
+                  pathname={pathname}
+                  orientation="vertical"
+                  onNavigate={() => setMenuOpen(false)}
+                />
+              </nav>
+              <div className="mt-auto border-t p-4">
+                <SheetClose asChild>
+                  <div>
+                    <AccountMenu />
+                  </div>
+                </SheetClose>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </header>
+  );
+}

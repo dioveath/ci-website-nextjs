@@ -1,134 +1,66 @@
 'use client';
 
-import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
-import useAuth from "../../lib/hooks/Auth";
-import useIsClient from "../../lib/hooks/useIsClient";
+import { useRouter } from 'next/navigation';
+import { useEffect, useMemo } from 'react';
+import {
+  BookOpen,
+  Files,
+  LogOut,
+  Newspaper,
+  Settings,
+  ShieldCheck,
+  TrendingUp
+} from 'lucide-react';
 
-import queryClient from "../../lib/queryclient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import ConsoleShell, { UnderConstruction } from '@/components/layout/ConsoleShell';
+import LoadingScreen from '@/components/LoadingScreen';
+import type { ConsolePage } from '@/components/SideMenu';
+import useAuth from '@/lib/auth';
 
-import { useMediaQuery } from "react-responsive";
-import { SCREENS } from "../../lib/utils/Responsive";
-import styles from "../../styles/dashboard/index.module.css";
-import "react-loading-skeleton/dist/skeleton.css";
-import LoadingScreen from "../../components/LoadingScreen/index";
-import SideMenu from "../../components/SideMenu/index";
+import ArticleContainer from './_articles';
+import MediaContainer from './_media';
+import MyCoursesContainer from './_my-courses';
 
-import MediaContainer from "../../containers/media";
-import ArticleContainer from "../../containers/article";
-
-import { IoIosSettings, IoIosConstruct } from "react-icons/io";
-import { TfiStatsUp } from "react-icons/tfi";
-import { GiBookshelf } from "react-icons/gi";
-import { RiArticleLine, RiLogoutCircleRLine } from "react-icons/ri";
-import { VscFileMedia } from "react-icons/vsc";
-import { MdAdminPanelSettings } from "react-icons/md";
-
-const Logout = () => {
+function Logout() {
   const { logout } = useAuth();
   useEffect(() => {
     logout();
   }, [logout]);
-  return <LoadingScreen />;
-};
+  return <LoadingScreen label="Signing you out" />;
+}
 
-const ToAdmin = () => {
+function ToAdmin() {
   const router = useRouter();
   useEffect(() => {
-    router.push("/admin");
+    router.push('/admin');
   }, [router]);
-
-  return <LoadingScreen />;
-};
-
-const AdminDashboard = {
-  label: "Admin Dashboard",
-  icon: <MdAdminPanelSettings />,
-  element: <ToAdmin />,
-};
-
-const UnderConstruction = ({ pageName }: { pageName: string }) => {
-  return <div className='flex flex-col w-full justify-center items-center'>
-	   <div className='h-20'></div>
-           <IoIosConstruct className='text-white text-[100px] animate-pulse'/>
-	   <h1 className='text-white text-4xl uppercase'> Under construction </h1>
-	   <h2 className='text-gray-500 text-xl '> Please visit &apos;{ pageName }&apos; shortly! </h2>
-         </div>;
-};
+  return <LoadingScreen label="Opening admin" />;
+}
 
 export default function DashboardContent() {
-  const isDesktop = useMediaQuery({ minWidth: SCREENS.lg });
-  const { userData, isLoggedIn, loading } = useAuth();
-  const [page, setPage] = useState(0);
-  const [sideOpen, setSideOpen] = useState(isDesktop);
-  const isClient = useIsClient();
-  const router = useRouter();
+  // From the server-set `admin` custom claim; UI only (the server re-checks).
+  const { isAdmin } = useAuth();
 
-  const ready = isClient && !loading;
-  const redirectTo = ready && !isLoggedIn ? "/" : null;
+  const pages = useMemo<ConsolePage[]>(() => {
+    const base: ConsolePage[] = [
+      { label: 'My courses', icon: <BookOpen className="size-4" />, element: <MyCoursesContainer /> },
+      { label: 'Performance', icon: <TrendingUp className="size-4" />, element: <UnderConstruction pageName="Performance" /> },
+      { label: 'Articles', icon: <Newspaper className="size-4" />, element: <ArticleContainer /> },
+      { label: 'Resources', icon: <Files className="size-4" />, element: <MediaContainer /> },
+      { label: 'Settings', icon: <Settings className="size-4" />, element: <UnderConstruction pageName="Settings" /> },
+      { label: 'Logout', icon: <LogOut className="size-4" />, element: <Logout /> }
+    ];
 
-  // Navigation is a side effect, so it runs after render rather than during it.
-  useEffect(() => {
-    if (redirectTo) router.push(redirectTo);
-  }, [redirectTo, router]);
+    if (isAdmin) {
+      base.push({
+        label: 'Admin dashboard',
+        icon: <ShieldCheck className="size-4" />,
+        element: <ToAdmin />
+      });
+    }
 
-  if (!ready || redirectTo) return <LoadingScreen />;
+    return base;
+  }, [isAdmin]);
 
-  const PAGES = [
-    {
-      label: "Performance",
-      icon: <TfiStatsUp />,
-      element: <UnderConstruction pageName={'Performance'}/>
-    },
-    {
-      label: "Courses",
-      icon: <GiBookshelf />,
-      element: <UnderConstruction pageName={'Courses'}/>
-    },
-    {
-      label: "Articles",
-      icon: <RiArticleLine />,
-      element: <ArticleContainer />,
-    },
-    {
-      label: "Resources",
-      icon: <VscFileMedia />,
-      element: <MediaContainer />,
-    },
-    {
-      label: "Settings",
-      icon: <IoIosSettings />,
-      element: <UnderConstruction pageName={'Settings'}/>
-    },
-    {
-      label: "Logout",
-      icon: <RiLogoutCircleRLine />,
-      element: <Logout />,
-    },
-  ];
-
-  if(userData?.roles?.manager) PAGES.push(AdminDashboard);
-
-  return (
-    <div className={styles.container}>
-
-      <QueryClientProvider client={queryClient}>
-        <main className="bg-slategray">
-          <div className="flex">
-            <SideMenu
-              pages={PAGES}
-              currentPage={page}
-              setPage={setPage}
-              isOpen={sideOpen}
-              setSideOpen={setSideOpen}
-            />
-            <div className="w-full h-screen overflow-y-scroll pb-96 px-0 md:px-4">
-              {PAGES[page].element}
-            </div>
-          </div>
-        </main>
-      </QueryClientProvider>
-    </div>
-  );
+  return <ConsoleShell pages={pages} />;
 }

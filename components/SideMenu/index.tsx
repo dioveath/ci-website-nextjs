@@ -1,84 +1,106 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
+import { useState, type ReactNode } from 'react';
+import { PanelLeftClose, PanelLeftOpen, User as UserIcon } from 'lucide-react';
 
-import { GiHamburgerMenu } from 'react-icons/gi';
-import { RxCross1 } from 'react-icons/rx';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
+import Logo from '../brand/Logo';
+import { Button } from '../ui/button';
+import { Skeleton } from '../ui/skeleton';
+import { cn } from '@/lib/utils';
+import useAuth from '@/lib/auth';
 
-import useAuth from '../../lib/hooks/Auth';
-
-export interface SideMenuPage {
+export interface ConsolePage {
   label: string;
-  icon?: React.ReactNode;
-  element?: React.ReactNode;
+  icon?: ReactNode;
+  element?: ReactNode;
 }
 
-interface SideMenuProps {
-  pages: SideMenuPage[];
+export default function SideMenu({
+  pages,
+  setPage,
+  currentPage
+}: {
+  pages: ConsolePage[];
   setPage: (index: number) => void;
   currentPage: number;
-  /* Passed by /admin and /dashboard but currently unread: the open state lives
-     in this component. Declared so the call sites type-check as written. */
-  isOpen?: boolean;
-  setSideOpen?: (open: boolean) => void;
-}
-
-export default function SideMenu({ pages, setPage, currentPage }: SideMenuProps){
+}) {
   const { userData, fetching } = useAuth();
-  const [isOpen, setOpen] = useState(true);
-  const isOpenStyle = isOpen ? `w-full max-w-xs` : `w-12`;
-  const contentStyle = isOpen ? `block` : `hidden`;
+  const [open, setOpen] = useState(true);
 
-  const photoURL = userData?.profile_URL;
-  const name = `${userData?.first_name} ${userData?.last_name}`;
+  const name = [userData?.first_name, userData?.last_name].filter(Boolean).join(' ');
 
   return (
-    <div className={'min-h-screen h-screen overflow-y-scroll bg-linear-[-45deg] from-eggblue/70 to-slategray shadow-lg transition-all ' + isOpenStyle }>
-      <div className={`w-full mt-4 flex justify-center items-center ${isOpen ? 'hidden' : ''}`}>
-        <GiHamburgerMenu className='text-white text-3xl cursor-pointer hover:animate-pulse' onClick={() => setOpen(true)}/>
+    <aside
+      className={cn(
+        'flex h-screen shrink-0 flex-col gap-4 overflow-y-auto border-r bg-card py-4 transition-all',
+        open ? 'w-72' : 'w-16'
+      )}
+    >
+      <div className={cn('flex items-center px-3', open ? 'justify-between' : 'justify-center')}>
+        {open ? <Logo className="h-7" /> : null}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setOpen((value) => !value)}
+          aria-label={open ? 'Collapse menu' : 'Expand menu'}
+          aria-expanded={open}
+        >
+          {open ? <PanelLeftClose /> : <PanelLeftOpen />}
+        </Button>
       </div>
-      <div className={`w-full h-full ${contentStyle} transition-all`}>
-        <div className='flex justify-between px-10 py-4 items-center'>
-          <Image
-            src="/ci_logo_light_blue.png"
-            alt="Charicha Institute Logo"
-            width={140}
-            height={50}
-          />          
-	  <RxCross1 onClick={() => setOpen(false)} className='text-white text-3xl hover:rotate-45 cursor-pointer transition-all'/>
+
+      {open ? (
+        <div className="flex flex-col items-center gap-2 border-b px-3 pb-4">
+          {fetching ? (
+            <Skeleton shape="circle" className="size-20" />
+          ) : (
+            <Image
+              src={userData?.profile_URL || '/profile.jpg'}
+              alt=""
+              width={80}
+              height={80}
+              className="size-20 rounded-full border-2 border-primary object-cover"
+            />
+          )}
+          {fetching ? (
+            <Skeleton className="h-4 w-32" />
+          ) : (
+            <p className="text-sm font-medium text-card-foreground">{name || 'Student'}</p>
+          )}
         </div>
-	<div className='w-full flex justify-center  items-center'>
-          <ProfileImage fetching={fetching} photoURL={photoURL}/>
-        </div>
-	<div className='w-full flex justify-center pb-4 items-center'>
-	  <p className='text-white text-md font-light'> { name } </p>
-        </div>        
-        <nav className='flex flex-col gap-1'>
-          { pages.map((page: SideMenuPage, idx: number) => {
-	    return (<li key={page.label}
-                        onClick={() => setPage(idx)}
-                        className={`flex gap-2 items-center list-none cursor-pointer py-4 px-10 w-64 rounded-r-full text-white text-sm md:text-md  font-light
-                                    transition-all ${currentPage === idx ? 'bg-slategray' : 'hover:bg-eggblue'}`}>
-                      {page.icon} { page.label }
-                    </li>);
-          })}
-        </nav>
-      </div>    
-    </div>
+      ) : null}
+
+      {/*
+        Real <button>s in a list. These were <li onClick> before, so the menu
+        could not be reached or operated from the keyboard at all.
+      */}
+      <nav aria-label="Console">
+        <ul className="flex flex-col gap-1 px-2">
+          {pages.map((page, index) => (
+            <li key={page.label}>
+              <button
+                type="button"
+                onClick={() => setPage(index)}
+                aria-current={currentPage === index ? 'page' : undefined}
+                title={open ? undefined : page.label}
+                className={cn(
+                  'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm transition-colors',
+                  open ? 'justify-start' : 'justify-center',
+                  currentPage === index
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                )}
+              >
+                <span className="shrink-0" aria-hidden>
+                  {page.icon ?? <UserIcon className="size-4" />}
+                </span>
+                {open ? <span className="truncate">{page.label}</span> : null}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
   );
 }
-
-const ProfileImage = ({ fetching, photoURL }: { fetching: boolean; photoURL?: string }) =>
-      fetching ? (
-        <Skeleton circle={true} width={100} height={100} /> )
-      : (<div className='rounded-full overflow-clip w-[100px] h-[100px] object-cover border-4 border-eggblue'
-         ><Image
-           alt=""
-           src={photoURL ?? "/profile.jpg"}
-           width={100}
-           height={100}
-           className='object-cover'
-        /></div>);

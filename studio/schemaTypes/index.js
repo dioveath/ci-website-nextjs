@@ -15,6 +15,12 @@ import story from './objects/story';
 import appPromo from './objects/appPromo';
 import contactInfo from './objects/contactInfo';
 import navLink from './objects/navLink';
+import stat from './objects/stat';
+import courseSection from './objects/courseSection';
+import courseLesson from './objects/courseLesson';
+
+// Private "course content" workspace only (see sanity.config.js)
+import lessonContent from './content/lessonContent';
 
 export const schemaTypes = [
   // documents
@@ -32,4 +38,10 @@ export const schemaTypes = [
   appPromo,
   contactInfo,
   navLink,
+  stat,
+  courseSection,
+  courseLesson,
 ];
+
+// Schema for the private dataset that holds paid lesson bodies.
+export const contentSchemaTypes = [lessonContent];

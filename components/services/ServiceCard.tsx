@@ -1,17 +1,29 @@
-'use client';
+import type { ReactNode } from 'react';
 
-export default function ServiceCard(props: { title: React.ReactNode; children?: React.ReactNode }){
+import { Card, CardContent } from '../ui/card';
 
-  return(
-    <div className={'flex flex-col gap-2 w-[350px] h-[300px] bg-slategray p-6 rounded-2xl shadow-md'}>
-      <div className={'text-2xl text-cheeseyellow'}>
-        { props.title }
-      </div>
-      <div className='w-full h-1 bg-white rounded-2xl'> </div>
+export default function ServiceCard({
+  title,
+  children,
+  headingLevel = 3
+}: {
+  title: ReactNode;
+  children?: ReactNode;
+  headingLevel?: 2 | 3;
+}) {
+  const Heading = `h${headingLevel}` as 'h2' | 'h3';
 
-      <div className={'text-white font-light'}>
-        { props.children }
-      </div>
-    </div>
+  return (
+    <Card className="h-full">
+      <CardContent className="h-full">
+        <div className="flex h-full flex-col gap-3">
+          <span className="h-1 w-10 rounded-full bg-highlight" aria-hidden />
+          <Heading className="text-lg font-semibold text-card-foreground">
+            {title}
+          </Heading>
+          <p className="text-sm text-muted-foreground">{children}</p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

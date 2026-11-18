@@ -1,7 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Abel&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap')
-layer(base);
+/*
+  Design tokens for Charicha Institute.
+
+  Three rules govern this file:
+
+  1. Tokens are named for the ROLE they play, never for the colour they hold.
+     A component asks for `bg-primary text-primary-foreground`; it never asks
+     for teal. Rebranding is then a change here and nowhere else.
+  2. Every pair this file puts next to each other is verified by
+     `npm run contrast`, which reads the values below and asserts them against
+     WCAG 1.4.3 (text) and 1.4.11 (UI boundaries and focus rings). The gate
+     parses this file, so changing a value re-checks it.
+  3. A token earns its place by being used. The shadcn initialiser also writes
+     `--chart-1..5` and nine `--sidebar-*` tokens; they are removed here
+     because this site has no charts and no sidebar primitive. `shadcn add`
+     puts them back if one is ever installed.
+
+  Fonts are self-hosted via next/font in app/layout.tsx, which supplies
+  --font-raleway and --font-montserrat-loaded. A remote
+  @import url(fonts.googleapis.com) here was dropped by the CSS pipeline, so
+  the fonts never loaded.
+*/
 
 @import 'tailwindcss';
+/* Enter/exit keyframes the Radix-based primitives animate with. */
+@import 'tw-animate-css';
+/* Base layer the shadcn primitives expect (focus, selection, field sizing). */
+@import 'shadcn/tailwind.css';
 
 @plugin '@tailwindcss/typography';
 
@@ -10,166 +34,245 @@ layer(base);
 @source '../components';
 @source '../containers';
 
-@theme {
-  --color-eggblue: #14B2A2;
-  --color-slategray: #283F41;
-  --color-aquamarine: #95FDF8;
-  --color-cheeseyellow: #EFB53A;
-  --color-brightaqua: #00FFE9;
-  --color-mint: #A4EFE9;
-  --color-neonblue: #08E8DE;
-  --color-timbergreen: #1E2C2D;
-  --color-riverbed: #384B54;
-  --color-greenpea: #19564B;
-  --color-pinegreen: #0E8573;
+/*
+  Tailwind v4 dropped the `darkMode: 'class'` config option; the dark variant
+  is declared in CSS. `.dark` is set on <html> by next-themes.
+*/
+@custom-variant dark (&:is(.dark *));
 
-  --font-montserrat: Montserrat, sans-serif;
-  --font-poppins: Poppins, sans-serif;
+/* ---------------------------------------------------------------- theme map
 
-  /* The v3 config spelled this `keyFrames`, which Tailwind never read, so
-     animate-wiggle resolved to an animation with no keyframes and did
-     nothing. Spelled correctly it actually animates now. */
-  --animate-wiggle: wiggle 0.5s ease-out infinite;
+  `@theme inline` maps each role onto a plain custom property, so only the
+  two palettes below flip between themes. Nothing in this block is
+  theme-dependent, which is what keeps those palettes readable.
+*/
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 
-  @keyframes wiggle {
-    25%  { transform: translateX(10px);  color: blue; }
-    50%  { transform: translateX(0);     color: yellow; }
-    100% { transform: translateX(-10px); color: red; }
-  }
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  /* Popovers sit on the same surface as cards. Aliased rather than given
+     their own value, so there is one elevated surface to reason about. */
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--card-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  /* `accent` is the quiet interactive surface the shadcn primitives use for
+     hover and selected states. The loud brand highlight is `highlight`, so a
+     hovered dropdown row does not turn amber. */
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* The brand band: decorative gradient stops plus the text colours that are
+     legible on them. Never a surface for body copy outside the band. */
+  --color-brand-from: var(--brand-from);
+  --color-brand-to: var(--brand-to);
+  --color-on-brand: var(--on-brand);
+  --color-on-brand-muted: var(--on-brand-muted);
+
+  --font-sans: var(--font-raleway), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-montserrat-loaded), var(--font-raleway), ui-sans-serif, sans-serif;
+
+  /* One radius, derived steps. */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+
+  /* Two elevations. The tint flips with the theme so a dark surface casts a
+     real shadow instead of a grey haze. */
+  --shadow-card: 0 1px 2px var(--shadow-tint-weak), 0 8px 24px var(--shadow-tint);
+  --shadow-pop: 0 8px 32px var(--shadow-tint-strong);
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+/* -------------------------------------------------------------- light theme */
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
+:root {
+  --radius: 0.75rem;
+
+  --background: #ffffff;
+  --foreground: #0f1e20;
+
+  --card: #ffffff;
+  --card-foreground: #0f1e20;
+
+  --primary: #0a6457;
+  --primary-foreground: #ffffff;
+
+  --secondary: #e6f1ef;
+  --secondary-foreground: #09433a;
+
+  --muted: #f3f8f7;
+  --muted-foreground: #46605f;
+
+  --accent: #e6f1ef;
+  --accent-foreground: #09433a;
+
+  --highlight: #efb53a;
+  --highlight-foreground: #1e2c2d;
+
+  --destructive: #ae1f1b;
+  --destructive-foreground: #ffffff;
+
+  --border: #d7e4e2;
+  --input: #6b8785;
+  --ring: #0a6457;
+
+  --brand-from: #0a5b4f;
+  --brand-to: #0c2326;
+  --on-brand: #ffffff;
+  --on-brand-muted: #d6eae6;
+
+  --shadow-tint-weak: rgb(15 30 32 / 0.06);
+  --shadow-tint: rgb(15 30 32 / 0.08);
+  --shadow-tint-strong: rgb(15 30 32 / 0.16);
+}
+
+/* --------------------------------------------------------------- dark theme */
+
+.dark {
+  --background: #0c1819;
+  --foreground: #e7f3f1;
+
+  --card: #142728;
+  --card-foreground: #e7f3f1;
+
+  /* On a dark surface the primary has to be the light half of the pair, so
+     the teal that failed behind white text in the old palette finally has a
+     legitimate home -- paired with dark text. */
+  --primary: #19b7a6;
+  --primary-foreground: #04201c;
+
+  --secondary: #1c3334;
+  --secondary-foreground: #cbe3e0;
+
+  --muted: #122324;
+  --muted-foreground: #9bbab9;
+
+  --accent: #1c3334;
+  --accent-foreground: #cbe3e0;
+
+  --highlight: #f0bc4d;
+  --highlight-foreground: #231a05;
+
+  /* Light enough to read as error text on the dark page, which forces the
+     paired foreground dark -- white on this would only reach 3:1. */
+  --destructive: #f0666b;
+  --destructive-foreground: #1a0f0f;
+
+  --border: #294042;
+  --input: #7b9a9c;
+  --ring: #19b7a6;
+
+  --brand-from: #0a5b4f;
+  --brand-to: #081314;
+  --on-brand: #ffffff;
+  --on-brand-muted: #d6eae6;
+
+  --shadow-tint-weak: rgb(0 0 0 / 0.3);
+  --shadow-tint: rgb(0 0 0 / 0.4);
+  --shadow-tint-strong: rgb(0 0 0 / 0.55);
+}
+
+/* ---------------------------------------------------------------- utilities
+
+  The brand gradient, as one named utility rather than
+  `bg-linear-[-45deg] from-x to-y` repeated across nine route files.
+*/
+@utility brand-band {
+  background-image: linear-gradient(-45deg, var(--brand-from), var(--brand-to));
+  color: var(--on-brand);
+}
+
+/* --------------------------------------------------------------- base layer
+
+  Element defaults belong in @layer base. Tailwind v4 emits utilities inside
+  @layer utilities, and unlayered CSS beats every layered rule regardless of
+  specificity -- an unlayered `* { padding: 0 }` silently cancels every p-*
+  utility on the site.
 */
 @layer base {
+  /*
+    Tailwind v4 defaults the border colour to currentcolor. Anchoring it to
+    the token means `border` alone draws the right hairline, in both themes.
+  */
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headings carry the display face; size and weight stay with the utility. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    text-wrap: balance;
+  }
+
+  /* Links inherit colour so the surrounding text utility governs them. */
+  a {
+    color: inherit;
+  }
+
+  ::selection {
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-muted-foreground);
   }
 }
-
-:root {
-    --primary-color: #0EE8E1;
-    --secondary-color: #0070f3;
-}
-
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: Raleway, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-	       Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  font-weight: 500;
-  /* background: linear-gradient(247.47deg, #0DD4BC 5.76%, #0C8380 84.97%);       */
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-    box-sizing: border-box;
-    padding: 0px;
-    margin: 0px;
-    /* cursor: none; */
-    /* cursor: url("../public/aim.svg"); */
-    
-}
-
-/* width */
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #eeeeee;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #08E8DE;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.ce-block--selected .ce-block__content {
-    background: #0E8573;
-}
-
-.ce-inline-toolbar,
-.codex-editor--narrow .ce-toolbox,
-.ce-settings,
-.ce-settings__button,
-.cdx-button,
-.ce-popover {
-  background: white;
-  color: black;
-}
-
-.ce-toolbar__plus,
-.ce-toolbar__settings-btn {
-    color: white;
-}
-
-.ce-toolbar__plus:hover,
-.ce-toolbar__settings-btn:hover {
-    color: #19564B;
-}
-
-.ce-inline-toolbar__dropdown,
-.ce-conversion-toolbar,
-.ce-conversion-toolbar__label,
-.ce-toolbox__button,
-.cdx-settings-button,
-.ce-popover__item,
-.ce-inline-tool,
-.ce-toolbox__button{
-  color: black;
-}
-
-.ce-inline-tool--active {
-    color: #0E8573;
-    transform: scale(1.1);
-}
-
-::selection {
-  background: #0E8573;
-}
-
-/* .cdx-settings-button:hover, */
-.ce-settings__button:hover,
-.ce-toolbox__button,
-.cdx-button:hover,
-.ce-inline-tool:hover,
-.ce-popover__item:hover {
-    background-color: #efefefef;
-    color: black;
-}
-
-.cdx-notify--error {
-  background: #fb5d5d !important;
-}
-
-.cdx-notify__cross::after,
-.cdx-notify__cross::before {
-  background: white;
-}
-
-/* .codex-editor { */
-/*     position: static; */
-/*     height: 384px; */
-/*     overflow-y: scroll; */
-/* } */
