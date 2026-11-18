@@ -1,3 +1,4 @@
+import { coursesList } from '../../components/course/coursesList';
 import type { Course } from '../../types';
 
 // Static fallbacks for the singleton documents. These mirror the original
@@ -44,9 +45,10 @@ export const homePageFallback = {
     { value: '20+', label: 'Courses offered' },
     { value: '6', label: 'Days a week open' },
   ],
-  // Empty by default: the home page falls back to the static course list, the
-  // same way every other CMS-backed section falls back.
-  featuredCourses: [] as Course[],
+  // The first three of the static course list, so the home page still shows a
+  // courses section before an editor has picked any -- the same way every
+  // other CMS-backed section falls back rather than disappearing.
+  featuredCourses: coursesList.slice(0, 3) as Course[],
   stories: [
     {
       title: 'How it all started?',
