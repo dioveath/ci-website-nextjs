@@ -5,10 +5,10 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 
 import useAuth from '@/lib/auth';
 import queryClient from '@/lib/queryClient';
-import ArticleRenderer from "../../components/ArticleRenderer";
+import ArticleRenderer from "@/components/ArticleRenderer";
 
 import { IoIosArrowBack } from "react-icons/io";
-import type { Article } from '../../types';
+import type { Article } from '@/types';
 import { listAllArticles, updateArticle } from '@/lib/articles';
 
 export default function ArticleManagementContainer() {

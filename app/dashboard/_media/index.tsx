@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import FileUploader from '../../components/FileUploader';
-import type { Media } from '../../types';
+import FileUploader from '@/components/FileUploader';
+import type { Media } from '@/types';
 import useMedia from './useMedia';
 
 export default function MediaContainer(){

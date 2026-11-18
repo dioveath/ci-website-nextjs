@@ -4,7 +4,7 @@ import { createContext, useState } from 'react';
 import ListArticlesContainer from './ListArticlesContainer';
 import AddArticleContainer from './AddArticleContainer';
 import ViewArticleContainer from './ViewArticleContainer';
-import type { Article } from '../../types';
+import type { Article } from '@/types';
 
 export interface ArticlePageContext {
   page: number;

@@ -1,8 +1,8 @@
 'use client';
 
 import DashboardShell, { GoTo, Logout, type DashboardPage } from '../../components/DashboardShell';
-import ArticleManagementContainer from '../../containers/admin_article';
-import UserManagementContainer from '../../containers/admin_user';
+import ArticleManagementContainer from './ArticleManagement';
+import UserManagementContainer from './UserManagement';
 
 import { IoIosSettings } from 'react-icons/io';
 import { MdOutlineDashboard } from 'react-icons/md';

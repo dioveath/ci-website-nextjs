@@ -9,15 +9,15 @@ import { useMutation } from "@tanstack/react-query";
 import useAuth from '@/lib/auth';
 import queryClient from '@/lib/queryClient';
 import { pageContext } from "./index";
-import { isEmptyDocument } from "../../lib/editor/serialize";
-import MediaSelectModal from "../media/MediaSelectModal";
+import { isEmptyDocument } from "@/lib/editor/serialize";
+import MediaSelectModal from "../_media/MediaSelectModal";
 import { IoIosArrowBack } from "react-icons/io";
-import type { Article, Media } from '../../types';
-import type { TiptapEditorHandle } from '../../components/TiptapEditor';
+import type { Article, Media } from '@/types';
+import type { TiptapEditorHandle } from '@/components/TiptapEditor';
 import { removeMedia } from '@/lib/users';
 import { createArticle, updateArticle } from '@/lib/articles';
 
-const TiptapEditor = dynamic(() => import("../../components/TiptapEditor"), { ssr: false });
+const TiptapEditor = dynamic(() => import("@/components/TiptapEditor"), { ssr: false });
 
 export default function AddArticleContainer({ article }: { article?: Article | null }) {
   const [title, setTitle] = useState<string | undefined>(article?.title);

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 import useAuth from '@/lib/auth';
-import LoadingScreen from '../../components/LoadingScreen';
-import type { Media } from '../../types';
+import LoadingScreen from '@/components/LoadingScreen';
+import type { Media } from '@/types';
 import useMedia from './useMedia';
 
 

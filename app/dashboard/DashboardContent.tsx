@@ -1,8 +1,8 @@
 'use client';
 
 import DashboardShell, { GoTo, Logout, type DashboardPage } from '../../components/DashboardShell';
-import MediaContainer from '../../containers/media';
-import ArticleContainer from '../../containers/article';
+import MediaContainer from './_media';
+import ArticleContainer from './_articles';
 
 import { IoIosSettings, IoIosConstruct } from 'react-icons/io';
 import { TfiStatsUp } from 'react-icons/tfi';

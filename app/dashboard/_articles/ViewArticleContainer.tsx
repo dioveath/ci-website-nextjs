@@ -1,11 +1,11 @@
 'use client';
 
 import { useContext } from 'react';
-import ArticleRenderer from '../../components/ArticleRenderer';
+import ArticleRenderer from '@/components/ArticleRenderer';
 
 import { pageContext } from './index';
 import { IoIosArrowBack } from 'react-icons/io';
-import type { Article } from '../../types';
+import type { Article } from '@/types';
 
 export default function ViewArticleContainer({ article }: { article: Article }){
   const { setPage, setArticle } = useContext(pageContext);

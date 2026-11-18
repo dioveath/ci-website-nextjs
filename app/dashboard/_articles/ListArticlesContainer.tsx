@@ -7,12 +7,12 @@ import { useMutation, useInfiniteQuery } from "@tanstack/react-query";
 import useAuth from '@/lib/auth';
 import queryClient from '@/lib/queryClient';
 import { pageContext } from "./index";
-import { articleSummary } from "../../lib/editor/serialize";
+import { articleSummary } from "@/lib/editor/serialize";
 import { RiQuillPenFill } from "react-icons/ri";
 import PulseLoader from "react-spinners/PulseLoader";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import type { Article } from '../../types';
+import type { Article } from '@/types';
 import { deleteArticle, listArticlesByAuthor } from '@/lib/articles';
 
 type ArticlePageParam = { lastDoc: Article } | undefined;
