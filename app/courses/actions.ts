@@ -16,16 +16,21 @@ import {
   type CompletionResult,
   type Student,
 } from '../../lib/server/enrollments';
+import { reconcilePendingOrders, startCheckout as startCheckoutFor } from '../../lib/server/orders';
+import { isPaymentProvider } from '../../lib/server/payments';
 import { isLessonId } from '../../lib/courses/ids';
 import { findLesson, resumeLessonId, summarizeProgress } from '../../lib/courses/progress';
 import type {
   ActionResult,
+  CheckoutRedirect,
   CourseAccess,
   CourseId,
   EnrollmentDTO,
   LessonContent,
   LessonId,
   MyCourseView,
+  OrderId,
+  PaymentProvider,
 } from '../../types/courses';
 
 /*
@@ -47,7 +52,23 @@ export async function getCourseAccess(
     const course = await requireCourse(courseId);
     const caller = await optionalCaller(idToken);
     if (!caller) return describeAccess(course, null, null);
-    return describeAccess(course, await getEnrollment(course.id, caller.uid), caller.uid);
+    // Settle any checkout for this course first, so a student who paid and
+    // closed the tab sees their access as soon as they come back.
+    const pendingOrderId = course.price ? await reconcilePendingOrders(caller.uid, course.id) : null;
+    return describeAccess(course, await getEnrollment(course.id, caller.uid), caller.uid, pendingOrderId);
+  });
+}
+
+/** Starts paying for a course. The browser follows the returned redirect. */
+export async function startCheckout(
+  idToken: string,
+  input: { courseId: CourseId; provider: PaymentProvider }
+): Promise<ActionResult<{ orderId: OrderId; checkout: CheckoutRedirect }>> {
+  return runAction('startCheckout', async () => {
+    const caller = await requireCaller(idToken);
+    if (!isPaymentProvider(input?.provider)) fail('invalid', 'Choose a payment method.');
+    const course = await requireCourse(input.courseId);
+    return startCheckoutFor(course, asStudent(caller), input.provider);
   });
 }
 
@@ -111,6 +132,7 @@ export async function completeLesson(
 export async function getMyCourses(idToken: string): Promise<ActionResult<MyCourseView[]>> {
   return runAction('getMyCourses', async () => {
     const caller = await requireCaller(idToken);
+    await reconcilePendingOrders(caller.uid);
     const enrollments = (await listEnrollmentsFor(caller.uid)).filter(({ enrollment }) =>
       hasActiveAccess(enrollment)
     );

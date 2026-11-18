@@ -21,6 +21,8 @@ export function useCourseAccess(courseId: CourseId) {
     queryFn: async () => unwrap(await getCourseAccess(await getIdToken(), courseId)),
     enabled: !authLoading && !!user,
     refetchOnMount: 'always',
+    // While a payment is being confirmed, check again every few seconds.
+    refetchInterval: (current) => (current.state.data?.pendingOrderId ? 5000 : false),
   });
 
   const access = query.data ?? null;

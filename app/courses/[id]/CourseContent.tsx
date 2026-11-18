@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaLayerGroup } from 'react-icons/fa';
@@ -8,14 +9,15 @@ import Footer from '../../../components/footer/Footer';
 import LiveCurriculum from '../../../components/course/LiveCurriculum';
 import CourseActions from '../../../components/course/CourseActions';
 import { formatDuration, formatMoney } from '../../../lib/courses/format';
-import type { CatalogCourse } from '../../../types/courses';
+import type { CatalogCourse, PaymentOption } from '../../../types/courses';
 
 interface CourseContentProps {
   course: CatalogCourse;
   prerequisites: CatalogCourse[];
+  paymentOptions: PaymentOption[];
 }
 
-export default function CourseContent({ course, prerequisites }: CourseContentProps) {
+export default function CourseContent({ course, prerequisites, paymentOptions }: CourseContentProps) {
   const duration = formatDuration(course.totalDurationSec);
 
   return (
@@ -69,7 +71,10 @@ export default function CourseContent({ course, prerequisites }: CourseContentPr
           </div>
 
           <aside className="flex flex-col gap-6 lg:sticky lg:top-6 lg:self-start">
-            <CourseActions course={course} />
+            {/* CourseActions reads ?payment=; the page itself stays static. */}
+            <Suspense>
+              <CourseActions course={course} paymentOptions={paymentOptions} />
+            </Suspense>
             {prerequisites.length > 0 && (
               <section className="rounded-lg bg-timbergreen/60 p-5">
                 <h2 className="text-white font-semibold mb-2">Recommended first</h2>

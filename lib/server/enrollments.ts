@@ -44,13 +44,19 @@ export async function getEnrollment(courseId: string, uid: Uid): Promise<Enrollm
   return snapshot.exists ? (snapshot.data() as EnrollmentDoc) : null;
 }
 
-export function describeAccess(course: CatalogCourse, enrollment: EnrollmentDoc | null, uid: Uid | null): CourseAccess {
+export function describeAccess(
+  course: CatalogCourse,
+  enrollment: EnrollmentDoc | null,
+  uid: Uid | null,
+  pendingOrderId: string | null = null
+): CourseAccess {
   if (!enrollment || !uid) {
-    return { enrollment: null, hasAccess: false, progress: null, resumeLessonId: null };
+    return { enrollment: null, pendingOrderId, hasAccess: false, progress: null, resumeLessonId: null };
   }
   const access = hasActiveAccess(enrollment);
   return {
     enrollment: toEnrollmentDTO(enrollmentId(course.id, uid), enrollment),
+    pendingOrderId: access ? null : pendingOrderId,
     hasAccess: access,
     progress: summarizeProgress(course, enrollment.progress),
     resumeLessonId: access ? resumeLessonId(course, enrollment.progress, enrollment.lastLessonId) : null,
@@ -75,7 +81,7 @@ export function activateEnrollment(
   transaction: Transaction,
   ref: DocumentReference<EnrollmentDoc>,
   existing: EnrollmentDoc | null,
-  course: CatalogCourse,
+  course: Pick<CatalogCourse, 'id' | 'title'>,
   student: Student,
   source: EnrollmentSource
 ): EnrollmentDoc | false {

@@ -131,6 +131,8 @@ export interface OrderDoc {
   uid: Uid;
   courseId: CourseId;
   courseTitle: string;
+  /** Copied onto the enrollment when the payment is confirmed. */
+  student: { name: string; email: string | null };
   /** Read from Sanity by the server at checkout, never sent by the browser. */
   amount: Money;
   status: OrderStatus;
@@ -147,9 +149,14 @@ export type CheckoutRedirect =
   | { kind: 'redirect'; url: string }
   | { kind: 'form-post'; url: string; fields: Record<string, string> };
 
+/**
+ * A provider's answer about one order. `pending` with `started: false` means
+ * the student never got as far as paying (still on the provider's page, or
+ * walked away); it becomes a failure once they cancel or the order goes stale.
+ */
 export type VerifiedPayment =
   | { status: 'paid'; ref: ProviderRef }
-  | { status: 'pending' }
+  | { status: 'pending'; started: boolean }
   | { status: 'failed'; reason: string };
 
 export interface PaymentOption {
@@ -226,6 +233,8 @@ export interface ProgressSummary {
 /** Course page: what the current visitor can do. */
 export interface CourseAccess {
   enrollment: EnrollmentDTO | null;
+  /** A checkout the provider has not confirmed yet ("we are confirming your payment"). */
+  pendingOrderId: OrderId | null;
   hasAccess: boolean;
   progress: ProgressSummary | null;
   /** First lesson not yet completed, for "Continue". */

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { getCourseById, getCourseIds, getCoursesByIds } from '../../../lib/sanity/fetchers';
+import { paymentOptions } from '../../../lib/server/payments';
 import CourseContent from './CourseContent';
 
 export const revalidate = 60;
@@ -27,5 +28,5 @@ export default async function CoursePage({ params }: Params) {
   const course = await getCourseById(id);
   if (!course) notFound();
   const prerequisites = await getCoursesByIds(course.prerequisiteIds);
-  return <CourseContent course={course} prerequisites={prerequisites} />;
+  return <CourseContent course={course} prerequisites={prerequisites} paymentOptions={paymentOptions()} />;
 }
