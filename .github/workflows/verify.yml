@@ -1,0 +1,27 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Matches .nvmrc and the `engines.node` floor in package.json.
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Types, the design-system rules, and the WCAG contrast gate.
+      - run: npm run verify
+
+      # The build is its own gate: prerendering catches server/client boundary
+      # mistakes that neither tsc nor eslint can see.
+      - run: npm run build
